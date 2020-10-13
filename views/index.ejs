@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="landing.css">
+    <link href="https://fonts.googleapis.com/css2?family=Allura&family=Open+Sans+Condensed:wght@300&display=swap" rel="stylesheet">
+
+    <title>Community Pantry</title>
+  </head>
+  <body style="background-color: black">
+      
+      <div class="jumbotron mb-0" id="titletron">
+          <div class="title">
+              <h1 class=" pt-5">Community Pantry</h1>
+              <h2 class=" mt-5" id="slogan">Make more with  what you have!</h2>
+          </div>
+      </div>
+       <div class="jumbotron text-white" id="logintron">
+          <div class="login container card border border-rounded border-light">
+              <div class="form" action="/login" method="POST">
+                    <h2 id="login"><u>Login</u></h2>
+                    <form action="/login" method="POST">
+                      <div class="inputsection mt-4">
+                        <input type="text" name="username" autocomplete="off" required />
+                        <label for="name" class="label-name">
+                            <span class="content-name">Username</span>
+                        </label>
+                      </div>
+                      <div class="inputsection mt-3">
+                        <input type="password" name="pword" autocomplete="off" required />
+                        <label for="password" class="label-name">
+                            <span class="content-name">Password</span>
+                        </label>
+                      </div>
+                      <button class="btn btn-outline-light btn-block mt-3">Login</button>
+                    </form>
+                    <a href="#createaccount" id="createbtn" class="mt-4 offset-8">Create an Account</a>
+                </div>
+          </div>
+      </div>
+      
+      
+  
+      
+      
+      
+      
+      <div class="transition"></div>
+      
+      <section id="createaccount">
+          <div style="background-color: #f5f5f5">
+          <div class="container">
+              <br><br>
+              <div class="createarea">
+                 
+                  <center><h2 class="my-5 pt-5">Create an Account</h2></center>
+                  <div class="createform mb-4" style="margin: auto">
+                      <div class="form-group">
+                        <label for="name">Username : </label>
+                        <input class="form-control" type="text" placeholder="Username" name="uName">
+                      </div>
+                      <div class="form-group">
+                        <label for="name">Email : </label>
+                        <input class="form-control" type="text" placeholder="Email" name="email">
+                      </div>
+                      <div class="form-group">
+                        <label for="name">Password : </label>
+                        <input class="form-control" type="password" placeholder="Password" name = "pWord">
+                      </div>
+                      <div class="form-group">
+                        <label for="name">Confirm Password : </label>
+                        <input class="form-control" type="password" placeholder="Confirm Password" name = "cPword">
+                      </div>
+                      <div class="form-group">
+                        <label for="accounttype">Account Type : </label>
+                        <select name="accounttype" id="accounttype" class="form-control">
+                            <option value="User" name="user">User</option>
+                            <option value="Administrator" name="admin">Administrator</option>
+                        </select>
+                        <button class="btn btn-outline-primary btn-block my-5">Create Account</button>
+                        
+                      </div>
+                  </div>
+                  <br>
+              </div>
+                
+              
+              <br><br><br><br><br>
+              
+        </div>
+      </div>
+      </section>
+    
+
+
+    
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.js"
+      integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    
+    
+    <script>
+        $(document).ready(function(){
+            var scrolllink = $('#createbtn');
+            scrolllink.click(function(e){
+                e.preventDefault();
+                $('body,html').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 1000)
+            })
+        })
+      
+      </script>
+    
+  </body>
+</html>
