@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="top10.css">
+    <link href="https://fonts.googleapis.com/css2?family=Allura&family=Open+Sans+Condensed:wght@300&display=swap" rel="stylesheet">
+
+    <title>Community Pantry</title>
+  </head>
+  <body>
+     
+     
+     <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
+          <div class="container">
+                  <a class="navbar-brand" href="/">Community Pantry</a>
+                  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                  </button>
+                  <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                      <a class="nav-link active">Top 10</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/search">Search</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/home">Home</a>
+                    </li>
+                  </ul>
+          </div>
+    </nav>
+     
+     
+      
+    <div class="container mt-5 pt-5">
+           <h1 class="my-5 display-1">Our Top 10 Recipes</h1>
+          
+            <% for(var i=1; i<11; i++) { %>
+                <h1 class="my-5 display-1"><%= i %>.</h1>
+                <div class="container">
+                    <a class="nav-link" href="/recipe/<%= i %> "><h2 class="display-3 my-5">Recipe Name</h2></a>
+                    <div class="container m-5">
+                        <h5>recipe Picture</h5>
+                        <p>Recipe Snip bit</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto consequatur aut quis eius sapiente a voluptate expedita sed sit laboriosam accusamus ipsam cumque, animi, quae ipsum eligendi pariatur dolorum. Soluta.</p>
+                    </div>
+                </div>
+            <% } %>
+            
+      </div>
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.js"
+      integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    
+    
+  </body>
+</html>
