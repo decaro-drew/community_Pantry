@@ -4,7 +4,7 @@ var mysql = require("mysql");
 var bodyParser = require("body-parser");
 
 app.use(bodyParser.urlencoded({extended: true}));
-app.set("view-engine", "ejs");
+app.set("view engine", "ejs");
 
 var db = mysql.createConnection({
     host: 'community-pantry.c2b5rjt4aoog.us-east-1.rds.amazonaws.com',
@@ -12,7 +12,7 @@ var db = mysql.createConnection({
     password: 'commpantry',
     database: 'community_pantry'
 });
-//res.redirect to send to pages
+
 db.connect(function(error){
     if(error){
         console.log("Error while connecting to Database");
@@ -23,9 +23,24 @@ db.connect(function(error){
 
 app.use(express.static("public"));
 
-app.get("/", function(req, res){
-    res.render("index.ejs");
+
+app.get("/home", function(req, res){
+    res.render("home.ejs");
 });
+
+app.get("/top10", function(req, res){
+    res.render("top10.ejs");
+});
+
+app.get("/search", function(req, res){
+    res.render("search.ejs");
+});
+
+app.get("/recipe/:dish", function(req, res){
+    const {dish} = req.params;
+    res.render("recipe.ejs", {dish});
+});
+
 
 app.post("/login", function(req, res){
     db.query("SELECT username, pWord FROM user", function(error, rows, fields){
@@ -39,9 +54,10 @@ app.post("/login", function(req, res){
                    if(rows[i].pWord == req.body.pword){
                        console.log("password match");
                        success = true;
-                       res.send("Successful login");
+                       res.render("home.ejs")
                    }else{
-                       console.log("incorrect passowrd");
+                       console.log("incorrect password");
+                       success = true;
                        res.redirect("/");
                    }
                }
@@ -51,6 +67,7 @@ app.post("/login", function(req, res){
         }
     });
 });
+
 app.post("/createAccount", function(req, res){
     var valid = true;
     if(req.body.uName.length < 6){
@@ -75,12 +92,20 @@ app.post("/createAccount", function(req, res){
                 res.send("Username already exists");
             }
             else{
-                res.send("Account created");
+                res.render("home.ejs");
             }
         });
     }
 });
 
+
+app.get("/", function(req, res){
+    res.render("index.ejs");
+});
+
+
 app.listen(3000, function(){
     console.log("Server running on port 3000")
 });
+
+
