@@ -76,8 +76,9 @@ app.post("/login", function(req, res){
     }
 });
 
-app.post("/createRecipe", function(req, res){
-    db.query("Insert into recipe (name, picture, cuisine, snipbit, ingredients, instructions) VALUES ('"+req.body.rName+"','"+req.body.picture+"','"+req.body.cuisine+"','"+req.body.snipbit+"', '"+req.body.ingredients+"', '"+req.body.instructions+"')",function(err, result){   
+app.post("/createRecipe/:username", function(req, res){
+    const {username} = req.params;
+    db.query("Insert into recipe (name, picture, cuisine, snipbit, ingredients, instructions, username) VALUES ('"+req.body.rName+"','"+req.body.picture+"','"+req.body.cuisine+"','"+req.body.snipbit+"', '"+req.body.ingredients+"', '"+req.body.instructions+"', '"+username+"')",function(err, result){   
         if(err){
             res.send("Error");
         }
