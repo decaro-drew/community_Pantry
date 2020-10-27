@@ -29,7 +29,24 @@ app.get("/home", function(req, res){
 });
 
 app.get("/top10", function(req, res){
-    res.render("top10.ejs");
+
+    dish1 = {
+        id: 1,
+        name: "Dish 1",
+        picture: "",
+        snipbit: "This dish tastes real fucking good"
+    }
+
+    dish2 = {
+        id: 2,
+        name: "Dish 2",
+        picture: "",
+        snipbit: "Eating this for dinner will make you shut your pants"
+    }
+
+    dishes = [dish1, dish2];
+
+    res.render("top10.ejs", {dishes});
 });
 
 app.get("/search", function(req, res){
