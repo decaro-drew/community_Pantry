@@ -42,26 +42,20 @@
      
       
     <div class="container pt-5">
-           <h1 class="my-5 display-1">Recipe Name # <%=dish%></h1>
+           <h1 class="my-5 display-1"><%=dishName%></h1>
             <h3> Recipe Picture</h3>
     
             <h3 class="mt-5">Ingredients</h3>
             <ul class="mb-5">
-                <li>ingrient 1</li>
-                <li>ingrient 2</li>
-                <li>ingrient 3</li>
-                <li>ingrient 4</li>
-                <li>ingrient 5</li>
-                <li>ingrient 6</li>
-                <li>ingrient 7</li>
-                <li>ingrient 8</li>
-                <li>ingrient 9</li>
+                <% for(var i=0; i<ingredients.length; i++){ %> 
+                    <li><%= ingredients[i] %> </li>
+                <% } %> 
             </ul>
 
 
             <h3 class="my-5">Instructions</h3>
 
-               <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Neque veniam quos unde iste facere fugiat nesciunt temporibus totam, perferendis, voluptate inventore fuga et quia adipisci quasi facilis quisquam! Praesentium, eaque! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique voluptates excepturi nostrum atque illo, molestias nisi. Magni ea accusamus vero veniam tenetur, ad libero voluptas modi cumque earum nam tempora. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero, nesciunt odit officiis quos ad, voluptates eum cupiditate sunt architecto veritatis porro laboriosam dolor vero consequuntur quam esse? Fugiat iste, id. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestias exercitationem officia recusandae vel autem eveniet aperiam, magni facere, mollitia dolorem dolorum enim rerum eos? Reiciendis voluptatem consectetur consequuntur neque fuga!</p>
+               <p><%=instructions%></p>
         </div> 
     
     <script
