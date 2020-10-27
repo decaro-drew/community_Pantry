@@ -43,27 +43,43 @@ app.get("/recipe/:dish", function(req, res){
 
 
 app.post("/login", function(req, res){
-    db.query("SELECT username, pWord FROM user", function(error, rows, fields){
-        var success = false;
-        if(error){
-            console.log(error);
-        }else{
-           for(var i=0; i<rows.length; i++){
-               if(rows[i].username == req.body.username){
-                   console.log("username match");
-                   if(rows[i].pWord == req.body.pword){
-                       console.log("password match");
-                       success = true;
-                       res.render("home.ejs")
-                   }else{
-                       console.log("incorrect password");
-                       success = true;
-                       res.redirect("/");
+    if(req.body.username == "admin" && req.body.pword == "admin"){
+        res.render("admin.ejs");
+    }
+    else{
+        db.query("SELECT username, pWord FROM user", function(error, rows, fields){
+            var success = false;
+            if(error){
+                console.log(error);
+            }else{
+               for(var i=0; i<rows.length; i++){
+                   if(rows[i].username == req.body.username){
+                       console.log("username match");
+                       if(rows[i].pWord == req.body.pword){
+                           console.log("password match");
+                           success = true;
+                           res.render("home.ejs")
+                       }else{
+                           console.log("incorrect password");
+                           success = true;
+                           res.redirect("/");
+                       }
                    }
                }
-           }
-           if(!success)
-                res.send("No such user");
+               if(!success)
+                    res.send("No such user");
+            }
+        });
+    }
+});
+
+app.post("/createRecipe", function(req, res){
+    db.query("Insert into recipe (name, picture, cuisine, snipbit, ingredients, instructions) VALUES ('"+req.body.rName+"','"+req.body.picture+"','"+req.body.cuisine+"','"+req.body.snipbit+"', '"+req.body.ingredients+"', '"+req.body.instructions+"')",function(err, result){   
+        if(err){
+            res.send("Error");
+        }
+        else{
+            res.redirect("/recipe/" + req.body.rName);
         }
     });
 });
