@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="recipe.css">
+    <link href="https://fonts.googleapis.com/css2?family=Allura&family=Open+Sans+Condensed:wght@300&display=swap" rel="stylesheet">
+
+    <title>Community Pantry</title>
+  </head>
+  <body>
+     
+     
+     
+     <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
+          <div class="container">
+                  <a class="navbar-brand" href="/">Community Pantry</a>
+                  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                  </button>
+                  <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                      <a class="nav-link active" href="/top10">Administrator</a>
+                    </li>
+                    
+                  </ul>
+          </div>
+    </nav>
+     
+     
+     
+     
+    <div class="container mt-5 pt-5">
+         <h2 class="my-5 pt-5"><u></u>Delete A User</h2>
+         <form class="" action="/deleteuser" method="POST">
+             <div class="input-group mb-3">
+                   <input type="text" name="username" class="form-control" placeholder="Username" aria-label="username" aria-describedby="button-addon2">
+                   <div class="input-group-append">
+                     <button class="btn btn-outline-secondary" id="button-addon2">Delete This User</button>
+                   </div>
+             </div>
+         </form>
+        <br><br><hr>
+        
+         <h2 class="my-5"><u></u>Set the Top 10 Recipes</h2>
+        <div class="offset-2">
+            <div class="form-group row">
+                <label for="staticEmail" class="col-sm-1 col-form-label pl-0">Position :</label>
+                <div class="col-sm-2 pl-0">
+                  <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="ID # of Recipe">
+                </div>
+              </div>
+              <form action="settop10" method="post">
+                  <div class="form-group row">
+                        <label for="" class="col-sm-1 col-form-label pl-4">1 :</label>
+                        <div class="col-sm-2 pl-0">
+                          <input type="text" name="first" class="form-control" id="">
+                        </div>
+                  </div>   
+                  <div class="form-group row">
+                        <label for="" class="col-sm-1 col-form-label pl-4">2 :</label>
+                        <div class="col-sm-2 pl-0">
+                          <input type="text" name="second" class="form-control" id="">
+                        </div>
+                  </div>  
+                  <div class="form-group row">
+                        <label for="" class="col-sm-1 col-form-label pl-4">3 :</label>
+                        <div class="col-sm-2 pl-0">
+                          <input type="text" name="third" class="form-control" id="">
+                        </div>
+                  </div>   
+                  <div class="form-group row">
+                        <label for="" class="col-sm-1 col-form-label pl-4">4 :</label>
+                        <div class="col-sm-2 pl-0">
+                          <input type="text" name="fourth" class="form-control" id="">
+                        </div>
+                  </div>   
+                  <div class="form-group row">
+                        <label for="" class="col-sm-1 col-form-label pl-4">5 :</label>
+                        <div class="col-sm-2 pl-0">
+                          <input type="text" name="fifth" class="form-control" id="">
+                        </div>
+                  </div>   
+                  <div class="form-group row">
+                        <label for="" class="col-sm-1 col-form-label pl-4">6 :</label>
+                        <div class="col-sm-2 pl-0">
+                          <input type="text" name="sixth" class="form-control" id="">
+                        </div>
+                  </div>   
+                  <div class="form-group row">
+                        <label for="" class="col-sm-1 col-form-label pl-4">7 :</label>
+                        <div class="col-sm-2 pl-0">
+                          <input type="text" name="seventh" class="form-control" id="">
+                        </div>
+                  </div>   
+                  <div class="form-group row">
+                        <label for="" class="col-sm-1 col-form-label pl-4">8 :</label>
+                        <div class="col-sm-2 pl-0">
+                          <input type="text" name="eigth" class="form-control" id="">
+                        </div>
+                  </div>   
+                  <div class="form-group row">
+                        <label for="" class="col-sm-1 col-form-label pl-4">9 :</label>
+                        <div class="col-sm-2 pl-0">
+                          <input type="text" name="ninth" class="form-control" id="">
+                        </div>
+                  </div>   
+                  <div class="form-group row">
+                        <label for="" class="col-sm-1 col-form-label pl-4">10 :</label>
+                        <div class="col-sm-2 pl-0">
+                          <input type="text" name="tenth" class="form-control" id="">
+                        </div>
+                  </div>   
+                  <button class="col-3 btn btn-outline-dark">Submit</button>              
+              </form>
+        </div>        
+    </div> 
+      
+    <br><br><br><br>
+    
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.js"
+      integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    
+    
+  </body>
+</html>
