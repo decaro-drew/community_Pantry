@@ -38,8 +38,11 @@ app.get("/search", function(req, res){
 
 app.get("/recipe/:dish", function(req, res){
     const {dish} = req.params;
-    res.render("recipe.ejs", {dish});
+
+    ingredients = ["egg", "brocoli", "cumin"];
+    res.render("recipe.ejs", {dishName: "test Dish", instructions: "just fucking make it bro", ingredients});
 });
+
 
 
 app.post("/login", function(req, res){
