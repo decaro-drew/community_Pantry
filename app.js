@@ -53,13 +53,38 @@ app.get("/search", function(req, res){
     res.render("search.ejs");
 });
 
-app.get("/recipe/:dish", function(req, res){
-    const {dish} = req.params;
-
-    ingredients = ["egg", "brocoli", "cumin"];
-    res.render("recipe.ejs", {dishName: "test Dish", instructions: "just fucking make it bro", ingredients});
+app.get("/recipe/:id", function(req, res){
+    const {id} = req.params;
+    var success = false;
+    //console.log(id);
+    db.query("SELECT * FROM recipe WHERE id = ?", [id], function(error, rows){
+        if(error){
+            throw error;
+        }
+        else{
+            if(rows.length > 0){
+                success = true;
+                var dishName = rows[0].name;
+                var instructions = rows[0].instructions;
+                console.log("here");
+                ///ingredients = ["egg", "brocoli", "cumin"];
+                ingredients = rows[0].ingredients.split(",");
+                res.render("recipe.ejs", {dishName, instructions, ingredients});
+            }
+            else{
+                console.log("hererere");
+                ingredients = ["egg", "brocoli", "cumin"];
+                res.render("recipe.ejs", {dishName: "nah", instructions: "just fucking make it bro", ingredients});
+            }
+ 
+            //var result = JSON.parse(JSON.stringify(rows[0]));
+            //console.log(rows[0].name.toString());
+            //dishName = rows[0].name.toString()
+            
+        }      
+    });
+    
 });
-
 
 
 app.post("/login", function(req, res){
@@ -100,7 +125,8 @@ app.post("/createRecipe/:username", function(req, res){
             res.send("Error");
         }
         else{
-            res.redirect("/recipe/" + req.body.rName);
+            id = result.insertId;
+            res.redirect("/recipe/" + id);
         }
     });
 });
