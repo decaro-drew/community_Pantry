@@ -28,8 +28,54 @@ app.get("/home", function(req, res){
     res.render("home.ejs");
 });
 
+app.post("/settop10", function(req, res){
+    var valid = true;
+    ids = [req.body.first, req.body.second, req.body.third, req.body.fourth, req.body.fifth, req.body.sixth, req.body.seventh, req.body.eigth, req.body.ninth, req.body.tenth];
+    db.query("SELECT id FROM recipe", function(error, rows){
+        if(error){
+            throw error;
+        }
+        ///console.log(rows.length);
+        var max = rows.length;
+        for(var i = 0; i < ids.length; i++){
+            if(ids[i] == ''){
+                valid = false;
+                res.send("null value was entered");
+                return;
+            }
+            if(ids[i] > max || ids[i] < 1){
+                valid = false;
+                res.send("recipe id entered does not exist")
+                return;
+            }
+        }
+        if(valid){
+            var sql = "Insert into top10 (positionId, dishId) VALUES ? ON DUPLICATE KEY UPDATE dishId = VALUES(dishId)";
+            var vals = [
+            [1, req.body.first],
+            [2, req.body.second],
+            [3, req.body.third],
+            [4, req.body.fourth],
+            [5, req.body.fifth],
+            [6, req.body.sixth],
+            [7, req.body.seventh],
+            [8, req.body.eigth],
+            [9, req.body.ninth],
+            [10, req.body.tenth]
+            ]
+            db.query(sql, [vals], function(error, rows){
+                if(error){
+                    throw error;
+                }
+            });
+            res.redirect("/top10");
+        }
+    });  
+});
+
 app.get("/top10", function(req, res){
 
+    
     dish1 = {
         id: 1,
         name: "Dish 1",
