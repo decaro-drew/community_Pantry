@@ -2,6 +2,7 @@ var express = require("express")
 var app = express();
 var mysql = require("mysql");
 var bodyParser = require("body-parser");
+var session = require('client-sessions');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
@@ -23,6 +24,24 @@ db.connect(function(error){
 
 app.use(express.static("public"));
 
+app.use(session({
+    cookieName: 'session',
+    secret: 'promise_me_you_wont_tell_anyone',
+    duration: 30 * 60 * 1000,
+    activeDuration: 5 * 60 * 1000,
+    httpOnly: true,
+    secure: true,
+    ephemeral: true
+  }));
+/*
+function requireLogin (req, res, next) {
+    if (!req.user) {
+      //res.redirect('/login');
+    } else {
+      next();
+    }
+};
+*/
 
 app.get("/home", function(req, res){
     res.render("home.ejs");
@@ -171,7 +190,6 @@ app.get("/top10", function(req, res){
 
     });
 });
-
 app.get("/search", function(req, res){
     res.render("search.ejs");
 });
@@ -212,6 +230,7 @@ app.get("/recipe/:id", function(req, res){
 
 app.post("/login", function(req, res){
     if(req.body.username == "admin" && req.body.pword == "admin"){
+        req.session.user = "admin";
         res.render("admin.ejs");
     }
     else{
@@ -226,6 +245,7 @@ app.post("/login", function(req, res){
                        if(rows[i].pWord == req.body.pword){
                            console.log("password match");
                            success = true;
+                           req.session.user = req.body.username;
                            res.render("home.ejs")
                        }else{
                            console.log("incorrect password");
@@ -284,7 +304,21 @@ app.post("/createAccount", function(req, res){
     }
 });
 
-
+app.use(function(req, res, next) {
+    if (req.session && req.session.user) { 
+          user = req.session.user;    
+          console.log(user); 
+          req.user = user;
+          delete req.user.password; // delete the password from the session
+          req.session.user = user;  //refresh the session value
+          res.locals.user = user;
+        
+        // finishing processing the middleware and run the route
+        next();
+    } else {
+      next();
+    }
+  });
 app.get("/", function(req, res){
     res.render("index.ejs");
 });
