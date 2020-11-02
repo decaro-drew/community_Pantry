@@ -129,78 +129,7 @@ app.post("/settop10", function(req, res){
 
 app.get("/top10", function(req, res){
 
-    //inserted dummy data to check against
-    dish1 = {
-        id: 1,
-        name: "Dish 1",
-        picture: "",
-        snipbit: "This dish tastes real fucking good"
-    }
-
-    dish2 = {
-        id: 2,
-        name: "Dish 2",
-        picture: "",
-        snipbit: "Eating this for dinner will make you shut your pants"
-    }
-
-    dish3 = {
-        id: 3,
-        name: "Dish 3",
-        picture: "",
-        snipbit: "tuna bits"
-    }
-
-    dish4 = {
-        id: 4,
-        name: "Dish 4",
-        picture: "",
-        snipbit: "I invented sparkling water in 1987"
-    }
-
-    dish5 = {
-        id: 5,
-        name: "Dish 5",
-        picture: "",
-        snipbit: "Cherry Banana Topo Chico"
-    }
-    dish6 = {
-        id: 6,
-        name: "Dish 6",
-        picture: "",
-        snipbit: "cherry hi-c"
-    }
-
-    dish7 = {
-        id: 7,
-        name: "Dish 7",
-        picture: "",
-        snipbit: "Frog Legs"
-    }
-
-    dish8 = {
-        id: 8,
-        name: "Dish 8",
-        picture: "",
-        snipbit: "ox tails chips"
-    }
-
-    dish9 = {
-        id: 9,
-        name: "Dish 9",
-        picture: "",
-        snipbit: "Pillsbury dough boy nuggets"
-    }
-
-    dish10 = {
-        id: 10,
-        name: "Dish 10",
-        picture: "",
-        snipbit: "crawfish soup"
-    }
-
-
-    dishes = [dish1, dish2, dish3, dish4, dish5, dish6, dish7, dish8, dish9, dish10];
+    const dishes = new Array ();
 
     db.query("Select * from recipe, top10 WHERE recipe.id =top10.dishid order by positionId", function(error, rows){
 
@@ -210,19 +139,23 @@ app.get("/top10", function(req, res){
         else{
             console.log("cool, alright");
              
-            for(i=0; i<dishes.length; i++){
+            for(i=0; i<rows.length; i++){
 
-                dishes[i].id = rows[i].id;
-                dishes[i].name = rows[i].name;
-                dishes[i].picture = rows[i].picture;
-                dishes[i].snipbit = rows[i].snipbit;
+                dish = {
+                    id: rows[i].id,
+                    name:rows[i].name,
+                    picture: rows[i].picture,
+                    snipbit: rows[i].snipbit,
+                }
+
+                dishes[i] = dish;
 
             }
-            
-            res.render("top10.ejs", {dishes, user:req.session.user});
+
+            res.render("top10.ejs", {dishes});
+
         }
         
-
     });
 });
 
