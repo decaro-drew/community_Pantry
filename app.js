@@ -200,8 +200,8 @@ app.get("/recipe/:id", function(req, res){
             }
             else{
                 //console.log("hererere");
-                ingredients = ["egg", "brocoli", "cumin"];
-                res.render("recipe.ejs", {user: req.session.user, dishName: "nah", instructions: "just fucking make it bro", ingredients});
+                ingredients = ["Recipe currently does not exist"];
+                res.render("recipe.ejs", {user: req.session.user, dishName: "Recipe currently does not exist", instructions: "Recipe currently does not exist", ingredients});
             }
  
             //var result = JSON.parse(JSON.stringify(rows[0]));
