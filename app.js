@@ -44,7 +44,42 @@ function requireLogin (req, res, next) {
 */
 
 app.get("/home", function(req, res){
-    res.render("home.ejs");
+
+    likedRecipe1 = {
+        id : 1,
+        name : "ligma",
+        picture : "",
+        snipbit : "don't fall for it",
+    }
+
+    likedRecipe2 = {
+        id : 2,
+        name : "something edible",
+        picture : "",
+        snipbit : "put it in your mouth and chew"
+    }
+
+    likedRecipes = [likedRecipe1, likedRecipe2];
+
+    userRecipe1 = {
+        id : 3,
+        name : "beetle juice",
+        picture : "",
+        snipbit : "very nutritious"
+    }
+
+    userRecipe2 = {
+        id : 4,
+        name : "pina colada",
+        picture : "",
+        snipbit : "lets get drunk"
+    }
+
+    userRecipes = [userRecipe1, userRecipe2];
+
+    shoppingList = ["cumin","chicken", "scallions", "brocolli"];
+
+    res.render("home.ejs", {user: req.session.user, likedRecipes, userRecipes, shoppingList});
 });
 
 app.post("/settop10", function(req, res){
@@ -184,14 +219,15 @@ app.get("/top10", function(req, res){
 
             }
             
-            res.render("top10.ejs", {dishes});
+            res.render("top10.ejs", {dishes, user:req.session.user});
         }
         
 
     });
 });
+
 app.get("/search", function(req, res){
-    res.render("search.ejs");
+    res.render("search.ejs", {user: req.session.user});
 });
 
 app.get("/recipe/:id", function(req, res){
@@ -210,12 +246,12 @@ app.get("/recipe/:id", function(req, res){
                 console.log("here");
                 ///ingredients = ["egg", "brocoli", "cumin"];
                 ingredients = rows[0].ingredients.split(",");
-                res.render("recipe.ejs", {dishName, instructions, ingredients});
+                res.render("recipe.ejs", {user: req.session.user, dishName, instructions, ingredients});
             }
             else{
                 console.log("hererere");
                 ingredients = ["egg", "brocoli", "cumin"];
-                res.render("recipe.ejs", {dishName: "nah", instructions: "just fucking make it bro", ingredients});
+                res.render("recipe.ejs", {user: req.session.user, dishName: "nah", instructions: "just fucking make it bro", ingredients});
             }
  
             //var result = JSON.parse(JSON.stringify(rows[0]));
@@ -246,7 +282,7 @@ app.post("/login", function(req, res){
                            console.log("password match");
                            success = true;
                            req.session.user = req.body.username;
-                           res.render("home.ejs")
+                           res.redirect("/home");
                        }else{
                            console.log("incorrect password");
                            success = true;
@@ -298,7 +334,7 @@ app.post("/createAccount", function(req, res){
                 res.send("Username already exists");
             }
             else{
-                res.render("home.ejs");
+                res.redirect("/home");
             }
         });
     }
@@ -319,6 +355,7 @@ app.use(function(req, res, next) {
       next();
     }
   });
+
 app.get("/", function(req, res){
     res.render("index.ejs");
 });
@@ -327,5 +364,3 @@ app.get("/", function(req, res){
 app.listen(3000, function(){
     console.log("Server running on port 3000")
 });
-
-
