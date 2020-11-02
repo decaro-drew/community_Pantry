@@ -106,7 +106,7 @@ app.post("/settop10", function(req, res){
             throw error;
         }
         ///console.log(rows.length);
-        var max = rows.length;
+        var max = rows[rows.length-1].id;
         for(var i = 0; i < ids.length; i++){
             if(ids[i] == ''){
                 valid = false;
