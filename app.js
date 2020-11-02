@@ -32,7 +32,23 @@ app.use(session({
     httpOnly: true,
     secure: true,
     ephemeral: true
-  }));
+}));
+
+app.use(function(req, res, next) {
+    if (req.session && req.session.user) { 
+          user = req.session.user;    
+          //console.log(user); 
+          req.user = user;
+          delete req.user.password; // delete the password from the session
+          req.session.user = user;  //refresh the session value
+          res.locals.user = user;
+        
+        // finishing processing the middleware and run the route
+        next();
+    } else {
+      next();
+    }
+  });
 /*
 function requireLogin (req, res, next) {
     if (!req.user) {
@@ -47,7 +63,7 @@ app.get("/home", function(req, res){
 
     likedRecipe1 = {
         id : 1,
-        name : "ligma",
+        name : "FOOD",
         picture : "",
         snipbit : "don't fall for it",
     }
@@ -72,7 +88,7 @@ app.get("/home", function(req, res){
         id : 4,
         name : "pina colada",
         picture : "",
-        snipbit : "lets get drunk"
+        snipbit : "yummy yummy"
     }
 
     userRecipes = [userRecipe1, userRecipe2];
@@ -137,7 +153,7 @@ app.get("/top10", function(req, res){
             throw error;
         }
         else{
-            console.log("cool, alright");
+            //console.log("cool, alright");
              
             for(i=0; i<rows.length; i++){
 
@@ -159,6 +175,7 @@ app.get("/top10", function(req, res){
     });
 });
 
+
 app.get("/search", function(req, res){
     res.render("search.ejs", {user: req.session.user});
 });
@@ -176,13 +193,13 @@ app.get("/recipe/:id", function(req, res){
                 success = true;
                 var dishName = rows[0].name;
                 var instructions = rows[0].instructions;
-                console.log("here");
+                //console.log("here");
                 ///ingredients = ["egg", "brocoli", "cumin"];
                 ingredients = rows[0].ingredients.split(",");
                 res.render("recipe.ejs", {user: req.session.user, dishName, instructions, ingredients});
             }
             else{
-                console.log("hererere");
+                //console.log("hererere");
                 ingredients = ["egg", "brocoli", "cumin"];
                 res.render("recipe.ejs", {user: req.session.user, dishName: "nah", instructions: "just fucking make it bro", ingredients});
             }
@@ -210,9 +227,9 @@ app.post("/login", function(req, res){
             }else{
                for(var i=0; i<rows.length; i++){
                    if(rows[i].username == req.body.username){
-                       console.log("username match");
+                       //console.log("username match");
                        if(rows[i].pWord == req.body.pword){
-                           console.log("password match");
+                           //console.log("password match");
                            success = true;
                            req.session.user = req.body.username;
                            res.redirect("/home");
@@ -273,21 +290,7 @@ app.post("/createAccount", function(req, res){
     }
 });
 
-app.use(function(req, res, next) {
-    if (req.session && req.session.user) { 
-          user = req.session.user;    
-          console.log(user); 
-          req.user = user;
-          delete req.user.password; // delete the password from the session
-          req.session.user = user;  //refresh the session value
-          res.locals.user = user;
-        
-        // finishing processing the middleware and run the route
-        next();
-    } else {
-      next();
-    }
-  });
+
 
 app.get("/", function(req, res){
     res.render("index.ejs");
