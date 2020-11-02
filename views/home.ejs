@@ -29,7 +29,7 @@
                       <a class="nav-link" href="/search"> Search</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link active">Home</a>
+                      <a class="nav-link active"><%= user %> </a>
                     </li>
                   </ul>
           </div>
@@ -38,58 +38,54 @@
       
     <div class="container mt-5 pt-5">
     
-        <h1 class="display-1 my-5">User's Name</h1>
+        <h1 class="display-1 my-5"><%= user %> </h1>
         <p class="my-5">potential profile picture or avatar</p>
         <p class="my-5">potential optional Bio</p>
         
-        <h3 class="display-4 mt-5">Liked Recipes</h3>
-            <ul class="mb-5 my-5">
-                <li class="m-5">
-                    <h4 class="my-5">Recipe Name</h4>
-                    <div class="container m-5">
-                        <h5>recipe Picture</h5>
-                        <p>Recipe Snip bit</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto consequatur aut quis eius sapiente a voluptate expedita sed sit laboriosam accusamus ipsam cumque, animi, quae ipsum eligendi pariatur dolorum. Soluta.</p>
-                    </div>
-                </li>
-                <li class="m-5">
-                    <h4 class="my-5">Recipe Name</h4>
-                    <div class="container m-5">
-                        <h5>recipe Picture</h5>
-                        <p>Recipe Snip bit</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto consequatur aut quis eius sapiente a voluptate expedita sed sit laboriosam accusamus ipsam cumque, animi, quae ipsum eligendi pariatur dolorum. Soluta.</p>
-                    </div>
-                </li>
-                <li class="m-5">
-                    <h4 class="my-5">Recipe Name</h4>
-                    <div class="container m-5">
-                        <h5>recipe Picture</h5>
-                        <p>Recipe Snip bit</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto consequatur aut quis eius sapiente a voluptate expedita sed sit laboriosam accusamus ipsam cumque, animi, quae ipsum eligendi pariatur dolorum. Soluta.</p>
-                    </div>
-                </li>
+        <h3 class="display-4 mt-5">Your Recipes</h3>
+        <ul class="mb-5 my-5">
+              
+            <% userRecipes.forEach(recipe => { %>
+
+              <li class="m-5">
+                <a class="nav-link" href="/recipe/<%= recipe.id %> "><h4 class="my-5"><%= recipe.name %> </h4></a>
+                  <div class="container m-5">
+                       <h5>recipe Picture</h5>
+                       <p><%= recipe.snipbit %> </p>
+                  </div>
+              </li>
+
+            <% }); %> 
                 
-            </ul>
+        </ul>
+
+        <h3 class="display-4 mt-5">Saved Recipes</h3>
+        <ul class="mb-5 my-5">
+              
+            <% likedRecipes.forEach(recipe => { %>
+
+              <li class="m-5">
+                <a class="nav-link" href="/recipe/<%= recipe.id %> "><h4 class="my-5"><%= recipe.name %> </h4></a>
+                  <div class="container m-5">
+                       <h5>recipe Picture</h5>
+                       <p><%= recipe.snipbit %> </p>
+                  </div>
+              </li>
+
+            <% }); %> 
+                
+        </ul>
+      
             
             
         <h3 class="display-4 mt-5">Shopping list</h3>
         <ul class="m-5">
-                <li>ingrient 1</li>
-                <li>ingrient 2</li>
-                <li>ingrient 3</li>
-                <li>ingrient 4</li>
-                <li>ingrient 5</li>
-                <li>ingrient 6</li>
-                <li>ingrient 7</li>
-                <li>ingrient 8</li>
-                <li>ingrient 9</li>
-                <li>ingrient 10</li>
-                <li>ingrient 11</li>
-                <li>ingrient 12</li>
-                <li>ingrient 13</li>
-                <li>ingrient 14</li>
-                <li>ingrient 15</li>
-            </ul>
+          <% shoppingList.forEach(ingredient => { %>
+
+            <li><%= ingredient %> </li>
+
+          <% }); %> 
+       </ul>
     
     </div>
     <div class="createarea">
