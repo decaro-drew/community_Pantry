@@ -3,9 +3,13 @@ var app = express();
 var mysql = require("mysql");
 var bodyParser = require("body-parser");
 var session = require('client-sessions');
+var upload = require('express-fileupload');
+var busboy = require('connect-busboy');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
+app.use(upload());
+app.use(busboy());
 
 var db = mysql.createConnection({
     host: 'community-pantry.c2b5rjt4aoog.us-east-1.rds.amazonaws.com',
@@ -22,7 +26,8 @@ db.connect(function(error){
     }
 });
 
-app.use(express.static("public"));
+var publicDir = require('path').join(__dirname,'/public'); 
+app.use(express.static(publicDir)); 
 
 app.use(session({
     cookieName: 'session',
@@ -106,7 +111,7 @@ app.post("/settop10", function(req, res){
             throw error;
         }
         ///console.log(rows.length);
-        var max = rows[rows.length-1].id;
+        var max = rows.length;
         for(var i = 0; i < ids.length; i++){
             if(ids[i] == ''){
                 valid = false;
@@ -193,15 +198,17 @@ app.get("/recipe/:id", function(req, res){
                 success = true;
                 var dishName = rows[0].name;
                 var instructions = rows[0].instructions;
-                //console.log("here");
+                image = rows[0].picture;
+                console.log(image);
                 ///ingredients = ["egg", "brocoli", "cumin"];
                 ingredients = rows[0].ingredients.split(",");
-                res.render("recipe.ejs", {user: req.session.user, dishName, instructions, ingredients});
+                //res.render("test.ejs", {image});
+                res.render("recipe.ejs", {user: req.session.user, dishName, instructions, ingredients, image});
             }
             else{
                 //console.log("hererere");
-                ingredients = ["Recipe currently does not exist"];
-                res.render("recipe.ejs", {user: req.session.user, dishName: "Recipe currently does not exist", instructions: "Recipe currently does not exist", ingredients});
+                ingredients = ["egg", "brocoli", "cumin"];
+                res.render("recipe.ejs", {user: req.session.user, dishName: "nah", instructions: "just fucking make it bro", ingredients});
             }
  
             //var result = JSON.parse(JSON.stringify(rows[0]));
@@ -248,6 +255,9 @@ app.post("/login", function(req, res){
 });
 
 app.post("/createRecipe/:username", function(req, res){
+
+    console.log(req.files);
+
     const {username} = req.params;
     db.query("Insert into recipe (name, picture, cuisine, snipbit, ingredients, instructions, username) VALUES ('"+req.body.rName+"','"+req.body.picture+"','"+req.body.cuisine+"','"+req.body.snipbit+"', '"+req.body.ingredients+"', '"+req.body.instructions+"', '"+username+"')",function(err, result){   
         if(err){
