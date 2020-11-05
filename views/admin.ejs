@@ -122,40 +122,41 @@
       
     <br><br><br><br>
           <center><h2 class="my-5 pt-5">Create a Recipe</h2></center>
-      <form action="/createRecipe/admin" method="POST">
-        <div class="createform mb-4" style="margin: auto">
-          <div class="form-group">
-            <label for="name">Recipe name</label>
-            <input class="form-control" type="text" placeholder="Recipe Name" name="rName">
+          <form action="/createRecipe/tmpUser" method="POST" enctype="multipart/form-data">
+            <div class="createform mb-4" style="margin: auto">
+              <div class="form-group">
+                <label for="name">Recipe name</label>
+                <input class="form-control" type="text" placeholder="Recipe Name" name="rName">
+              </div>
+              <div class="form-group">
+                <label for="name">Cuisine</label>
+                <input class="form-control" type="text" placeholder="Cusiine" name = "cuisine">
+              </div>
+              <div class="form-group">
+                <label for="name">Short description</label>
+                <textarea class="form-control" rows="5" name="snipbit"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="name">Ingredients (use commas to seperate values)</label>
+                <textarea class="form-control" rows="5" name="ingredients"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="name">Instructions</label>
+                <textarea class="form-control" rows="10" name="instructions"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlFile1">Recipe Image</label>
+                <input type="file" class="form-control-file" name="image" id="exampleFormControlFile1">
+              </div>
+              
+              <div class="form-group">
+                <button class="btn btn-outline-primary btn-block my-5">Add recipee</button>        
+              </div>
           </div>
-          <div class="form-group">
-            <label for="name">Ingredients (use commas to seperate values)</label>
-            <input class="form-control" type="text" placeholder="Ingredients" name="ingredients">
-          </div>
-          <div class="form-group">
-            <label for="name">Cuisine</label>
-            <input class="form-control" type="text" placeholder="Cuisine" name = "cuisine">
-          </div>
-          <div class="form-group">
-            <label for="name">Instructions</label>
-            <input class="form-control" type="text" placeholder="Intstructions" name = "instructions">
-          </div>
-          <div class="form-group">
-            <label for="name">Short description</label>
-            <input class="form-control" type="text" placeholder="Short description" name = "snipbit">
-          </div>
-          <div class="form-group">
-            <label for="name">Picture</label>
-            <input class="form-control" type="text" placeholder="Picture" name = "picture">
-          </div>
-          <div class="form-group">
-            <button class="btn btn-outline-primary btn-block my-5">Add recipe</button>        
-          </div>
+          </form>
+          <br>
       </div>
-      </form>
-      <br>
-  </div>
-    </form>
+        </form>
     <br><br>
     <script
       src="https://code.jquery.com/jquery-3.5.1.js"
