@@ -6,6 +6,7 @@ var session = require('client-sessions');
 var upload = require('express-fileupload');
 var busboy = require('connect-busboy');
 var path = require('path');
+var url = require('url');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('views', __dirname + '/views');
@@ -186,8 +187,90 @@ app.get("/top10", function(req, res){
 
 
 app.get("/search", function(req, res){
-    res.render("search.ejs", {user: req.session.user});
+
+    proteins = ["Chicken", "Beef", "Pork", "Tuna", "Salmon"];
+    veggies = ["Brocolli", "Asparagus", "Corn", "Spinach", "Garlic", "Chili Pepper", "Cucumber"];
+    starches = ["Pasta", "Potatos", "Rice", "Couscous"];
+    herbs = ["Cilantro", "Parseley", "Mint", "Basil", "Dill"];
+    spices = ["Cumin", "Coriander", "Anese", "Cardamom", "Cinammon"];
+    other = []
+
+    res.render("search.ejs", {user: req.session.user, proteins, veggies, starches, herbs, spices, other});
 });
+
+app.get("/results/dish", function(req, res){
+
+    var dishName = url.parse(req.url, true).query.dishName;
+
+    var dishes = new Array();
+    db.query("Select * from recipe where name = ?",[dishName], function(error, rows){
+        if(error){
+            throw error;
+        }
+        else{
+            for(i=0; i<rows.length; i++){
+                dish = {
+                    id: rows[i].id,
+                    name:rows[i].name,
+                    picture: rows[i].picture,
+                    snipbit: rows[i].snipbit,
+                }
+                dishes[i] = dish;
+            }
+        }
+        res.render("results.ejs", {user: req.session.user, message: "Results for (dishname)", dishes});
+    });
+    
+    
+});
+
+app.get("/results/cuisine", function(req, res){
+
+    var cuisine = url.parse(req.url, true).query.cuisine;
+
+    var dishes = new Array();
+    db.query("Select * from recipe where cuisine = ?", [cuisine], function(error, rows){
+        if(error){
+            throw error;
+        }
+        else{
+            for(i=0; i<rows.length; i++){
+                dish = {
+                    id: rows[i].id,
+                    name:rows[i].name,
+                    picture: rows[i].picture,
+                    snipbit: rows[i].snipbit,
+                }
+                dishes[i] = dish;
+            }
+        }
+        res.render("results.ejs", {user: req.session.user, message: "Results for (cuisine)", dishes});
+    });
+    
+    
+});
+
+app.get("/results", function(req, res){
+    var dishes = new Array();
+    db.query("Select * from recipe where id >= 80 limit 10", function(error, rows){
+        if(error){
+            throw error;
+        }
+        else{
+            for(i=0; i<rows.length; i++){
+                dish = {
+                    id: rows[i].id,
+                    name:rows[i].name,
+                    picture: rows[i].picture,
+                    snipbit: rows[i].snipbit,
+                }
+                dishes[i] = dish;
+            }
+        }
+        res.render("results.ejs", {user: req.session.user, message: "Here's what you can make", dishes});
+    });
+});
+
 
 app.get("/recipe/:id", function(req, res){
     const {id} = req.params;
