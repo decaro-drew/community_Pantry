@@ -5,9 +5,14 @@ var bodyParser = require("body-parser");
 var session = require('client-sessions');
 var upload = require('express-fileupload');
 var busboy = require('connect-busboy');
+var path = require('path');
 
 app.use(bodyParser.urlencoded({extended: true}));
+app.set('views', __dirname + '/views');
 app.set("view engine", "ejs");
+//var publicDir = require('path').join(__dirname,'/public'); 
+app.use(express.static(path.join(__dirname,'public'))); 
+app.use(bodyParser.json());
 app.use(upload());
 app.use(busboy());
 
@@ -26,8 +31,7 @@ db.connect(function(error){
     }
 });
 
-var publicDir = require('path').join(__dirname,'/public'); 
-app.use(express.static(publicDir)); 
+
 
 app.use(session({
     cookieName: 'session',
@@ -253,21 +257,82 @@ app.post("/login", function(req, res){
         });
     }
 });
-
+/*const multer = require("multer");
+const upload = multer({
+    dest: "C:\Users\Drew\NodeStuff\public\recipe_images"
+    // you might also want to set some limits: https://github.com/expressjs/multer#limits
+  });
+  */
+ exports.index = function(req, res){
+    message = '';
+   if(req.method == "POST"){
+      var post  = req.body;
+      var name= post.user_name;
+      var pass= post.password;
+      var fname= post.first_name;
+      var lname= post.last_name;
+      var mob= post.mob_no;
+ 
+	  if (!req.files)
+				return res.status(400).send('No files were uploaded.');
+ 
+		var file = req.files.uploaded_image;
+		var img_name=file.name;
+ 
+	  	 if(file.mimetype == "image/jpeg" ||file.mimetype == "image/png"||file.mimetype == "image/gif" ){
+                                 
+              file.mv('public/images/upload_images/'+file.name, function(err) {
+                             
+	              if (err)
+ 
+	                return res.status(500).send(err);
+      					var sql = "INSERT INTO `users_image`(`first_name`,`last_name`,`mob_no`,`user_name`, `password` ,`image`) VALUES ('" + fname + "','" + lname + "','" + mob + "','" + name + "','" + pass + "','" + img_name + "')";
+ 
+    						var query = db.query(sql, function(err, result) {
+    							 res.redirect('profile/'+result.insertId);
+    						});
+					   });
+          } else {
+            message = "This format is not allowed , please upload file with '.png','.gif','.jpg'";
+            res.render('index.ejs',{message: message});
+          }
+   } else {
+      res.render('index');
+   }
+ 
+};
 app.post("/createRecipe/:username", function(req, res){
 
-    console.log(req.files);
+    console.log(req.files.image.name);
 
-    const {username} = req.params;
-    db.query("Insert into recipe (name, picture, cuisine, snipbit, ingredients, instructions, username) VALUES ('"+req.body.rName+"','"+req.body.picture+"','"+req.body.cuisine+"','"+req.body.snipbit+"', '"+req.body.ingredients+"', '"+req.body.instructions+"', '"+username+"')",function(err, result){   
-        if(err){
-            res.send("Error");
-        }
-        else{
-            id = result.insertId;
-            res.redirect("/recipe/" + id);
-        }
+    db.query("SELECT MAX(id) as max FROM recipe", function(err, result){
+        console.log(result[0].max);
+        var file = req.files.image;
+        file.name = (result[0].max+1).toString() + ".jpg";
+        var imgName = "/recipe_images/"+file.name;
+        if(file.mimetype == "image/jpeg" ||file.mimetype == "image/png"||file.mimetype == "image/gif" ){                               
+            file.mv('public/recipe_images/'+file.name, function(err) {                      
+                if (err)
+                  return res.status(500).send(err);
+                  const {username} = req.params;
+                  db.query("Insert into recipe (name, picture, cuisine, snipbit, ingredients, instructions, username) VALUES ('"+req.body.rName+"','"+imgName+"','"+req.body.cuisine+"','"+req.body.snipbit+"', '"+req.body.ingredients+"', '"+req.body.instructions+"', '"+username+"')",function(err, result){   
+                      if(err){
+                          res.send("Error");
+                      }
+                      else{
+                          id = result.insertId;
+                          res.redirect("/recipe/" + id);
+                          ///next();
+                      }
+                  });           
+            });
+        } else {
+          message = "This format is not allowed , please upload file with '.png','.gif','.jpg'";
+          res.render('index.ejs',{message: message});
+        } 
     });
+ 	 
+   
 });
 
 app.post("/createAccount", function(req, res){
