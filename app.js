@@ -271,8 +271,7 @@ app.post("/createRecipe/:username", function(req, res){
             file.mv('public/recipe_images/'+file.name, function(err) {                      
                 if (err)
                   return res.status(500).send(err);
-                  const {username} = req.params;
-                  db.query("Insert into recipe (name, picture, cuisine, snipbit, ingredients, instructions, username) VALUES ('"+req.body.rName+"','"+imgName+"','"+req.body.cuisine+"','"+req.body.snipbit+"', '"+req.body.ingredients+"', '"+req.body.instructions+"', '"+username+"')",function(err, result){   
+                  db.query("Insert into recipe (name, picture, cuisine, snipbit, ingredients, instructions, username) VALUES ('"+req.body.rName+"','"+imgName+"','"+req.body.cuisine+"','"+req.body.snipbit+"', '"+req.body.ingredients+"', '"+req.body.instructions+"', '"+req.session.user+"')",function(err, result){   
                       if(err){
                           res.send("Error");
                       }
