@@ -71,8 +71,6 @@ function requireLogin (req, res, next) {
 
 app.get("/home", function(req, res){
 
-    
-    
     function getShoppingListAndLikedRecipes(){
         return new Promise(function (resolve, reject){
             var dishes = new Array();
@@ -85,7 +83,6 @@ app.get("/home", function(req, res){
                         shoppingList : rows[0].shoppingList.split(", "),
                         likedRecipes : rows[0].likedRecipes.split(",")
                     }
-                    //console.log(lists);
                     resolve(lists);
                 }
                 
@@ -358,7 +355,7 @@ app.get("/recipe/:id", function(req, res){
 app.post("/login", function(req, res){
     if(req.body.username == "admin" && req.body.pword == "admin"){
         req.session.user = "admin";
-        res.render("admin.ejs");
+        res.redirect("/admin");
     }
     else{
         db.query("SELECT username, pWord FROM user", function(error, rows, fields){
@@ -451,6 +448,20 @@ app.post("/createAccount", function(req, res){
     }
 });
 
+app.get("/admin", function(req, res){
+    res.render("admin.ejs", {message : ""});
+});
+
+app.post("/deleteuser", function(req, res){
+    db.query("delete from user where username = ?",[req.body.username], function(err, result){   
+        if(err){
+            throw err;
+        }
+        else{
+            res.redirect("/admin");
+        }
+    });
+});
 
 
 app.get("/", function(req, res){
