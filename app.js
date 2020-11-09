@@ -71,41 +71,88 @@ function requireLogin (req, res, next) {
 
 app.get("/home", function(req, res){
 
-    likedRecipe1 = {
-        id : 1,
-        name : "FOOD",
-        picture : "",
-        snipbit : "don't fall for it",
+    
+    
+    function getShoppingListAndLikedRecipes(){
+        return new Promise(function (resolve, reject){
+            var dishes = new Array();
+            db.query("Select shoppingList, likedRecipes from user where username = ?",[req.session.user], function(error, rows){
+                if(error){
+                    throw error;
+                }
+                else{
+                    lists = {
+                        shoppingList : rows[0].shoppingList.split(", "),
+                        likedRecipes : rows[0].likedRecipes.split(",")
+                    }
+                    //console.log(lists);
+                    resolve(lists);
+                }
+                
+            });
+        })
     }
 
-    likedRecipe2 = {
-        id : 2,
-        name : "something edible",
-        picture : "",
-        snipbit : "put it in your mouth and chew"
+    function getUserRecipes(){
+        return new Promise(function (resolve, reject){
+            var dishes = new Array();
+            db.query("Select * from recipe where username = ?",[req.session.user], function(error, rows){
+                if(error){
+                    throw error;
+                }
+                else{
+                    for(i=0; i<rows.length; i++){
+                        dish = {
+                            id: rows[i].id,
+                            name:rows[i].name,
+                            picture: rows[i].picture,
+                            snipbit: rows[i].snipbit,
+                        }
+                        dishes[i] = dish;
+                    }
+                    resolve(dishes);
+                }
+                
+            });
+        })
     }
 
-    likedRecipes = [likedRecipe1, likedRecipe2];
-
-    userRecipe1 = {
-        id : 3,
-        name : "beetle juice",
-        picture : "",
-        snipbit : "very nutritious"
+    function getLikedRecipe(id){
+        return new Promise(function (resolve, reject){
+            db.query("Select * from recipe where id = ?",[id], function(error, rows){
+                if(error){
+                    throw error;
+                }
+                else{
+                    dish = {
+                        id: rows[0].id,
+                        name:rows[0].name,
+                        picture: rows[0].picture,
+                        snipbit: rows[0].snipbit,
+                    }
+                    resolve(dish);
+                }
+                
+            });
+        })
     }
 
-    userRecipe2 = {
-        id : 4,
-        name : "pina colada",
-        picture : "",
-        snipbit : "yummy yummy"
+
+    async function compile(){
+        var userRecipes = await getUserRecipes();
+        var lists = await getShoppingListAndLikedRecipes();
+        var shoppingList = lists.shoppingList;
+
+        var likedRecipes = new Array();
+        for(var i=0; i <lists.likedRecipes.length; i++){
+            likedRecipes[i] = await getLikedRecipe(lists.likedRecipes[i]);
+        }
+
+        res.render("home.ejs", {user: req.session.user, likedRecipes, userRecipes, shoppingList});
     }
 
-    userRecipes = [userRecipe1, userRecipe2];
-
-    shoppingList = ["cumin","chicken", "scallions", "brocolli"];
-
-    res.render("home.ejs", {user: req.session.user, likedRecipes, userRecipes, shoppingList});
+    compile();
+    
 });
 
 app.post("/settop10", function(req, res){
