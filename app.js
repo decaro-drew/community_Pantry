@@ -293,39 +293,28 @@ app.get("/results/cuisine", function(req, res){
 });
 
 app.get("/results", function(req, res){
+
     var ingredientsTemp = url.parse(req.url, true).query;
-    var ingredients = Object.keys(ingredientsTemp);
+    var ingredients  = Object.keys(ingredientsTemp);
+    console.log(ingredients);
+
+
     var dishes = new Array();
-    for(i = 0; i < ingredients.length; i++){
-        ingredients[i] = ingredients[i].toLowerCase();
-    }
-    db.query("Select * from recipe", function(error, rows){
+    db.query("Select * from recipe where id >= 80 limit 10", function(error, rows){
         if(error){
             throw error;
         }
         else{
-            var counter = 0;
             for(i=0; i<rows.length; i++){
-                var subset = true;
-                for(j=0; j<ingredients.length; j++){
-                    lowerIng = rows[i].ingredients.toLowerCase();
-                    if(!lowerIng.includes(ingredients[j])){
-                        subset = false;
-                    }
+                dish = {
+                    id: rows[i].id,
+                    name:rows[i].name,
+                    picture: rows[i].picture,
+                    snipbit: rows[i].snipbit,
                 }
-                if(subset){
-                    dish = {
-                        id: rows[i].id,
-                        name:rows[i].name,
-                        picture: rows[i].picture,
-                        snipbit: rows[i].snipbit,
-                    }
-                    dishes[counter] = dish;
-                    counter++;
-                }
+                dishes[i] = dish;
             }
         }
-        console.log(dishes.length);
         res.render("results.ejs", {user: req.session.user, message: "Here's what you can make", dishes});
     });
 });
@@ -352,6 +341,28 @@ app.post("/saveRecipe/:id", function(req, res){
     })
 });
 
+app.post("/saveIngredients/:id/:ingredients", function(req, res){
+    const {ingredients} = req.params;
+    const {id} = req.params;
+    db.query("select shoppingList from user where username = ?", [req.session.user], function(error, rows){
+        if(error){
+            throw error;
+        }
+        else{
+            list = rows[0].shoppingList;
+            newString = ingredients + ", " + list;
+            db.query("update user set shoppingList = '" + newString + "' where username = ?", [req.session.user], function(error, rows){
+                if(error){
+                    throw error;
+                }
+                else{
+                    res.redirect("/recipe/" + id)
+                }
+            })
+        }
+    })
+});
+
 app.get("/recipe/:id", function(req, res){
     const {id} = req.params;
     var success = false;
@@ -367,11 +378,13 @@ app.get("/recipe/:id", function(req, res){
                 var instructions = rows[0].instructions;
                 image = rows[0].picture;
                 ingredients = rows[0].ingredients.split(",");
-                res.render("recipe.ejs", {user: req.session.user, dishName, instructions, ingredients, image, id});
+                ingredientString = rows[0].ingredients;
+                res.render("recipe.ejs", {user: req.session.user, dishName, instructions, ingredients, ingredientString, image, id});
             }
             else{
                 ingredients = ["egg", "brocoli", "cumin"];
-                res.render("recipe.ejs", {user: req.session.user, dishName: "nah", instructions: "just fucking make it bro", ingredients, id});
+                ingredientString = "";
+                res.render("recipe.ejs", {user: req.session.user, dishName: "nah", instructions: "just fucking make it bro", ingredients, ingredientString, id});
             }
         }      
     });
