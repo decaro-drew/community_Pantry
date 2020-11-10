@@ -293,28 +293,39 @@ app.get("/results/cuisine", function(req, res){
 });
 
 app.get("/results", function(req, res){
-
     var ingredientsTemp = url.parse(req.url, true).query;
-    var ingredients  = Object.keys(ingredientsTemp);
-    console.log(ingredients);
-
-
+    var ingredients = Object.keys(ingredientsTemp);
     var dishes = new Array();
-    db.query("Select * from recipe where id >= 80 limit 10", function(error, rows){
+    for(i = 0; i < ingredients.length; i++){
+        ingredients[i] = ingredients[i].toLowerCase();
+    }
+    db.query("Select * from recipe", function(error, rows){
         if(error){
             throw error;
         }
         else{
+            var counter = 0;
             for(i=0; i<rows.length; i++){
-                dish = {
-                    id: rows[i].id,
-                    name:rows[i].name,
-                    picture: rows[i].picture,
-                    snipbit: rows[i].snipbit,
+                var subset = true;
+                for(j=0; j<ingredients.length; j++){
+                    lowerIng = rows[i].ingredients.toLowerCase();
+                    if(!lowerIng.includes(ingredients[j])){
+                        subset = false;
+                    }
                 }
-                dishes[i] = dish;
+                if(subset){
+                    dish = {
+                        id: rows[i].id,
+                        name:rows[i].name,
+                        picture: rows[i].picture,
+                        snipbit: rows[i].snipbit,
+                    }
+                    dishes[counter] = dish;
+                    counter++;
+                }
             }
         }
+        console.log(dishes.length);
         res.render("results.ejs", {user: req.session.user, message: "Here's what you can make", dishes});
     });
 });
