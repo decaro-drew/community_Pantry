@@ -54,9 +54,12 @@
             <h3 class="mt-5">Ingredients</h3>
             <ul class="mb-5">
                 <% for(var i=0; i<ingredients.length; i++){ %> 
-                    <li value="<%= ingredients[i] %>"><%= ingredients[i] %> </li>
+                    <li><%= ingredients[i] %> </li>
                 <% } %> 
             </ul>
+            <form action="/saveIngredients/<%= id %>/<%= ingredientString%> " method="post">
+              <button type="submit" class="btn btn-primary mb-2">Add ingredients to shopping list</button>
+            </form>
 
 
             <h3 class="my-5">Instructions</h3>
