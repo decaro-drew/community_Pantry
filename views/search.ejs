@@ -60,89 +60,93 @@
         
         <h1 class="display-1 mt-5 pt-5">Search By Ingredient</h1>
         
-        <div class="row row-cols-1 row-cols-md-3 mt-5">
-          <div class="col mb-4">
-            <div class="card">
-              <img src="..." class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title display-4 mb-4">Proteins</h5>
-
-                <% proteins.forEach(protein => { %> 
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="<%= protein %>" id="">
-                    <label class="form-check-label" for="">
-                        <%= protein %> 
-                    </label>
-                  </div> 
-                <% }); %> 
-
+        <form action="/results" method="GET">
+          <div class="row row-cols-1 row-cols-md-3 mt-5">
+            <div class="col mb-4">
+              <div class="card">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title display-4 mb-4">Proteins</h5>
+  
+                  <% proteins.forEach(protein => { %> 
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" name="<%= protein %>" value="<%= protein %>" id="">
+                      <label class="form-check-label" for="">
+                          <%= protein %> 
+                      </label>
+                    </div> 
+                  <% }); %> 
+  
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col mb-4">
-            <div class="card">
-              <img src="..." class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title display-4 mb-4">Vegetables</h5>
+            <div class="col mb-4">
+              <div class="card">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title display-4 mb-4">Vegetables</h5>
+                  
+                  <% veggies.forEach(veggie => { %> 
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" name="<%= veggie %>" value="<%= veggie %>" id="">
+                      <label class="form-check-label" for="">
+                          <%= veggie %> 
+                      </label>
+                    </div> 
+                  <% }); %>
                 
-                <% veggies.forEach(veggie => { %> 
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="<%= veggie %>" id="">
-                    <label class="form-check-label" for="">
-                        <%= veggie %> 
-                    </label>
-                  </div> 
-                <% }); %>
-              
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col mb-4">
-            <div class="card">
-              <img src="..." class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title display-4 mb-4">Starches</h5>
-                <% starches.forEach(starch => { %> 
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="<%= starch %>" id="">
-                    <label class="form-check-label" for="">
-                        <%= starch %> 
-                    </label>
-                  </div> 
-                <% }); %>
-              
-              </div>
-            </div>
-          </div>
-          <div class="col mb-4">
-            <div class="card">
-              <img src="..." class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title display-4 mb-4">Herbs &amp; Spices</h5>
-                <% herbs.forEach(herb => { %> 
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="<%= herb %>" id="">
-                    <label class="form-check-label" for="">
-                        <%= herb %> 
-                    </label>
-                  </div> 
-                <% }); %>
-
-                <% spices.forEach(spice => { %> 
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="<%= spice %>" id="">
-                    <label class="form-check-label" for="">
-                        <%= spice %> 
-                    </label>
-                  </div> 
-                <% }); %>
+            <div class="col mb-4">
+              <div class="card">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title display-4 mb-4">Starches</h5>
+                  <% starches.forEach(starch => { %> 
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" name="<%= starch %>" value="<%= starch %>" id="">
+                      <label class="form-check-label" for="">
+                          <%= starch %> 
+                      </label>
+                    </div> 
+                  <% }); %>
                 
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col mb-4">
-           <button type="submit" class="btn btn-primary mb-2" style="width: 600px; height: 200px">Let's Find Something to Make</button>
-          </div>
+            <div class="col mb-4">
+              <div class="card">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title display-4 mb-4">Herbs &amp; Spices</h5>
+                  <% herbs.forEach(herb => { %> 
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" name="<%= herb %>" value="<%= herb %>" id="">
+                      <label class="form-check-label" for="">
+                          <%= herb %> 
+                      </label>
+                    </div> 
+                  <% }); %>
+  
+                  <% spices.forEach(spice => { %> 
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" name="<%= spice %>" value="<%= spice %>" id="">
+                      <label class="form-check-label" for="">
+                          <%= spice %> 
+                      </label>
+                    </div> 
+                  <% }); %>
+                  
+                </div>
+              </div>
+            </div>
+            <div class="col mb-4">
+             <button type="submit" class="btn btn-primary mb-2" style="width: 600px; height: 200px">Let's Find Something to Make</button>
+            </div>
+        </form>
+
+        
         </div>        
         
         
