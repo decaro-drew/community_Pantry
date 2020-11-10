@@ -42,14 +42,19 @@
      
       
     <div class="container pt-5">
-           <h1 class="my-5 display-1"><%=dishName%></h1>
+           <h1 class="my-5 display-1"><%= dishName %></h1>
+
+          <form action="/saveRecipe/<%= id %> " method="post">
+            <button type="submit" class="btn btn-primary mb-2">Save this recipe</button>
+          </form>
+
            <img src="<%= image %> " alt="food">
            
     
             <h3 class="mt-5">Ingredients</h3>
             <ul class="mb-5">
                 <% for(var i=0; i<ingredients.length; i++){ %> 
-                    <li><%= ingredients[i] %> </li>
+                    <li value="<%= ingredients[i] %>"><%= ingredients[i] %> </li>
                 <% } %> 
             </ul>
 
