@@ -221,9 +221,7 @@ app.get("/top10", function(req, res){
                 dishes[i] = dish;
 
             }
-
             res.render("top10.ejs", {dishes});
-
         }
         
     });
@@ -295,6 +293,12 @@ app.get("/results/cuisine", function(req, res){
 });
 
 app.get("/results", function(req, res){
+
+    var ingredientsTemp = url.parse(req.url, true).query;
+    var ingredients  = Object.keys(ingredientsTemp);
+    console.log(ingredients);
+
+
     var dishes = new Array();
     db.query("Select * from recipe where id >= 80 limit 10", function(error, rows){
         if(error){
@@ -315,6 +319,27 @@ app.get("/results", function(req, res){
     });
 });
 
+app.post("/saveRecipe/:id", function(req, res){
+    const {id} = req.params;
+    
+    db.query("select likedRecipes from user where username = ?", [req.session.user], function(error, rows){
+        if(error){
+            throw error;
+        }
+        else{
+            liked = rows[0].likedRecipes;
+            newString = id + "," + liked;
+            db.query("update user set likedRecipes = '" + newString + "' where username = ?", [req.session.user], function(error, rows){
+                if(error){
+                    throw error;
+                }
+                else{
+                    res.redirect("/recipe/" + id)
+                }
+            })
+        }
+    })
+});
 
 app.get("/recipe/:id", function(req, res){
     const {id} = req.params;
@@ -330,26 +355,18 @@ app.get("/recipe/:id", function(req, res){
                 var dishName = rows[0].name;
                 var instructions = rows[0].instructions;
                 image = rows[0].picture;
-                console.log(image);
-                ///ingredients = ["egg", "brocoli", "cumin"];
                 ingredients = rows[0].ingredients.split(",");
-                //res.render("test.ejs", {image});
-                res.render("recipe.ejs", {user: req.session.user, dishName, instructions, ingredients, image});
+                res.render("recipe.ejs", {user: req.session.user, dishName, instructions, ingredients, image, id});
             }
             else{
-                //console.log("hererere");
                 ingredients = ["egg", "brocoli", "cumin"];
-                res.render("recipe.ejs", {user: req.session.user, dishName: "nah", instructions: "just fucking make it bro", ingredients});
+                res.render("recipe.ejs", {user: req.session.user, dishName: "nah", instructions: "just fucking make it bro", ingredients, id});
             }
- 
-            //var result = JSON.parse(JSON.stringify(rows[0]));
-            //console.log(rows[0].name.toString());
-            //dishName = rows[0].name.toString()
-            
         }      
     });
     
 });
+
 
 
 app.post("/login", function(req, res){
@@ -453,14 +470,22 @@ app.get("/admin", function(req, res){
 });
 
 app.post("/deleteuser", function(req, res){
-    db.query("delete from user where username = ?",[req.body.username], function(err, result){   
+    db.query("update recipe set username = 'admin' where username = ?",[req.body.username], function(err, result){   
         if(err){
             throw err;
         }
         else{
-            res.redirect("/admin");
+            db.query("delete from user where username = ?",[req.body.username], function(err, result){   
+                if(err){
+                    throw err;
+                }
+                else{
+                   res.redirect("/admin");
+               }
+            });
         }
     });
+
 });
 
 
