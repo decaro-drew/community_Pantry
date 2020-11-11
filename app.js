@@ -7,6 +7,7 @@ var upload = require('express-fileupload');
 var busboy = require('connect-busboy');
 var path = require('path');
 var url = require('url');
+const { isNull } = require("util");
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('views', __dirname + '/views');
@@ -79,10 +80,31 @@ app.get("/home", function(req, res){
                     throw error;
                 }
                 else{
-                    lists = {
-                        shoppingList : rows[0].shoppingList.split(", "),
-                        likedRecipes : rows[0].likedRecipes.split(",")
+                    if(rows[0].shoppingList == null && rows[0].likedRecipes == null){
+                        lists = {
+                            shoppingList : [],
+                            likedRecipes : []
+                        }
                     }
+                    else if(rows[0].shoppingList == null){
+                        lists = {
+                            shoppingList : [],
+                            likedRecipes : rows[0].likedRecipes.split(",")
+                        }
+                    }
+                    else if(rows[0].likedRecipes == null){
+                        lists = {
+                            shoppingList : rows[0].shoppingList.split(", "),
+                            likedRecipes : []
+                        }
+                    }
+                    else{
+                        lists = {
+                            shoppingList : rows[0].shoppingList.split(", "),
+                            likedRecipes : rows[0].likedRecipes.split(",")
+                        }
+                    }
+
                     resolve(lists);
                 }
                 
@@ -231,7 +253,7 @@ app.get("/top10", function(req, res){
 app.get("/search", function(req, res){
 
     proteins = ["Chicken", "Beef", "Pork", "Tuna", "Salmon"];
-    veggies = ["Brocolli", "Asparagus", "Corn", "Spinach", "Garlic", "Chili Pepper", "Cucumber"];
+    veggies = ["Broccoli", "Asparagus", "Corn", "Spinach", "Garlic", "Chili Pepper", "Cucumber"];
     starches = ["Pasta", "Potatos", "Rice", "Couscous"];
     herbs = ["Cilantro", "Parseley", "Mint", "Basil", "Dill"];
     spices = ["Cumin", "Coriander", "Anese", "Cardamom", "Cinammon"];
@@ -329,7 +351,6 @@ app.get("/results", function(req, res){
         res.render("results.ejs", {user: req.session.user, message: "Here's what you can make", dishes});
     });
 });
-
 
 app.post("/saveRecipe/:id", function(req, res){
     const {id} = req.params;
