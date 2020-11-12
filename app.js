@@ -171,8 +171,10 @@ app.get("/home", function(req, res){
         }
 
         if(shoppingList[0] == '') shoppingList = [];
+
+        keyWords = ["Chicken", "Beef", "Pork", "Lamb", "Fish", "Seafood", "Pasta", "Rice"];
         
-        res.render("home.ejs", {user: req.session.user, likedRecipes, userRecipes, shoppingList});
+        res.render("home.ejs", {user: req.session.user, likedRecipes, userRecipes, shoppingList, keyWords});
     }
 
     compile();
@@ -377,7 +379,7 @@ app.post("/saveRecipe/:id", function(req, res){
                 }
                 else{
                     res.redirect("/recipe/" + id)
-                }
+                } 
             })
         }
     })
@@ -534,7 +536,8 @@ app.post("/createAccount", function(req, res){
 });
 
 app.get("/admin", function(req, res){
-    res.render("admin.ejs", {message : ""});
+    keyWords = ["Chicken", "Beef", "Pork", "Lamb", "Fish", "Seafood", "Pasta", "Rice"];
+    res.render("admin.ejs", {message : "", keyWords});
 });
 
 app.post("/deleteuser", function(req, res){
