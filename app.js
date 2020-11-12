@@ -104,7 +104,7 @@ app.get("/home", function(req, res){
                             likedRecipes : rows[0].likedRecipes.split(",")
                         }
                     }
-
+                   
                     resolve(lists);
                 }
                 
@@ -136,7 +136,7 @@ app.get("/home", function(req, res){
         })
     }
 
-    function getLikedRecipe(id){
+    function getLikedRecipe(id){ 
         return new Promise(function (resolve, reject){
             db.query("Select * from recipe where id = ?",[id], function(error, rows){
                 if(error){
@@ -162,11 +162,15 @@ app.get("/home", function(req, res){
         var lists = await getShoppingListAndLikedRecipes();
         var shoppingList = lists.shoppingList;
 
-        var likedRecipes = new Array();
-        for(var i=0; i <lists.likedRecipes.length; i++){
-            likedRecipes[i] = await getLikedRecipe(lists.likedRecipes[i]);
+        var likedRecipes = [];
+        if(lists.likedRecipes[0] != ''){
+            for(var i=0; i <lists.likedRecipes.length; i++){
+                likedRecipes[i] = await getLikedRecipe(lists.likedRecipes[i]);
+            }
         }
 
+        if(shoppingList[0] == '') shoppingList = [];
+        
         res.render("home.ejs", {user: req.session.user, likedRecipes, userRecipes, shoppingList});
     }
 
