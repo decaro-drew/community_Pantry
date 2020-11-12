@@ -80,6 +80,7 @@ app.get("/home", function(req, res){
                     throw error;
                 }
                 else{
+                    
                     if(rows[0].shoppingList == null && rows[0].likedRecipes == null){
                         lists = {
                             shoppingList : [],
@@ -104,7 +105,7 @@ app.get("/home", function(req, res){
                             likedRecipes : rows[0].likedRecipes.split(",")
                         }
                     }
-                   
+                  
                     resolve(lists);
                 }
                 
@@ -286,7 +287,8 @@ app.get("/results/dish", function(req, res){
                 dishes[i] = dish;
             }
         }
-        res.render("results.ejs", {user: req.session.user, message: "Results for (dishname)", dishes});
+        
+        res.render("results.ejs", {user: req.session.user, message: "Results for " + dishName, dishes});
     });
     
     
@@ -312,7 +314,8 @@ app.get("/results/cuisine", function(req, res){
                 dishes[i] = dish;
             }
         }
-        res.render("results.ejs", {user: req.session.user, message: "Results for (cuisine)", dishes});
+        
+        res.render("results.ejs", {user: req.session.user, message: "Results for " + cuisine, dishes});
     });
     
     
@@ -365,7 +368,9 @@ app.post("/saveRecipe/:id", function(req, res){
         }
         else{
             liked = rows[0].likedRecipes;
-            newString = id + "," + liked;
+            newString = '';
+            if(liked == '') newString = id;
+            else newString = id + "," + liked;
             db.query("update user set likedRecipes = '" + newString + "' where username = ?", [req.session.user], function(error, rows){
                 if(error){
                     throw error;
@@ -387,7 +392,9 @@ app.post("/saveIngredients/:id/:ingredients", function(req, res){
         }
         else{
             list = rows[0].shoppingList;
-            newString = ingredients + ", " + list;
+            newString = '';
+            if(list == '') newString = ingredients;
+            else newString = ingredients + ", " + list;
             db.query("update user set shoppingList = '" + newString + "' where username = ?", [req.session.user], function(error, rows){
                 if(error){
                     throw error;
