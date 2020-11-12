@@ -44,6 +44,9 @@
                    </div>
              </div>
          </form>
+         <% if(message.lenth > 0){ %>
+            <p><%= message %></p>
+         <% } %> 
         <br><br><hr>
         
          <h2 class="my-5"><u></u>Set the Top 10 Recipes</h2>
@@ -144,6 +147,19 @@
               <div class="form-group">
                 <label for="name">Instructions</label>
                 <textarea class="form-control" rows="10" name="instructions"></textarea>
+              </div>
+              <div class="keyWords py-4">
+                <label class="pb-2" for="name">Please select one or more keywords</label>
+                <div class="container row">
+                  <% keyWords.forEach(key => { %> 
+                    <div class="form-check col">
+                      <input class="form-check-input" type="checkbox" name="<%= key %>" value="True" id="">
+                      <label class="form-check-label" for="">
+                          <%= key %> 
+                      </label>
+                    </div> 
+                  <% }); %>
+                </div>
               </div>
               <div class="form-group">
                 <label for="exampleFormControlFile1">Recipe Image</label>
