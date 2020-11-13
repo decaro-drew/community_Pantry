@@ -160,7 +160,9 @@ app.get("/home", function(req, res){
 
     async function compile(){
         var userRecipes = await getUserRecipes();
+        console.log(1);
         var lists = await getShoppingListAndLikedRecipes();
+        console.log(2);
         var shoppingList = lists.shoppingList;
 
         var likedRecipes = [];
@@ -324,7 +326,6 @@ app.get("/results/cuisine", function(req, res){
 });
 
 app.get("/results", function(req, res){
-    //console.log("1,2, 3, 4".split(", "));
     var ingredientsTemp = url.parse(req.url, true).query;
     var ingredients = Object.keys(ingredientsTemp);
     var dishes = new Array();
@@ -337,43 +338,27 @@ app.get("/results", function(req, res){
         }
         else{
             var counter = 0;
-            var matches;
             for(i=0; i<rows.length; i++){
-                lowerIng = rows[i].ingredients.toLowerCase();
-                if(!rows[i].keywords)
-                    lowerKeys = "";
-                else
-                    lowerKeys = rows[i].keywords.toLowerCase();
-                matches = 0;
+                var subset = true;
                 for(j=0; j<ingredients.length; j++){
-                   // lowerIng.includes(ingredients[j]) || 
-                    if(lowerKeys.includes(ingredients[j])){
-                        matches++;
-                    }
-                    else{
-                        ingList = lowerIng.split(", ");
-                        for(k = 0; k < ingList.length; k++){
-                            if(ingredients[j] == ingList[k]){
-                                matches++;
-                                break;
-                            }
-                        }
+                    lowerIng = rows[i].ingredients.toLowerCase();
+                    if(!lowerIng.includes(ingredients[j])){
+                        subset = false;
                     }
                 }
-                if(matches > 0){
+                if(subset){
                     dish = {
                         id: rows[i].id,
                         name:rows[i].name,
                         picture: rows[i].picture,
                         snipbit: rows[i].snipbit,
-                        matches: matches,
                     }
                     dishes[counter] = dish;
                     counter++;
                 }
             }
         }
-        dishes.sort((a,b) => parseFloat(b.matches) - parseFloat(a.matches));
+        console.log(dishes.length);
         res.render("results.ejs", {user: req.session.user, message: "Here's what you can make", dishes});
     });
 });
@@ -491,15 +476,8 @@ app.post("/login", function(req, res){
 
 app.post("/createRecipe/:username", function(req, res){
 
-    //console.log(req.files.image.name);
-    var store = Object.keys(req.body);
-    var keys = ""
-    for(i = 5; i < store.length; i++){
-        if(i>5)
-            keys = keys + ",";
-        keys = keys + store[i];
-    }
-    //console.log(keys);
+    console.log(req.body);
+
     db.query("SELECT MAX(id) as max FROM recipe", function(err, result){
         console.log(result[0].max);
         var file = req.files.image;
@@ -509,7 +487,7 @@ app.post("/createRecipe/:username", function(req, res){
             file.mv('public/recipe_images/'+file.name, function(err) {                      
                 if (err)
                   return res.status(500).send(err);
-                  db.query("Insert into recipe (name, picture, cuisine, snipbit, ingredients, instructions, username, keywords) VALUES ('"+req.body.rName+"','"+imgName+"','"+req.body.cuisine+"','"+req.body.snipbit+"', '"+req.body.ingredients+"', '"+req.body.instructions+"', '"+req.session.user+"','"+keys+"')",function(err, result){   
+                  db.query("Insert into recipe (name, picture, cuisine, snipbit, ingredients, instructions, username) VALUES ('"+req.body.rName+"','"+imgName+"','"+req.body.cuisine+"','"+req.body.snipbit+"', '"+req.body.ingredients+"', '"+req.body.instructions+"', '"+req.session.user+"')",function(err, result){   
                       if(err){
                           res.send("Error");
                       }
@@ -528,6 +506,7 @@ app.post("/createRecipe/:username", function(req, res){
  	 
    
 });
+
 app.post("/createAccount", function(req, res){
     var valid = true;
     if(req.body.uName.length < 6){
@@ -552,6 +531,7 @@ app.post("/createAccount", function(req, res){
                 res.send("Username already exists");
             }
             else{
+                req.session.user = req.body.uName;
                 res.redirect("/home");
             }
         });
