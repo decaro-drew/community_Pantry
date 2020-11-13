@@ -324,6 +324,7 @@ app.get("/results/cuisine", function(req, res){
 });
 
 app.get("/results", function(req, res){
+    //console.log("1,2, 3, 4".split(", "));
     var ingredientsTemp = url.parse(req.url, true).query;
     var ingredients = Object.keys(ingredientsTemp);
     var dishes = new Array();
@@ -336,27 +337,43 @@ app.get("/results", function(req, res){
         }
         else{
             var counter = 0;
+            var matches;
             for(i=0; i<rows.length; i++){
-                var subset = true;
+                lowerIng = rows[i].ingredients.toLowerCase();
+                if(!rows[i].keywords)
+                    lowerKeys = "";
+                else
+                    lowerKeys = rows[i].keywords.toLowerCase();
+                matches = 0;
                 for(j=0; j<ingredients.length; j++){
-                    lowerIng = rows[i].ingredients.toLowerCase();
-                    if(!lowerIng.includes(ingredients[j])){
-                        subset = false;
+                   // lowerIng.includes(ingredients[j]) || 
+                    if(lowerKeys.includes(ingredients[j])){
+                        matches++;
+                    }
+                    else{
+                        ingList = lowerIng.split(", ");
+                        for(k = 0; k < ingList.length; k++){
+                            if(ingredients[j] == ingList[k]){
+                                matches++;
+                                break;
+                            }
+                        }
                     }
                 }
-                if(subset){
+                if(matches > 0){
                     dish = {
                         id: rows[i].id,
                         name:rows[i].name,
                         picture: rows[i].picture,
                         snipbit: rows[i].snipbit,
+                        matches: matches,
                     }
                     dishes[counter] = dish;
                     counter++;
                 }
             }
         }
-        console.log(dishes.length);
+        dishes.sort((a,b) => parseFloat(b.matches) - parseFloat(a.matches));
         res.render("results.ejs", {user: req.session.user, message: "Here's what you can make", dishes});
     });
 });
