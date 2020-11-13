@@ -474,8 +474,15 @@ app.post("/login", function(req, res){
 
 app.post("/createRecipe/:username", function(req, res){
 
-    console.log(req.files.image.name);
-
+    //console.log(req.files.image.name);
+    var store = Object.keys(req.body);
+    var keys = ""
+    for(i = 5; i < store.length; i++){
+        if(i>5)
+            keys = keys + ",";
+        keys = keys + store[i];
+    }
+    //console.log(keys);
     db.query("SELECT MAX(id) as max FROM recipe", function(err, result){
         console.log(result[0].max);
         var file = req.files.image;
@@ -485,7 +492,7 @@ app.post("/createRecipe/:username", function(req, res){
             file.mv('public/recipe_images/'+file.name, function(err) {                      
                 if (err)
                   return res.status(500).send(err);
-                  db.query("Insert into recipe (name, picture, cuisine, snipbit, ingredients, instructions, username) VALUES ('"+req.body.rName+"','"+imgName+"','"+req.body.cuisine+"','"+req.body.snipbit+"', '"+req.body.ingredients+"', '"+req.body.instructions+"', '"+req.session.user+"')",function(err, result){   
+                  db.query("Insert into recipe (name, picture, cuisine, snipbit, ingredients, instructions, username, keywords) VALUES ('"+req.body.rName+"','"+imgName+"','"+req.body.cuisine+"','"+req.body.snipbit+"', '"+req.body.ingredients+"', '"+req.body.instructions+"', '"+req.session.user+"','"+keys+"')",function(err, result){   
                       if(err){
                           res.send("Error");
                       }
@@ -504,7 +511,6 @@ app.post("/createRecipe/:username", function(req, res){
  	 
    
 });
-
 app.post("/createAccount", function(req, res){
     var valid = true;
     if(req.body.uName.length < 6){
