@@ -191,18 +191,38 @@ app.post("/settop10", function(req, res){
             throw error;
         }
         ///console.log(rows.length);
-        var max = rows.length;
+        var max = rows[rows.length-1].id;
+        var min = rows[0].id;
+        console.log(max);
+        console.log(min);
         for(var i = 0; i < ids.length; i++){
+            var match = false;
             if(ids[i] == ''){
                 valid = false;
                 res.send("null value was entered");
                 return;
             }
-            if(ids[i] > max || ids[i] < 1){
+            for(var j = 0; j < rows.length; j ++){
+                if(ids[i] == rows[j])
+                    console.log("here");
+                    match = true;
+                    break;
+
+            }
+            if(!match){
                 valid = false;
                 res.send("recipe id entered does not exist")
                 return;
             }
+            /*
+            if(ids[i] > max || ids[i] < min){
+                console.log(ids[i]);
+                console.log(max);
+                console.log(min);
+                valid = false;
+                res.send("recipe id entered does not exist")
+                return;
+            }*/
         }
         if(valid){
             var sql = "Insert into top10 (positionId, dishId) VALUES ? ON DUPLICATE KEY UPDATE dishId = VALUES(dishId)";
