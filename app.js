@@ -536,6 +536,24 @@ app.post("/saveRecipe/:id", function(req, res){
     })
 });
 
+app.post("/clearSavedRecipes", function(req, res){
+    db.query("select likedRecipes from user where username = ?", [req.session.user], function(error,rows) {
+        if(error){
+            throw error;
+        }
+        else{
+            db.query("update user set likedRecipes = "+ '""' +" where username = ?", [req.session.user], function(error, rows){
+                if(error){
+                    throw error;
+                }
+                else{
+                    res.redirect("/home")
+                }
+            })
+        }
+    })
+});
+
 app.post("/saveIngredients/:id/:ingredients", function(req, res){
     const {ingredients} = req.params;
     const {id} = req.params;
@@ -554,6 +572,24 @@ app.post("/saveIngredients/:id/:ingredients", function(req, res){
                 }
                 else{
                     res.redirect("/recipe/" + id)
+                }
+            })
+        }
+    })
+});
+
+app.post("/clearShoppingList", function(req, res){
+    db.query("select shoppingList from user where username = ?", [req.session.user], function(error,rows) {
+        if(error){
+            throw error;
+        }
+        else{
+            db.query("update user set shoppingList = "+ '""' +" where username = ?", [req.session.user], function(error, rows){
+                if(error){
+                    throw error;
+                }
+                else{
+                    res.redirect("/home")
                 }
             })
         }
