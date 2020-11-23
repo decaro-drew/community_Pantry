@@ -71,7 +71,6 @@ function requireLogin (req, res, next) {
 */
 
 app.get("/home", function(req, res){
-
     function getShoppingListAndLikedRecipes(){
         return new Promise(function (resolve, reject){
             var dishes = new Array();
@@ -176,11 +175,124 @@ app.get("/home", function(req, res){
 
         keyWords = ["Chicken", "Beef", "Pork", "Lamb", "Fish", "Seafood", "Pasta", "Rice"];
         
-        res.render("home.ejs", {user: req.session.user, likedRecipes, userRecipes, shoppingList, keyWords});
+        res.render("home.ejs", {user: req.session.user, mainUser: req.session.user, likedRecipes, userRecipes, shoppingList, keyWords});
     }
 
     compile();
     
+});
+
+app.get("/searchUser", function(req, res){
+    var user = url.parse(req.url, true).query.otherUser;
+    function getShoppingListAndLikedRecipes(){
+        return new Promise(function (resolve, reject){
+            var dishes = new Array();
+            db.query("Select shoppingList, likedRecipes from user where username = ?",[user], function(error, rows){
+                if(error){
+                    throw error;
+                }
+                else{
+                    
+                    if(rows[0].shoppingList == null && rows[0].likedRecipes == null){
+                        lists = {
+                            shoppingList : [],
+                            likedRecipes : []
+                        }
+                    }
+                    else if(rows[0].shoppingList == null){
+                        lists = {
+                            shoppingList : [],
+                            likedRecipes : rows[0].likedRecipes.split(",")
+                        }
+                    }
+                    else if(rows[0].likedRecipes == null){
+                        lists = {
+                            shoppingList : rows[0].shoppingList.split(", "),
+                            likedRecipes : []
+                        }
+                    }
+                    else{
+                        lists = {
+                            shoppingList : rows[0].shoppingList.split(", "),
+                            likedRecipes : rows[0].likedRecipes.split(",")
+                        }
+                    }
+                  
+                    resolve(lists);
+                }
+                
+            });
+        })
+    }
+
+    function getUserRecipes(){
+        return new Promise(function (resolve, reject){
+            var dishes = new Array();
+            db.query("Select * from recipe where username = ?",[user], function(error, rows){
+                if(error){
+                    throw error;
+                }
+                else{
+                    for(i=0; i<rows.length; i++){
+                        dish = {
+                            id: rows[i].id,
+                            name:rows[i].name,
+                            picture: rows[i].picture,
+                            snipbit: rows[i].snipbit,
+                        }
+                        dishes[i] = dish;
+                    }
+                    resolve(dishes);
+                }
+                
+            });
+        })
+    }
+
+    function getLikedRecipe(id){ 
+        return new Promise(function (resolve, reject){
+            db.query("Select * from recipe where id = ?",[id], function(error, rows){
+                if(error){
+                    throw error;
+                }
+                else{
+                    console.log(id);
+                    dish = {
+                        id: rows[0].id,
+                        name:rows[0].name,
+                        picture: rows[0].picture,
+                        snipbit: rows[0].snipbit,
+                    }
+                    resolve(dish);
+                }
+                
+            });
+        })
+    }
+
+
+    async function compile(){
+        var userRecipes = await getUserRecipes();
+        console.log(1);
+        var lists = await getShoppingListAndLikedRecipes();
+        console.log(2);
+        var shoppingList = lists.shoppingList;
+
+        var likedRecipes = [];
+        if(lists.likedRecipes[0] != ''){
+            for(var i=0; i <lists.likedRecipes.length; i++){
+                likedRecipes[i] = await getLikedRecipe(lists.likedRecipes[i]);
+            }
+        }
+
+        if(shoppingList[0] == '') shoppingList = [];
+
+        keyWords = ["Chicken", "Beef", "Pork", "Lamb", "Fish", "Seafood", "Pasta", "Rice"];
+        
+        res.render("home.ejs", {user: user, mainUser: req.session.user, likedRecipes, userRecipes, shoppingList, keyWords});
+    }
+
+    compile();
 });
 
 app.post("/settop10", function(req, res){
@@ -461,6 +573,7 @@ app.get("/recipe/:id", function(req, res){
                 success = true;
                 var dishName = rows[0].name;
                 var instructions = rows[0].instructions;
+                console.log(instructions);
                 image = rows[0].picture;
                 ingredients = rows[0].ingredients.split(",");
                 ingredientString = rows[0].ingredients;
@@ -513,7 +626,6 @@ app.post("/login", function(req, res){
 
 app.post("/createRecipe/:username", function(req, res){
 
-    console.log(req.body);
 
     db.query("SELECT MAX(id) as max FROM recipe", function(err, result){
         console.log(result[0].max);
@@ -524,7 +636,7 @@ app.post("/createRecipe/:username", function(req, res){
             file.mv('public/recipe_images/'+file.name, function(err) {                      
                 if (err)
                   return res.status(500).send(err);
-                  db.query("Insert into recipe (name, picture, cuisine, snipbit, ingredients, instructions, username) VALUES ('"+req.body.rName+"','"+imgName+"','"+req.body.cuisine+"','"+req.body.snipbit+"', '"+req.body.ingredients+"', '"+req.body.instructions+"', '"+req.session.user+"')",function(err, result){   
+                db.query("Insert into recipe (name, picture, cuisine, snipbit, ingredients, instructions, username) VALUES ('"+req.body.rName+"','"+imgName+"','"+req.body.cuisine+"','"+req.body.snipbit+"', '"+req.body.ingredients+"', '"+req.body.instructions+"', '"+req.session.user+"')",function(err, result){   
                       if(err){
                           res.send("Error");
                       }
