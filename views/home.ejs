@@ -14,10 +14,7 @@
   </head>
   <body>
       
-      <% var home = true;
-          if(mainUser != user) 
-            home = false;
-      %>
+      
       <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
           <div class="container">
                   <a class="navbar-brand" href="/">Community Pantry</a>
@@ -32,11 +29,7 @@
                       <a class="nav-link" href="/search"> Search</a>
                     </li>
                     <li class="nav-item">
-                      <%if(home){ %>
-                      <a class="nav-link active"><%= mainUser %> </a>
-                      <% }else{ %>
-                        <a class="nav-link active" href="/home"><%= mainUser %> </a>
-                      <%}%>
+                      <a class="nav-link active"><%= user %> </a>
                     </li>
                   </ul>
           </div>
@@ -48,12 +41,12 @@
         <h1 class="display-1 my-5"><%= user %> </h1>
         <p class="my-5">potential profile picture or avatar</p>
         <p class="my-5">potential optional Bio</p>
-
         
         <h3 class="display-4 mt-5">Your Recipes</h3>
         <ul class="mb-5 my-5">
               
             <% userRecipes.forEach(recipe => { %>
+
               <li class="m-5">
                 <a class="nav-link" href="/recipe/<%= recipe.id %> "><h4 class="my-5"><%= recipe.name %> </h4></a>
                   <div class="container m-5">
@@ -61,6 +54,7 @@
                        <p><%= recipe.snipbit %> </p>
                   </div>
               </li>
+
             <% }); %> 
                 
         </ul>
@@ -69,6 +63,7 @@
         <ul class="mb-5 my-5">
               
             <% likedRecipes.forEach(recipe => { %>
+
               <li class="m-5">
                 <a class="nav-link" href="/recipe/<%= recipe.id %> "><h4 class="my-5"><%= recipe.name %> </h4></a>
                   <div class="container m-5">
@@ -76,6 +71,7 @@
                        <p><%= recipe.snipbit %> </p>
                   </div>
               </li>
+
             <% }); %> 
                 
         </ul>
@@ -85,22 +81,13 @@
         <h3 class="display-4 mt-5">Shopping list</h3>
         <ul class="m-5">
           <% shoppingList.forEach(ingredient => { %>
+
             <li><%= ingredient %> </li>
+
           <% }); %> 
        </ul>
     
     </div>
-    <% if(home){ %>
-    <h2 class="display-1 pt-5">Find A User</h1>
-        <form class="form-inline pt-5 mb-5" action="/searchUser">
-          <div class="col-6 form-group mb-2">
-            <label for="inputPassword2" class="sr-only">Dish</label>
-            <input type="text" class="col-12 form-control" id="inputPassword2" placeholder="enter someone's username" name="otherUser">
-          </div>
-          <button type="submit" class="btn btn-primary mb-2">Find a User</button>
-        </form>
-    
-
     <div class="container">
                  
       <center><h2 class="my-5 pt-5">Create a Recipe</h2></center>
@@ -145,14 +132,13 @@
           </div>
           
           <div class="form-group">
-            <button class="btn btn-outline-primary btn-block my-5">Add recipe</button>        
+            <button class="btn btn-outline-primary btn-block my-5">Add recipee</button>        
           </div>
       </div>
       </form>
       <br>
   </div>
     </form>
-    <% } %>
     <script
       src="https://code.jquery.com/jquery-3.5.1.js"
       integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
