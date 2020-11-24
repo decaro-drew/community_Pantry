@@ -182,43 +182,31 @@ app.get("/home", function(req, res){
     
 });
 
-app.get("/searchUser", function(req, res){
-    var user = url.parse(req.url, true).query.otherUser;
+app.get("/user/:user", function(req, res){
+    const {user} = req.params;
+    console.log(user);
+   // var user = url.parse(req.url, true).query.otherUser;
     function getShoppingListAndLikedRecipes(){
         return new Promise(function (resolve, reject){
             var dishes = new Array();
-            db.query("Select shoppingList, likedRecipes from user where username = ?",[user], function(error, rows){
+            db.query("Select likedRecipes from user where username = ?",[user], function(error, rows){
                 if(error){
                     throw error;
                 }
-                else{
-                    
-                    if(rows[0].shoppingList == null && rows[0].likedRecipes == null){
-                        lists = {
-                            shoppingList : [],
-                            likedRecipes : []
-                        }
-                    }
-                    else if(rows[0].shoppingList == null){
-                        lists = {
-                            shoppingList : [],
-                            likedRecipes : rows[0].likedRecipes.split(",")
-                        }
-                    }
-                    else if(rows[0].likedRecipes == null){
-                        lists = {
-                            shoppingList : rows[0].shoppingList.split(", "),
-                            likedRecipes : []
-                        }
+                else{     
+                    console.log(rows);
+                    console.log(rows[0]);
+                    if(rows[0] == null){
+                        console.log("here1");
+                        resolve(["error"]);    
                     }
                     else{
-                        lists = {
-                            shoppingList : rows[0].shoppingList.split(", "),
-                            likedRecipes : rows[0].likedRecipes.split(",")
-                        }
+                        if(rows[0].likedRecipes == null)
+                            likedRecipes = [];
+                        else
+                            likedRecipes = rows[0].likedRecipes.split(",");
+                        resolve(likedRecipes);
                     }
-                  
-                    resolve(lists);
                 }
                 
             });
@@ -233,6 +221,8 @@ app.get("/searchUser", function(req, res){
                     throw error;
                 }
                 else{
+                    if(rows[0] == null)
+                        resolve(["error"]);
                     for(i=0; i<rows.length; i++){
                         dish = {
                             id: rows[i].id,
@@ -256,14 +246,29 @@ app.get("/searchUser", function(req, res){
                     throw error;
                 }
                 else{
-                    console.log(id);
-                    dish = {
-                        id: rows[0].id,
-                        name:rows[0].name,
-                        picture: rows[0].picture,
-                        snipbit: rows[0].snipbit,
+                    console.log("bam");
+                    console.log(rows[0]);
+                    if(id == "error"){
+                        console.log("heyyy");
+                        dish = {
+                            id: "error",
+                            name: "error",
+                            picture: "error",
+                            snipbit: "error",
+                        }
+                        resolve(dish);
+                        console.log("what");
                     }
-                    resolve(dish);
+                    else{
+                        console.log(id);
+                        dish = {
+                            id: rows[0].id,
+                            name:rows[0].name,
+                            picture: rows[0].picture,
+                            snipbit: rows[0].snipbit,
+                        }
+                        resolve(dish);
+                    }                 
                 }
                 
             });
@@ -274,22 +279,22 @@ app.get("/searchUser", function(req, res){
     async function compile(){
         var userRecipes = await getUserRecipes();
         console.log(1);
-        var lists = await getShoppingListAndLikedRecipes();
+        var likes = await getShoppingListAndLikedRecipes();
         console.log(2);
-        var shoppingList = lists.shoppingList;
+        //var shoppingList = lists.shoppingList;
 
         var likedRecipes = [];
-        if(lists.likedRecipes[0] != ''){
-            for(var i=0; i <lists.likedRecipes.length; i++){
-                likedRecipes[i] = await getLikedRecipe(lists.likedRecipes[i]);
+        if(likes[0] != ''){
+            for(var i=0; i <likes.length; i++){
+                likedRecipes[i] = await getLikedRecipe(likes[i]);
             }
         }
 
-        if(shoppingList[0] == '') shoppingList = [];
+        //if(shoppingList[0] == '') shoppingList = [];
 
-        keyWords = ["Chicken", "Beef", "Pork", "Lamb", "Fish", "Seafood", "Pasta", "Rice"];
+        //keyWords = ["Chicken", "Beef", "Pork", "Lamb", "Fish", "Seafood", "Pasta", "Rice"];
         
-        res.render("home.ejs", {user: user, mainUser: req.session.user, likedRecipes, userRecipes, shoppingList, keyWords});
+        res.render("user.ejs", {user: req.session.user, targetUser: user, likedRecipes, userRecipes});
     }
 
     compile();
