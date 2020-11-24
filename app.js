@@ -517,6 +517,39 @@ app.get("/results", function(req, res){
     });
 });
 
+app.get("/result/users", function(req, res){
+    var targetUser = url.parse(req.url, true).query.targetUser;
+    console.log("cheeseburger".indexOf("cheese"));
+    db.query("SELECT * FROM user", function(err, rows){
+        console.log(rows);
+        var exact = "";
+        var indexZero = new Array();
+        var others = new Array()
+        for(var i = 0; i < rows.length; i++){
+            if(rows[i].username.includes(targetUser)){
+                if(rows[i].username == targetUser)
+                    exact = rows[i].username;
+                if(rows[i].username.indexOf(targetUser) == 0)
+                    indexZero.push(rows[i].username);
+                else
+                    others.push(rows[i].username);
+            }
+        }
+        indexZero.sort(function(a,b){ return a.length - b.length});     
+        others.sort(function(a,b){ return a.length - b.length});
+        var userList = new Array();
+        if(exact != "")
+            userList.push(exact);
+        for(var i = 0; i < indexZero.length; i++)
+            userList.push(indexZero[i]);
+        for(var i = 0; i < others.length; i++)
+            userList.push(others[i]);
+        console.log(userList);
+        res.render("results.ejs", {user: req.session.user, message: "Here's who we found", userList});
+    });
+
+});
+
 app.post("/saveRecipe/:id", function(req, res){
     const {id} = req.params;
     
