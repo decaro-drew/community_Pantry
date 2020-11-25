@@ -742,10 +742,11 @@ app.post("/login", function(req, res){
 });
 
 app.post("/createRecipe/:username", function(req, res){
-
-
     db.query("SELECT MAX(id) as max FROM recipe", function(err, result){
-        console.log(result[0].max);
+        var keyString = "";
+        for(var i = 5; i < Object.keys(req.body).length; i++){
+            keyString = keyString + "," + Object.keys(req.body)[i];
+        }
         var file = req.files.image;
         file.name = (result[0].max+1).toString() + ".jpg";
         var imgName = "/recipe_images/"+file.name;
@@ -753,24 +754,21 @@ app.post("/createRecipe/:username", function(req, res){
             file.mv('public/recipe_images/'+file.name, function(err) {                      
                 if (err)
                   return res.status(500).send(err);
-                db.query("Insert into recipe (name, picture, cuisine, snipbit, ingredients, instructions, username) VALUES ('"+req.body.rName+"','"+imgName+"','"+req.body.cuisine+"','"+req.body.snipbit+"', '"+req.body.ingredients+"', '"+req.body.instructions+"', '"+req.session.user+"')",function(err, result){   
+                db.query("Insert into recipe (name, picture, cuisine, snipbit, ingredients, instructions, username, keywords) VALUES ('"+req.body.rName+"','"+imgName+"','"+req.body.cuisine+"','"+req.body.snipbit+"', '"+req.body.ingredients+"', '"+req.body.instructions+"', '"+req.session.user+"', '"+keyString+"')",function(err, result){   
                       if(err){
                           res.send("Error");
                       }
                       else{
                           id = result.insertId;
                           res.redirect("/recipe/" + id);
-                          ///next();
                       }
                   });           
             });
         } else {
-          message = "This format is not allowed , please upload file with '.png','.gif','.jpg'";
+          message = "This format is not allowed , please upload file with '.jpg'";
           res.render('index.ejs',{message: message});
         } 
-    });
- 	 
-   
+    }); 	    
 });
 
 app.post("/createAccount", function(req, res){
