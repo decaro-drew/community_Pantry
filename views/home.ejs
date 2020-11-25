@@ -75,23 +75,24 @@
             <% }); %> 
                 
         </ul>
-        <form class="form-inline pt-5 mb-5" action="/clearSavedRecipes" method="POST">
-          <button type="submit" class="btn btn-primary mb-2">Clear</button>
-        </form>
       
             
             
         <h3 class="display-4 mt-5">Shopping list</h3>
-        <ul class="m-5">
-          <% shoppingList.forEach(ingredient => { %>
-
-            <li><%= ingredient %> </li>
-
-          <% }); %> 
+        <ul class="col-8 list-group list-group-flush">
+          <% var count = 0; 
+            shoppingList.forEach(ingredient => { %>
+                
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <form action="/deleteIngredient/<%=count%>" method="POST"></form>
+                      <%= ingredient %>
+                      <button class="btn btn-sm btn-outline-danger">Remove from Shopping List</button>
+                    </form>
+                  </li>
+                  
+                   <% count += 1;
+           }); %> 
        </ul>
-       <form class="form-inline pt-5 mb-5" action="/clearShoppingList" method="POST">
-        <button type="submit" class="btn btn-primary mb-2">Clear</button>
-      </form>
     
     </div>
     <div class="container">
