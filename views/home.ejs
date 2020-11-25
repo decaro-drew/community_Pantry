@@ -75,7 +75,9 @@
             <% }); %> 
                 
         </ul>
-      
+        <form action="/clearSavedRecipes" method="post">
+          <button type="submit" class="btn btn-primary mb-2">Clear Saved Recipes</button>
+        </form>
             
             
         <h3 class="display-4 mt-5">Shopping list</h3>
@@ -93,6 +95,9 @@
                    <% count += 1;
            }); %> 
        </ul>
+       <form action="/clearShoppingList" method="post">
+          <button type="submit" class="btn btn-primary mb-2">Clear ShoppingList</button>
+        </form>
     
     </div>
     <div class="container">
