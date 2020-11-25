@@ -667,32 +667,24 @@ app.post("/clearShoppingList", function(req, res){
     })
 });
 
-app.get("/removeItem/:item", function(req, res){
-    const {item} = req.params;
+app.post("/deleteIngredient/:index", function(req, res){
+    const {index} = req.params;
+    console.log(index);
     db.query("select shoppingList from user where username = ?", [req.session.user], function(error,rows) {
         if(error){
             throw error;
         }
         else{
-            var items = rows[0].shoppingList;
-            var len = items.length;
-            var itemPos = items.indexOf(item);
-            var strlen = item.length;
-            var del = item;
-            var editItems = items;
-            if( (itemPos+strlen) == len){
-                editItems = editItems.replace(del, '');
-                editItems = editItems.substring(0, editItems.length-2);
-            }else{
-                del = del + ', ';
-                editItems = editItems.replace(del, '');
-            }
-            db.query("update user set shoppingList = '"+ editItems +"' where username = ?", [req.session.user], function(error, rows){
+            var shoppingList = rows[0].shoppingList.split(", ");
+            shoppingList.splice(index, 1);
+            var listAsString = shoppingList.join(", ");
+
+            db.query("update user set shoppingList = '" + listAsString + "' where username = ?", [req.session.user], function(error, rows){
                 if(error){
                     throw error;
                 }
                 else{
-                    res.redirect("/home")
+                    res.redirect("/home");
                 }
             })
         }
