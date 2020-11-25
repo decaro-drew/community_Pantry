@@ -592,6 +592,38 @@ app.post("/clearSavedRecipes", function(req, res){
     })
 });
 
+app.get("/removeRecipe/:item", function(req, res){
+    const {item} = req.params;
+    db.query("select likedRecipes from user where username = ?", [req.session.user], function(error,rows) {
+        if(error){
+            throw error;
+        }
+        else{
+            var items = rows[0].likedRecipes;
+            var len = items.length;
+            var itemPos = items.indexOf(item);
+            var strlen = item.length;
+            var del = item;
+            var editItems = items;
+            if( (itemPos+strlen) == len){
+                editItems = editItems.replace(del, '');
+                editItems = editItems.substring(0, editItems.length-2);
+            }else{
+                del = del + ', ';
+                editItems = editItems.replace(del, '');
+            }
+            db.query("update user set likedRecipes = '"+ editItems +"' where username = ?", [req.session.user], function(error, rows){
+                if(error){
+                    throw error;
+                }
+                else{
+                    res.redirect("/home")
+                }
+            })
+        }
+    })
+});
+
 app.post("/saveIngredients/:id/:ingredients", function(req, res){
     const {ingredients} = req.params;
     const {id} = req.params;
@@ -623,6 +655,38 @@ app.post("/clearShoppingList", function(req, res){
         }
         else{
             db.query("update user set shoppingList = "+ '""' +" where username = ?", [req.session.user], function(error, rows){
+                if(error){
+                    throw error;
+                }
+                else{
+                    res.redirect("/home")
+                }
+            })
+        }
+    })
+});
+
+app.get("/removeItem/:item", function(req, res){
+    const {item} = req.params;
+    db.query("select shoppingList from user where username = ?", [req.session.user], function(error,rows) {
+        if(error){
+            throw error;
+        }
+        else{
+            var items = rows[0].shoppingList;
+            var len = items.length;
+            var itemPos = items.indexOf(item);
+            var strlen = item.length;
+            var del = item;
+            var editItems = items;
+            if( (itemPos+strlen) == len){
+                editItems = editItems.replace(del, '');
+                editItems = editItems.substring(0, editItems.length-2);
+            }else{
+                del = del + ', ';
+                editItems = editItems.replace(del, '');
+            }
+            db.query("update user set shoppingList = '"+ editItems +"' where username = ?", [req.session.user], function(error, rows){
                 if(error){
                     throw error;
                 }
