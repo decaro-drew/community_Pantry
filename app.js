@@ -463,6 +463,40 @@ app.get("/results/cuisine", function(req, res){
     
 });
 
+
+app.get("/result/users", function(req, res){
+    var targetUser = url.parse(req.url, true).query.targetUser;
+    console.log("cheeseburger".indexOf("cheese"));
+    db.query("SELECT * FROM user", function(err, rows){
+        console.log(rows);
+        var exact = "";
+        var indexZero = new Array();
+        var others = new Array()
+        for(var i = 0; i < rows.length; i++){
+            if(rows[i].username.includes(targetUser)){
+                if(rows[i].username == targetUser)
+                    exact = rows[i].username;
+                if(rows[i].username.indexOf(targetUser) == 0)
+                    indexZero.push(rows[i].username);
+                else
+                    others.push(rows[i].username);
+            }
+        }
+        indexZero.sort(function(a,b){ return a.length - b.length});     
+        others.sort(function(a,b){ return a.length - b.length});
+        var userList = new Array();
+        if(exact != "")
+            userList.push(exact);
+        for(var i = 0; i < indexZero.length; i++)
+            userList.push(indexZero[i]);
+        for(var i = 0; i < others.length; i++)
+            userList.push(others[i]);
+        console.log(userList);
+        res.render("results.ejs", {user: req.session.user, message: "Here's who we found", userList});
+    });
+
+});
+
 app.get("/results", function(req, res){
     //console.log("1,2, 3, 4".split(", "));
     var ingredientsTemp = url.parse(req.url, true).query;
@@ -518,38 +552,7 @@ app.get("/results", function(req, res){
     });
 });
 
-app.get("/result/users", function(req, res){
-    var targetUser = url.parse(req.url, true).query.targetUser;
-    console.log("cheeseburger".indexOf("cheese"));
-    db.query("SELECT * FROM user", function(err, rows){
-        console.log(rows);
-        var exact = "";
-        var indexZero = new Array();
-        var others = new Array()
-        for(var i = 0; i < rows.length; i++){
-            if(rows[i].username.includes(targetUser)){
-                if(rows[i].username == targetUser)
-                    exact = rows[i].username;
-                if(rows[i].username.indexOf(targetUser) == 0)
-                    indexZero.push(rows[i].username);
-                else
-                    others.push(rows[i].username);
-            }
-        }
-        indexZero.sort(function(a,b){ return a.length - b.length});     
-        others.sort(function(a,b){ return a.length - b.length});
-        var userList = new Array();
-        if(exact != "")
-            userList.push(exact);
-        for(var i = 0; i < indexZero.length; i++)
-            userList.push(indexZero[i]);
-        for(var i = 0; i < others.length; i++)
-            userList.push(others[i]);
-        console.log(userList);
-        res.render("results.ejs", {user: req.session.user, message: "Here's who we found", userList});
-    });
 
-});
 
 app.post("/saveRecipe/:id", function(req, res){
     const {id} = req.params;
@@ -570,24 +573,6 @@ app.post("/saveRecipe/:id", function(req, res){
                 else{
                     res.redirect("/recipe/" + id)
                 } 
-            })
-        }
-    })
-});
-
-app.post("/clearSavedRecipes", function(req, res){
-    db.query("select likedRecipes from user where username = ?", [req.session.user], function(error,rows) {
-        if(error){
-            throw error;
-        }
-        else{
-            db.query("update user set likedRecipes = "+ '""' +" where username = ?", [req.session.user], function(error, rows){
-                if(error){
-                    throw error;
-                }
-                else{
-                    res.redirect("/home")
-                }
             })
         }
     })
@@ -619,6 +604,19 @@ app.post("/unSaveRecipe/:id", function(req, res){
 });
 
 
+app.post("/clearSavedRecipes", function(req, res){
+    db.query("update user set likedRecipes = '' where username = ?", [req.session.user], function(error, rows){
+        if(error){
+            throw error;
+        }
+        else{
+            res.redirect("/home")
+        }
+    })
+});
+
+
+
 app.post("/saveIngredients/:id/:ingredients", function(req, res){
     const {ingredients} = req.params;
     const {id} = req.params;
@@ -643,23 +641,7 @@ app.post("/saveIngredients/:id/:ingredients", function(req, res){
     })
 });
 
-app.post("/clearShoppingList", function(req, res){
-    db.query("select shoppingList from user where username = ?", [req.session.user], function(error,rows) {
-        if(error){
-            throw error;
-        }
-        else{
-            db.query("update user set shoppingList = "+ '""' +" where username = ?", [req.session.user], function(error, rows){
-                if(error){
-                    throw error;
-                }
-                else{
-                    res.redirect("/home")
-                }
-            })
-        }
-    })
-});
+
 
 app.post("/deleteIngredient/:index", function(req, res){
     const {index} = req.params;
@@ -685,6 +667,17 @@ app.post("/deleteIngredient/:index", function(req, res){
     })
 });
 
+app.post("/clearShoppingList", function(req, res){
+    db.query("update user set shoppingList = '' where username = ?", [req.session.user], function(error, rows){
+        if(error){
+            throw error;
+        }
+        else{
+            res.redirect("/home")
+        }
+    })
+});
+
 app.get("/recipe/:id", function(req, res){
     const {id} = req.params;
     var success = false;
@@ -698,7 +691,6 @@ app.get("/recipe/:id", function(req, res){
                 success = true;
                 var dishName = rows[0].name;
                 var instructions = rows[0].instructions;
-                console.log(instructions);
                 image = rows[0].picture;
                 ingredients = rows[0].ingredients.split(",");
                 ingredientString = rows[0].ingredients;
