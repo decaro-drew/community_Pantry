@@ -7,157 +7,458 @@
 
     
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <link rel="stylesheet" href="recipe.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="/styles/home.css">
     <link href="https://fonts.googleapis.com/css2?family=Allura&family=Open+Sans+Condensed:wght@300&display=swap" rel="stylesheet">
 
     <title>Community Pantry</title>
   </head>
   <body>
       
+       
+     
+     
+     <nav class="fixed-top">
+           <div class="container">
+            <div class="logo">
+                 <h4>Community Pantry</h4>
+             </div>
+             <ul class="nav-links">
+                 <li>
+                     <a class="" href="/top10">Top 10</a>
+                 </li>
+                 <li class="">
+                    <a class="" href="/search"> Search</a>
+                 </li>
+                <li class="">
+                    <a class="active" href="/home" disabled>Home</a>
+                </li>
+             </ul>
+             
+         </div>
+     </nav>
       
-      <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
-          <div class="container">
-                  <a class="navbar-brand" href="/">Community Pantry</a>
-                  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                  </button>
-                  <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                      <a class="nav-link" href="/top10">Top 10</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="/search"> Search</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link active"><%= user %> </a>
-                    </li>
-                  </ul>
-          </div>
-    </nav>
-      
-      
-    <div class="container mt-5 pt-5">
-    
-        <h1 class="display-1 my-5"><%= user %> </h1>
-        <p class="my-5">potential profile picture or avatar</p>
-        <p class="my-5">potential optional Bio</p>
-        
-        <h3 class="display-4 mt-5">Your Recipes</h3>
-        <ul class="mb-5 my-5">
-              
-            <% userRecipes.forEach(recipe => { %>
-
-              <li class="m-5">
-                <a class="nav-link" href="/recipe/<%= recipe.id %> "><h4 class="my-5"><%= recipe.name %> </h4></a>
-                  <div class="container m-5">
-                       <h5>recipe Picture</h5>
-                       <p><%= recipe.snipbit %> </p>
-                  </div>
+      <div class="fixed-bottom" id="menu">
+          <ul class="nav justify-content-center">
+              <li class="nav-item">
+                <a class="nav-link" href="#top" id="topbtn">Top</a>
               </li>
-
-            <% }); %> 
-                
-        </ul>
-
-        <h3 class="display-4 mt-5">Saved Recipes</h3>
-        <ul class="mb-5 my-5">
-              
-            <% likedRecipes.forEach(recipe => { %>
-
-              <li class="m-5">
-                <a class="nav-link" href="/recipe/<%= recipe.id %> "><h4 class="my-5"><%= recipe.name %> </h4></a>
-                  <div class="container m-5">
-                       <h5>recipe Picture</h5>
-                       <p><%= recipe.snipbit %> </p>
-                  </div>
+              <li class="nav-item">
+                <a class="nav-link" href="#yourRecipes" id="yourRecipesbtn">Your Recipes</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#createRecipe" id ="createRecipebtn">Create Recipe</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#savedRecipes" id="savedRecipesbtn">Saved Recipes</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#shoppingList" id="shoppingListbtn">Shopping List</a>
+              </li>
+         </ul>
+      </div>
+      
+      
+      
+      <div class="modal fade" id="bioModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update your Bio</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                
+                <div class="form-group">
+                  <label for="name">Bio : </label>
+                  <textarea class="form-control" rows="5" name="ingredients"></textarea>
+                </div>
 
-            <% }); %> 
-                
-        </ul>
-        <form action="/clearSavedRecipes" method="post">
-          <button type="submit" class="btn btn-primary mb-2">Clear Saved Recipes</button>
-        </form>
-            
-            
-        <h3 class="display-4 mt-5">Shopping list</h3>
-        <ul class="col-8 list-group list-group-flush">
-          <% var count = 0; 
-            shoppingList.forEach(ingredient => { %>
-                
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <form action="/deleteIngredient/<%=count%>" method="POST"></form>
-                      <%= ingredient %>
-                      <button class="btn btn-sm btn-outline-danger">Remove from Shopping List</button>
-                    </form>
-                  </li>
-                  
-                   <% count += 1;
-           }); %> 
-       </ul>
-       <form action="/clearShoppingList" method="post">
-          <button type="submit" class="btn btn-primary mb-2">Clear ShoppingList</button>
-        </form>
-    
-    </div>
-    <div class="container">
-                 
-      <center><h2 class="my-5 pt-5">Create a Recipe</h2></center>
-      <form action="/createRecipe/tmpUser" method="POST" enctype="multipart/form-data">
-        <div class="createform mb-4" style="margin: auto">
-          <div class="form-group">
-            <label for="name">Recipe name</label>
-            <input class="form-control" type="text" placeholder="Recipe Name" name="rName">
-          </div>
-          <div class="form-group">
-            <label for="name">Cuisine</label>
-            <input class="form-control" type="text" placeholder="Cusiine" name = "cuisine">
-          </div>
-          <div class="form-group">
-            <label for="name">Short description</label>
-            <textarea class="form-control" rows="5" name="snipbit"></textarea>
-          </div>
-          <div class="form-group">
-            <label for="name">Ingredients (use commas to seperate values)</label>
-            <textarea class="form-control" rows="5" name="ingredients"></textarea>
-          </div>
-          <div class="form-group">
-            <label for="name">Instructions</label>
-            <textarea class="form-control" rows="10" name="instructions"></textarea>
-          </div>
-          <div class="keyWords py-4">
-            <label class="pb-2" for="name">Please select one or more keywords</label>
-            <div class="container row">
-              <% keyWords.forEach(key => { %> 
-                <div class="form-check col">
-                  <input class="form-check-input" type="checkbox" name="<%= key %>" value="True" id="">
-                  <label class="form-check-label" for="">
-                      <%= key %> 
-                  </label>
-                </div> 
-              <% }); %>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+              </div>
             </div>
           </div>
-          <div class="form-group">
-            <label for="exampleFormControlFile1">Recipe Image</label>
-            <input type="file" class="form-control-file" name="image" id="exampleFormControlFile1">
+     </div>
+      
+      <div class="modal fade" id="picModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update your Profile Picture</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                
+                <div class="form-group">
+                  <label for="exampleFormControlFile1" class="mb-4">Upload an Image</label>
+                  <input type="file" class="form-control-file" name="image" id="exampleFormControlFile1">
+                </div>
+                
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+              </div>
+            </div>
           </div>
-          
-          <div class="form-group">
-            <button class="btn btn-outline-primary btn-block my-5">Add recipee</button>        
+     </div>
+      
+      
+      
+    <section id="top">
+    <div class="mb-0 jumbotron" id="title">
+        <div class="card">
+          <div class="row no-gutters">
+            <div class="col-md-4">
+              <img src="/styles/default_profile.jpg" class="card-img" alt="...">
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h1 class="card-title "><%= user %></h1>
+                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <div class="row ml-0">
+                   <button class="btn btn-outline-primary btn-sm mr-2" data-toggle="modal" data-target="#picModal">
+                      Edit Profile Picture
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm " data-toggle="modal" data-target="#bioModal">
+                      Edit Bio
+                    </button>
+                </div>
+                
+              </div>
+            </div>
           </div>
-      </div>
-      </form>
-      <br>
-  </div>
-    </form>
+          <div class="card-footer">
+              <a class="nav-link" href="#yourRecipes" id="yourRecipesbtn2">
+                  Your Recipes
+              </a>
+          </div>
+          <div class="card-footer">
+              <a class="nav-link" href="#createRecipe" id ="createRecipebtn2">
+                  Create a Recipe
+              </a>
+          </div>
+          <div class="card-footer">
+              <a class="nav-link" href="#savedRecipes" id="savedRecipesbtn2">
+                  Saved Recipes
+              </a>
+          </div>
+          <div class="card-footer">
+              <a class="nav-link" href="#shoppingList" id="shoppingListbtn2">
+                  Shopping List
+              </a>
+          </div>
+        </div>
+        
+    </div>
+   </section> 
+     
+    
+    
+    
+       
+       
+        <section id="yourRecipes">
+          <div class="container">
+           <br><br>
+            <div class="title">
+               <h3 class="display-4 mt-5 ">Your Recipes</h3>
+            </div>
+            <ul class="my-5 pl-0">
+
+              <% userRecipes.forEach(recipe => { %>
+                <a href="#">
+                  <li class="my-5" data-aos="fade-up">
+  
+                      <div class="card p-0" >
+                       
+                        <div class="row no-gutters">
+                          <div class="col-md-4 test">
+                            <img src="/recipe_images/default_recipe.jpg" class="card-img" alt="...">
+                          </div>
+                          <div class="col-md-8">
+                            <div class="card-body">
+                              <h5 class="card-title"><%= recipe.name %></h5>
+                              <p class="card-text"><%= recipe.cuisine %></p>
+                              <p class="card-text"><%= recipe.snipbit %></p>
+                              <div class="row mt-5 ml-1">
+                                  <img src="/styles/default_profile.jpg" alt="" class="mt-1">
+                                  <p class="card-text ml-2 pt-2"><%= recipe.username %></p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>  
+                      </div>
+                      
+                  </li>
+                  </a>
+              <% }); %>               
+               
+               
+            </ul>
+            <br><br>
+            </div>
+        </section>
+        
+        
+        <section id="createRecipe">
+          <div class="container">
+           <br><br>
+            <div class="title">
+               <h3 class="display-4 mt-5 ">Create a Recipe</h3>
+            </div>
+            <form action="/createRecipe/tmpUser" method="POST" enctype="multipart/form-data">
+              <div class="createform mb-4" style="margin: auto">
+                <div class="form-group">
+                  <label for="name">Recipe name</label>
+                  <input class="form-control" type="text" placeholder="Recipe Name" name="rName">
+                </div>
+                <div class="form-group">
+                  <label for="name">Cuisine</label>
+                  <input class="form-control" type="text" placeholder="Cusiine" name = "cuisine">
+                </div>
+                <div class="form-group">
+                  <label for="name">Short description</label>
+                  <textarea class="form-control" rows="5" name="snipbit"></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="name">Ingredients (use commas to seperate values)</label>
+                  <textarea class="form-control" rows="5" name="ingredients"></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="name">Instructions</label>
+                  <textarea class="form-control" rows="10" name="instructions"></textarea>
+                </div>
+                <div class="keyWords py-4">
+                  <label class="pb-2" for="name">Please select one or more keywords</label>
+                  <div class="container row">
+                    <% keyWords.forEach(key => { %> 
+                      <div class="form-check col">
+                        <input class="form-check-input" type="checkbox" name="<%= key %>" value="True" id="">
+                        <label class="form-check-label" for="">
+                            <%= key %> 
+                        </label>
+                      </div> 
+                    <% }); %>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="exampleFormControlFile1">Recipe Image</label>
+                  <input type="file" class="form-control-file" name="image" id="exampleFormControlFile1">
+                </div>
+                
+                <div class="form-group">
+                  <button class="btn btn-outline-primary btn-block my-5">Add recipee</button>        
+                </div>
+            </div>
+            </form>
+            </div>
+        </section>
+        
+        
+        
+        
+        
+        
+        <section id="savedRecipes">
+          <div class="container">
+           <br><br>
+            <div class="title">
+               <h3 class="display-4 mt-5 ">Saved Recipes</h3>
+            </div>
+            <ul class="my-5 pl-0">
+              <% likedRecipes.forEach(recipe => { %>
+                <a href="#">
+                  <li class="my-5" data-aos="fade-up">
+  
+                      <div class="card p-0" >
+                       
+                        <div class="row no-gutters">
+                          <div class="col-md-4 test">
+                            <img src="/recipe_images/default_recipe.jpg" class="card-img" alt="...">
+                          </div>
+                          <div class="col-md-8">
+                            <div class="card-body">
+                              <h5 class="card-title"><%= recipe.name %></h5>
+                              <p class="card-text"><%= recipe.cuisine %></p>
+                              <p class="card-text"><%= recipe.snipbit %></p>
+                              <div class="row mt-5 ml-1">
+                                  <img src="/styles/default_profile.jpg" alt="" class="mt-1">
+                                  <p class="card-text ml-2 pt-2"><%= recipe.username %></p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>  
+                      </div>
+                      
+                  </li>
+                  </a>
+              <% }); %> 
+               
+            </ul>
+            <br>
+            
+            <form action="/clearSavedRecipes" method="POST">
+              <button class="btn btn-outline-primary btn-block mt-2 mb-4">Clear Saved Recipes</button>
+            </form>
+            
+            <br>
+            </div>
+        </section>
+        
+        
+        <section id="shoppingList">
+          <div class="container">
+           <br><br>
+            <div class="title">
+               <h3 class="display-4 mt-5 ">Shopping List</h3>
+            </div>
+            <div class="row mt-5">
+              <ul class="col-8 list-group list-group-flush">
+                  <% var count = 0; 
+                    shoppingList.forEach(ingredient => { %>
+                
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                          <%= ingredient %>
+                          <form action="/deleteIngredient/<%= count %>" method="POST">
+                              <button class="btn btn-sm btn-outline-danger">Remove from Shopping List</button>
+                          </form>
+                      </li>
+                  
+                   <% count += 1;
+                  }); %> 
+                  
+                </ul>
+                
+                <ul class="col">
+                    <li>
+                        <form action="/clearShoppingList" method="POST">
+                            <button class="btn btn-outline-primary btn-block mt-2 mb-4">Clear Shopping List</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            </div>
+        </section>
+    
+    
+    
+    
+    
+  
     <script
       src="https://code.jquery.com/jquery-3.5.1.js"
       integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
             crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 900
+        });
+    </script>
+    <script>
     
+      $(document).ready(function(){
+            var scrolllink = $('#topbtn');
+            scrolllink.click(function(e){
+                e.preventDefault();
+                $('body,html').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 1000)
+            })
+        })
+      $(document).ready(function(){
+            var scrolllink = $('#yourRecipesbtn');
+            scrolllink.click(function(e){
+                e.preventDefault();
+                $('body,html').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 1000)
+            })
+        })
+        $(document).ready(function(){
+            var scrolllink = $('#createRecipebtn');
+            scrolllink.click(function(e){
+                e.preventDefault();
+                $('body,html').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 1000)
+            })
+        })
+        $(document).ready(function(){
+            var scrolllink = $('#savedRecipesbtn');
+            scrolllink.click(function(e){
+                e.preventDefault();
+                $('body,html').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 1000)
+            })
+        })
+        $(document).ready(function(){
+            var scrolllink = $('#shoppingListbtn');
+            scrolllink.click(function(e){
+                e.preventDefault();
+                $('body,html').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 1000)
+            })
+        })
+        $(document).ready(function(){
+            var scrolllink = $('#yourRecipesbtn2');
+            scrolllink.click(function(e){
+                e.preventDefault();
+                $('body,html').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 1000)
+            })
+        })
+        $(document).ready(function(){
+            var scrolllink = $('#createRecipebtn2');
+            scrolllink.click(function(e){
+                e.preventDefault();
+                $('body,html').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 1000)
+            })
+        })
+        $(document).ready(function(){
+            var scrolllink = $('#savedRecipesbtn2');
+            scrolllink.click(function(e){
+                e.preventDefault();
+                $('body,html').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 1000)
+            })
+        })
+        $(document).ready(function(){
+            var scrolllink = $('#shoppingListbtn2');
+            scrolllink.click(function(e){
+                e.preventDefault();
+                $('body,html').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 1000)
+            })
+        })
+        
+        window.addEventListener('scroll', function(){
+            let nav = document.querySelector('nav');
+            nav.classList.toggle('scroll-active', window.scrollY > 0);
+            let menu = document.getElementById('menu');
+            menu.classList.toggle('scroll-active', window.scrollY > 40);
+        })
+        
+      
+    </script>
     
   </body>
 </html>
