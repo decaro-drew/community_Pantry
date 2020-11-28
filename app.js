@@ -826,7 +826,7 @@ app.post("/createAccount", function(req, res){
         valid = false;
     }
     if(valid){
-        db.query("Insert into user (username, email, pWord) VALUES ('"+req.body.uName+"','"+req.body.email+"','"+req.body.pWord+"')",function(err, result){   
+        db.query("Insert into user (username, email, pWord, shoppingList, likedRecipes, bio) VALUES ('"+req.body.uName+"','"+req.body.email+"','"+req.body.pWord+"', '', '', '')",function(err, result){   
             if(err){
                 res.send("Username already exists");
             }
