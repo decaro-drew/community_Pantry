@@ -59,6 +59,7 @@
       </div>
       
       
+      
       <div class="modal fade" id="bioModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -72,7 +73,7 @@
                 
                 <div class="form-group">
                   <label for="name">Bio : </label>
-                  <textarea class="form-control" rows="5" name="ingredients" ></textarea>
+                  <textarea class="form-control" rows="5" name="ingredients"><%= bio %> </textarea>
                 </div>
 
 
@@ -85,31 +86,33 @@
           </div>
      </div>
       
-      <div class="modal fade" id="picModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Update your Profile Picture</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">   
-              <form action="/updateProfilePhoto" method="POST" enctype="multipart/form-data">      
-                <div class="form-group">
-                  <label for="exampleFormControlFile1" class="mb-4">Upload an Image</label>
-                  <input type="file" class="form-control-file" name="image" id="exampleFormControlFile1">
-                </div>               
-              </div>
-
-              <div class="modal-footer">
-                <button  class="btn btn-primary">Save changes</button>
-              </form> 
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              </div>
-            </div>
+     <div class="modal fade" id="picModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Update your Profile Picture</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
-     </div>
+          <div class="modal-body">   
+          <form action="/updateProfilePhoto" method="POST" enctype="multipart/form-data">      
+            <div class="form-group">
+              <label for="exampleFormControlFile1" class="mb-4">Upload an Image</label>
+              <input type="file" class="form-control-file" name="image" id="exampleFormControlFile1">
+            </div>               
+          </div>
+
+          <div class="modal-footer">
+            <button  class="btn btn-primary">Save changes</button>
+          </form> 
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+ </div>
+      
+      
       
     <section id="top">
     <div class="mb-0 jumbotron" id="title">
@@ -187,7 +190,7 @@
                               <p class="card-text"><%= recipe.cuisine %></p>
                               <p class="card-text snipbit"><%= recipe.snipbit %></p>
                               <div class="row mt-5 ml-1">
-                                <img class="mt-1" src="/profile_images/<%= user %>.jpg" class="card-img" onerror="this.src='/profile_images/default_profile.jpg'">
+                                <img class="mt-1 card-image" src="/profile_images/<%= recipe.username %>.jpg"  onerror="this.src='/profile_images/default_profile.jpg'">
                                   <p class="card-text ml-2 pt-2"><%= recipe.username %></p>
                               </div>
                             </div>
@@ -288,7 +291,7 @@
                               <p class="card-text"><%= recipe.cuisine %></p>
                               <p class="card-text snipbit"><%= recipe.snipbit %></p>
                               <div class="row mt-5 ml-1">
-                                <img class="mt-1" src="/profile_images/<%= user %>.jpg" class="card-img" onerror="this.src='/profile_images/default_profile.jpg'">
+                                <img class="mt-1 card-image" src="/profile_images/<%= recipe.username %>.jpg"  onerror="this.src='/profile_images/default_profile.jpg'">
                                   <p class="card-text ml-2 pt-2"><%= recipe.username %></p>
                               </div>
                             </div>
