@@ -36,11 +36,19 @@
     </nav>
      
      
-      
+          
     <div class="container mt-5 pt-5">
            <h1 class="my-5 display-1"><%= message %> </h1>
           
-            <% for(var i=0; i<dishes.length; i++) { %>
+            <% if(message == "Here's who we found"){
+                for(var i = 0; i < userList.length; i++){ %>
+                  <div class="container">
+                    <a class="nav-link" href="/user/<%= userList[i] %> "><h2 class="display-3 my-5"><%= userList[i] %> </h2></a>
+                </div>
+                <%}
+            }
+            else{
+            for(var i=0; i < dishes.length; i++) { %>
     
                 <div class="container">
                     <a class="nav-link" href="/recipe/<%= dishes[i].id %> "><h2 class="display-3 my-5"><%= dishes[i].name %> </h2></a>
@@ -49,7 +57,7 @@
                         <p><%= dishes[i].snipbit %> </p>
                     </div>
                 </div>
-            <% } %>
+            <% }} %>
             
       </div>
     <script
