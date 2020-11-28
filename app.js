@@ -793,6 +793,17 @@ app.post("/updateProfilePhoto", function(req, res){
     }
 });
 
+app.post("/updateBio", function(req, res){
+    console.log(req.body.bio);
+    db.query("update user set bio = '"+req.body.bio+"' where username = ?",[req.session.user], function(err, rows){
+        if(err)
+            throw err;
+        else{
+            res.redirect("/home");
+        }
+    });
+});
+
 app.post("/createAccount", function(req, res){
     var valid = true;
     if(req.body.uName.length < 6){
