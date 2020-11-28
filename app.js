@@ -464,19 +464,19 @@ app.get("/results/cuisine", function(req, res){
 });
 
 
-app.get("/result/users", function(req, res){
-    var targetUser = url.parse(req.url, true).query.targetUser;
-    console.log("cheeseburger".indexOf("cheese"));
+app.get("/results/users", function(req, res){
+    var targetUser = url.parse(req.url, true).query.targetUser.toLowerCase();
+    console.log(targetUser);
     db.query("SELECT * FROM user", function(err, rows){
-        console.log(rows);
-        var exact = "";
+        var exact = new Array();
         var indexZero = new Array();
         var others = new Array()
         for(var i = 0; i < rows.length; i++){
-            if(rows[i].username.includes(targetUser)){
-                if(rows[i].username == targetUser)
-                    exact = rows[i].username;
-                if(rows[i].username.indexOf(targetUser) == 0)
+            if(rows[i].username.toLowerCase().includes(targetUser)){
+                console.log(rows[i].username.toLowerCase());
+                if(rows[i].username.toLowerCase() == targetUser)
+                    exact.push(rows[i].username);
+                else if(rows[i].username.toLowerCase().indexOf(targetUser) == 0)
                     indexZero.push(rows[i].username);
                 else
                     others.push(rows[i].username);
@@ -485,8 +485,8 @@ app.get("/result/users", function(req, res){
         indexZero.sort(function(a,b){ return a.length - b.length});     
         others.sort(function(a,b){ return a.length - b.length});
         var userList = new Array();
-        if(exact != "")
-            userList.push(exact);
+        for(var i = 0; i < exact.length; i++)
+            userList.push(exact[i]);
         for(var i = 0; i < indexZero.length; i++)
             userList.push(indexZero[i]);
         for(var i = 0; i < others.length; i++)
