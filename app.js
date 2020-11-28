@@ -161,18 +161,14 @@ app.get("/home", function(req, res){
     }
 
 
-    function getBioandPic(){ 
+    function getBio(){ 
         return new Promise(function (resolve, reject){
-            db.query("Select bio, picture from user where username = ?",[req.session.user], function(error, rows){
+            db.query("Select bio from user where username = ?",[req.session.user], function(error, rows){
                 if(error){
                     throw error;
                 }
                 else{
-                    info = {
-                        bio : rows[0].bio,
-                        picture: rows[0].picture
-                    }
-                    resolve(info);
+                    resolve("");
                 }
                 
             });
@@ -184,13 +180,8 @@ app.get("/home", function(req, res){
         var userRecipes = await getUserRecipes();
         var lists = await getShoppingListAndLikedRecipes();
         var shoppingList = lists.shoppingList;
-        var info = await getBioandPic();
-        var bio = "";
-        if(info.bio != null)
-            bio = info.bio;
-        var pic = "/profile_images/default_profile.jpg";
-        if(info.pic != null)
-            pic = info.pic;
+        var bio = await getBio();
+        
         var likedRecipes = [];
         if(lists.likedRecipes[0] != ''){
             for(var i=0; i <lists.likedRecipes.length; i++){
@@ -203,16 +194,14 @@ app.get("/home", function(req, res){
         keyWords = ["Chicken", "Beef", "Pork", "Lamb", "Fish", "Seafood", "Pasta", "Rice", "Stirfry", "Soup", "Stew", "Salad", "Vegeterian"];
 
         
-        res.render("home.ejs", {user: req.session.user, mainUser: req.session.user, likedRecipes, userRecipes, shoppingList, keyWords, bio, pic});
+        res.render("home.ejs", {user: req.session.user, mainUser: req.session.user, likedRecipes, userRecipes, shoppingList, keyWords, bio});
     }
-
     compile();
     
 });
 
 app.get("/user/:user", function(req, res){
     const {user} = req.params;
-    console.log(user);
    // var user = url.parse(req.url, true).query.otherUser;
     function getShoppingListAndLikedRecipes(){
         return new Promise(function (resolve, reject){
@@ -222,19 +211,13 @@ app.get("/user/:user", function(req, res){
                     throw error;
                 }
                 else{     
-                    console.log(rows);
-                    console.log(rows[0]);
-                    if(rows[0] == null){
-                        console.log("here1");
-                        resolve(["error"]);    
-                    }
-                    else{
+
                         if(rows[0].likedRecipes == null)
                             likedRecipes = [];
                         else
                             likedRecipes = rows[0].likedRecipes.split(",");
                         resolve(likedRecipes);
-                    }
+                    
                 }
                 
             });
@@ -249,8 +232,6 @@ app.get("/user/:user", function(req, res){
                     throw error;
                 }
                 else{
-                    if(rows[0] == null)
-                        resolve(["error"]);
                     for(i=0; i<rows.length; i++){
                         dish = {
                             id: rows[i].id,
@@ -274,20 +255,10 @@ app.get("/user/:user", function(req, res){
                     throw error;
                 }
                 else{
-                    console.log("bam");
-                    console.log(rows[0]);
-                    if(id == "error"){
-                        console.log("heyyy");
-                        dish = {
-                            id: "error",
-                            name: "error",
-                            picture: "error",
-                            snipbit: "error",
-                        }
-                        resolve(dish);
-                        console.log("what");
-                    }
-                    else{
+    
+    
+                    
+                 
                         console.log(id);
                         dish = {
                             id: rows[0].id,
@@ -296,7 +267,7 @@ app.get("/user/:user", function(req, res){
                             snipbit: rows[0].snipbit,
                         }
                         resolve(dish);
-                    }                 
+                                  
                 }
                 
             });
@@ -306,10 +277,7 @@ app.get("/user/:user", function(req, res){
 
     async function compile(){
         var userRecipes = await getUserRecipes();
-        console.log(1);
         var likes = await getShoppingListAndLikedRecipes();
-        console.log(2);
-        //var shoppingList = lists.shoppingList;
 
         var likedRecipes = [];
         if(likes[0] != ''){
@@ -317,10 +285,6 @@ app.get("/user/:user", function(req, res){
                 likedRecipes[i] = await getLikedRecipe(likes[i]);
             }
         }
-
-        //if(shoppingList[0] == '') shoppingList = [];
-
-        //keyWords = ["Chicken", "Beef", "Pork", "Lamb", "Fish", "Seafood", "Pasta", "Rice"];
         
         res.render("user.ejs", {user: req.session.user, targetUser: user, likedRecipes, userRecipes});
     }
