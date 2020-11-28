@@ -168,7 +168,7 @@ app.get("/home", function(req, res){
                     throw error;
                 }
                 else{
-                    resolve("");
+                    resolve(rows[0].bio);
                 }
                 
             });
