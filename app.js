@@ -751,7 +751,10 @@ app.post("/createRecipe/:username", function(req, res){
     db.query("SELECT MAX(id) as max FROM recipe", function(err, result){
         var keyString = "";
         for(var i = 5; i < Object.keys(req.body).length; i++){
-            keyString = keyString + "," + Object.keys(req.body)[i];
+            if(keyString == "")
+                keyString = Object.keys(req.body)[i];
+            else
+                keyString = keyString + "," + Object.keys(req.body)[i];
         }
         var file = req.files.image;
         file.name = (result[0].max+1).toString() + ".jpg";
