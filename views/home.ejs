@@ -73,7 +73,7 @@
                 
                 <div class="form-group">
                   <label for="name">Bio : </label>
-                  <textarea class="form-control" rows="5" name="ingredients"></textarea>
+                  <textarea class="form-control" rows="5" name="ingredients"><%= bio %> </textarea>
                 </div>
 
 
@@ -118,12 +118,12 @@
         <div class="card">
           <div class="row no-gutters">
             <div class="col-md-4">
-              <img src="/styles/default_profile.jpg" class="card-img" alt="...">
+              <img src="/profile_images/<%= user %>.jpg" class="card-img" onerror="this.src='/profile_images/default_profile.jpg'">
             </div>
             <div class="col-md-8">
               <div class="card-body">
                 <h1 class="card-title "><%= user %></h1>
-                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <p class="card-text"><%= bio %> </p>
                 <div class="row ml-0">
                    <button class="btn btn-outline-primary btn-sm mr-2" data-toggle="modal" data-target="#picModal">
                       Edit Profile Picture
@@ -175,22 +175,21 @@
             <ul class="my-5 pl-0">
 
               <% userRecipes.forEach(recipe => { %>
-                <a href="#">
+                <a href="/recipe/<%= recipe.id %>">
                   <li class="my-5" data-aos="fade-up">
   
                       <div class="card p-0" >
                        
                         <div class="row no-gutters">
                           <div class="col-md-4 test">
-                            <img src="/recipe_images/default_recipe.jpg" class="card-img" alt="...">
-                          </div>
+                            <img src="/recipe_images/<%= recipe.id %>.jpg" class="card-img" onerror="this.src='/recipe_images/default_recipe.jpg'">
                           <div class="col-md-8">
                             <div class="card-body">
                               <h5 class="card-title"><%= recipe.name %></h5>
                               <p class="card-text"><%= recipe.cuisine %></p>
-                              <p class="card-text"><%= recipe.snipbit %></p>
+                              <p class="card-text snipbit"><%= recipe.snipbit %></p>
                               <div class="row mt-5 ml-1">
-                                  <img src="/styles/default_profile.jpg" alt="" class="mt-1">
+                                <img class="mt-1" src="/profile_images/<%= user %>.jpg" class="card-img" onerror="this.src='/profile_images/default_profile.jpg'">
                                   <p class="card-text ml-2 pt-2"><%= recipe.username %></p>
                               </div>
                             </div>
@@ -212,30 +211,30 @@
         <section id="createRecipe">
           <div class="container">
            <br><br>
-            <div class="title">
+            <div class="title mb-4 ">
                <h3 class="display-4 mt-5 ">Create a Recipe</h3>
             </div>
             <form action="/createRecipe/tmpUser" method="POST" enctype="multipart/form-data">
               <div class="createform mb-4" style="margin: auto">
                 <div class="form-group">
                   <label for="name">Recipe name</label>
-                  <input class="form-control" type="text" placeholder="Recipe Name" name="rName">
+                  <input class="form-control" type="text" placeholder="Recipe Name" name="rName" required>
                 </div>
                 <div class="form-group">
                   <label for="name">Cuisine</label>
-                  <input class="form-control" type="text" placeholder="Cusiine" name = "cuisine">
+                  <input class="form-control" type="text" placeholder="Cusiine" name = "cuisine" required>
                 </div>
                 <div class="form-group">
                   <label for="name">Short description</label>
-                  <textarea class="form-control" rows="5" name="snipbit"></textarea>
+                  <textarea class="form-control" rows="5" name="snipbit" required></textarea>
                 </div>
                 <div class="form-group">
                   <label for="name">Ingredients (use commas to seperate values)</label>
-                  <textarea class="form-control" rows="5" name="ingredients"></textarea>
+                  <textarea class="form-control" rows="5" name="ingredients" required></textarea>
                 </div>
                 <div class="form-group">
                   <label for="name">Instructions</label>
-                  <textarea class="form-control" rows="10" name="instructions"></textarea>
+                  <textarea class="form-control" rows="10" name="instructions" required></textarea>
                 </div>
                 <div class="keyWords py-4">
                   <label class="pb-2" for="name">Please select one or more keywords</label>
@@ -276,22 +275,22 @@
             </div>
             <ul class="my-5 pl-0">
               <% likedRecipes.forEach(recipe => { %>
-                <a href="#">
+                <a href="/recipe/<%= recipe.id %> ">
                   <li class="my-5" data-aos="fade-up">
   
                       <div class="card p-0" >
                        
                         <div class="row no-gutters">
                           <div class="col-md-4 test">
-                            <img src="/recipe_images/default_recipe.jpg" class="card-img" alt="...">
+                            <img src="/recipe_images/<%= recipe.id %>.jpg" class="card-img" onerror="this.src='/recipe_images/default_recipe.jpg'">
                           </div>
                           <div class="col-md-8">
                             <div class="card-body">
                               <h5 class="card-title"><%= recipe.name %></h5>
                               <p class="card-text"><%= recipe.cuisine %></p>
-                              <p class="card-text"><%= recipe.snipbit %></p>
+                              <p class="card-text snipbit"><%= recipe.snipbit %></p>
                               <div class="row mt-5 ml-1">
-                                  <img src="/styles/default_profile.jpg" alt="" class="mt-1">
+                                <img class="mt-1" src="/profile_images/<%= user %>.jpg" class="card-img" onerror="this.src='/profile_images/default_profile.jpg'">
                                   <p class="card-text ml-2 pt-2"><%= recipe.username %></p>
                               </div>
                             </div>
