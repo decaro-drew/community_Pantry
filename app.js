@@ -126,6 +126,8 @@ app.get("/home", function(req, res){
                             name:rows[i].name,
                             picture: rows[i].picture,
                             snipbit: rows[i].snipbit,
+                            cuisine: rows[i].cuisine,
+                            username: rows[i].username
                         }
                         dishes[i] = dish;
                     }
@@ -148,6 +150,8 @@ app.get("/home", function(req, res){
                         name:rows[0].name,
                         picture: rows[0].picture,
                         snipbit: rows[0].snipbit,
+                        cuisine: rows[0].cuisine,
+                        username: rows[0].username
                     }
                     resolve(dish);
                 }
@@ -157,12 +161,30 @@ app.get("/home", function(req, res){
     }
 
 
+    function getBioandPic(){ 
+        return new Promise(function (resolve, reject){
+            db.query("Select bio, picture from user where username = ?",[req.session.user], function(error, rows){
+                if(error){
+                    throw error;
+                }
+                else{
+                    info = {
+                        bio : rows[0].bio,
+                        picture: rows[0].picture
+                    }
+                    resolve(info);
+                }
+                
+            });
+        })
+    }
+
+
     async function compile(){
         var userRecipes = await getUserRecipes();
-        console.log(1);
         var lists = await getShoppingListAndLikedRecipes();
-        console.log(2);
         var shoppingList = lists.shoppingList;
+        var info = await getBioandPic();
 
         var likedRecipes = [];
         if(lists.likedRecipes[0] != ''){
@@ -385,11 +407,14 @@ app.get("/top10", function(req, res){
                     name:rows[i].name,
                     picture: rows[i].picture,
                     snipbit: rows[i].snipbit,
+                    cuisine: rows[i].cuisine,
+                    username: rows[i].username
                 }
 
                 dishes[i] = dish;
 
             }
+         
             res.render("top10.ejs", {dishes});
         }
         
@@ -425,12 +450,14 @@ app.get("/results/dish", function(req, res){
                     name:rows[i].name,
                     picture: rows[i].picture,
                     snipbit: rows[i].snipbit,
+                    cuisine: rows[i].cuisine,
+                    username: rows[i].username
                 }
                 dishes[i] = dish;
             }
         }
         
-        res.render("results.ejs", {user: req.session.user, message: "Results for " + dishName, dishes});
+        res.render("results.ejs", {user: req.session.user, message: "Results for " + dishName, dishes, userSearch: false});
     });
     
     
@@ -452,12 +479,14 @@ app.get("/results/cuisine", function(req, res){
                     name:rows[i].name,
                     picture: rows[i].picture,
                     snipbit: rows[i].snipbit,
+                    cuisine: rows[i].cuisine,
+                    username: rows[i].username
                 }
                 dishes[i] = dish;
             }
         }
         
-        res.render("results.ejs", {user: req.session.user, message: "Results for " + cuisine, dishes});
+        res.render("results.ejs", {user: req.session.user, message: "Results for " + cuisine, dishes, userSearch: false});
     });
     
     
@@ -541,6 +570,8 @@ app.get("/results", function(req, res){
                         name:rows[i].name,
                         picture: rows[i].picture,
                         snipbit: rows[i].snipbit,
+                        cuisine: rows[i].cuisine,
+                        uername: rows[i].username,
                         matches: matches,
                     }
                     dishes[counter] = dish;
@@ -549,7 +580,7 @@ app.get("/results", function(req, res){
             }
         }
         dishes.sort((a,b) => parseFloat(b.matches) - parseFloat(a.matches));
-        res.render("results.ejs", {user: req.session.user, message: "Here's what you can make", dishes});
+        res.render("results.ejs", {user: req.session.user, message: "Here's what you can make", dishes, userSearch: false});
     });
 });
 
@@ -596,7 +627,7 @@ app.post("/unSaveRecipe/:id", function(req, res){
                     throw error;
                 }
                 else{
-                    res.redirect("/home");
+                    res.redirect("/recipe/" + id)
                 }
             })
 
@@ -688,20 +719,25 @@ app.get("/recipe/:id", function(req, res){
             throw error;
         }
         else{
-            if(rows.length > 0){
-                success = true;
                 var dishName = rows[0].name;
                 var instructions = rows[0].instructions;
-                image = rows[0].picture;
-                ingredients = rows[0].ingredients.split(",");
-                ingredientString = rows[0].ingredients;
-                res.render("recipe.ejs", {user: req.session.user, dishName, instructions, ingredients, ingredientString, image, id});
-            }
-            else{
-                ingredients = ["egg", "brocoli", "cumin"];
-                ingredientString = "";
-                res.render("recipe.ejs", {user: req.session.user, dishName: "nah", instructions: "just fucking make it bro", ingredients, ingredientString, id});
-            }
+                var image = rows[0].picture;
+                var ingredients = rows[0].ingredients.split(",");
+                var ingredientString = rows[0].ingredients;
+                var username = rows[0].username;
+                var snipbit = rows[0].snipbit;
+                var cuisine = rows[0].cuisine;
+
+                db.query("SELECT likedRecipes FROM user WHERE username = ?", [req.session.user], function(error, rows){
+                        if(error){
+                            throw error;
+                        }
+                        else{
+                            var saved = rows[0].likedRecipes.includes(id);
+                            res.render("recipe.ejs", {user: req.session.user, saved, dishName, instructions, ingredients, ingredientString, image, id, snipbit, username, cuisine});
+                        }
+                });
+                
         }      
     });
     
