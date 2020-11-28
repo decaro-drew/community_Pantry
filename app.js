@@ -188,7 +188,7 @@ app.get("/home", function(req, res){
         var bio = "";
         if(info.bio != null)
             bio = info.bio;
-        var pic = "/profile_images/default/profile.jpg";
+        var pic = "/profile_images/default_profile.jpg";
         if(info.pic != null)
             pic = info.pic;
         var likedRecipes = [];
