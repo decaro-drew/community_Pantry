@@ -491,7 +491,8 @@ app.get("/results/users", function(req, res){
             userList.push(indexZero[i]);
         for(var i = 0; i < others.length; i++)
             userList.push(others[i]);
-        console.log(userList);
+        userList = userList.filter(e => e !== "admin");
+        userList = userList.filter(e => e !== req.session.user);  
         res.render("results.ejs", {user: req.session.user, message: "Here's who we found", userList});
     });
 
