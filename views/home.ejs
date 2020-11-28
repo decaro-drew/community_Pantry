@@ -60,7 +60,7 @@
       
       
       
-      <div class="modal fade" id="bioModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="bioModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
@@ -73,7 +73,7 @@
                 
                 <div class="form-group">
                   <label for="name">Bio : </label>
-                  <textarea class="form-control" rows="5" name="ingredients"><%= bio %> </textarea>
+                  <textarea class="form-control" rows="5" name="ingredients" ></textarea>
                 </div>
 
 
@@ -95,17 +95,18 @@
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div class="modal-body">
-                
+              <div class="modal-body">   
+              <form action="/updateProfilePhoto" method="POST" enctype="multipart/form-data">      
                 <div class="form-group">
                   <label for="exampleFormControlFile1" class="mb-4">Upload an Image</label>
                   <input type="file" class="form-control-file" name="image" id="exampleFormControlFile1">
-                </div>
-                
+                </div> 
+                <button  class="btn btn-primary">Save changes</button>
+              </form>               
               </div>
+
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
               </div>
             </div>
           </div>
