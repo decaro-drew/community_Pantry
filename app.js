@@ -777,6 +777,22 @@ app.post("/createRecipe/:username", function(req, res){
     }); 	    
 });
 
+app.post("/updateProfilePhoto", function(req, res){
+    var file = req.files.image;
+    file.name = req.session.user + ".jpg";
+   // var imgName = "/recipe_images/"+file.name;
+    if(file.mimetype == "image/jpeg"){
+        file.mv('public/profile_images/'+file.name, function(err){
+            res.redirect("/home");
+        });
+    }
+    else{
+        console.log("error with file type. try again, but better");
+        ///message = "This format is not allowed , please upload file with '.jpg'";
+        res.redirect("/home");
+    }
+});
+
 app.post("/createAccount", function(req, res){
     var valid = true;
     if(req.body.uName.length < 6){
