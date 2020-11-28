@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="recipe.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Allura&family=Open+Sans+Condensed:wght@300&display=swap" rel="stylesheet">
+
+    <title>Community Pantry</title>
+  </head>
+  <body>
+      
+      
+      <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
+          <div class="container">
+                  <a class="navbar-brand" href="/">Community Pantry</a>
+                  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                  </button>
+                  <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                      <a class="nav-link" href="/top10">Top 10</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/search"> Search</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link active"><%= user %> </a>
+                    </li>
+                  </ul>
+          </div>
+    </nav>
+      
+      
+    <div class="container mt-5 pt-5">
+    
+        <h1 class="display-1 my-5"><%= targetUser %> </h1>
+        <p class="my-5">potential profile picture or avatar</p>
+        <p class="my-5">potential optional Bio</p>
+        
+        <h3 class="display-4 mt-5">Your Recipes</h3>
+        <ul class="mb-5 my-5">
+              
+            <% userRecipes.forEach(recipe => { %>
+              <li class="m-5">
+                <a class="nav-link" href="/recipe/<%= recipe.id %> "><h4 class="my-5"><%= recipe.name %> </h4></a>
+                  <div class="container m-5">
+                       <h5>recipe Picture</h5>
+                       <p><%= recipe.snipbit %> </p>
+                  </div>
+              </li>
+            <% }); %> 
+                
+        </ul>
+
+        <h3 class="display-4 mt-5">Saved Recipes</h3>
+        <ul class="mb-5 my-5">
+              
+            <% likedRecipes.forEach(recipe => { %>
+              <li class="m-5">
+                <a class="nav-link" href="/recipe/<%= recipe.id %> "><h4 class="my-5"><%= recipe.name %> </h4></a>
+                  <div class="container m-5">
+                       <h5>recipe Picture</h5>
+                       <p><%= recipe.snipbit %> </p>
+                  </div>
+              </li>
+            <% }); %> 
+                
+        </ul>
+    <div class="container">
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.js"
+      integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    
+    
+  </body>
+</html>
