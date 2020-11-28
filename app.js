@@ -425,7 +425,6 @@ app.get("/results/dish", function(req, res){
                 dishes[i] = dish;
             }
         }
-        
         res.render("results.ejs", {user: req.session.user, message: "Results for " + dishName, dishes, userSearch: false});
     });
     
@@ -471,17 +470,31 @@ app.get("/results/users", function(req, res){
         var others = new Array()
         for(var i = 0; i < rows.length; i++){
             if(rows[i].username.toLowerCase().includes(targetUser)){
-                console.log(rows[i].username.toLowerCase());
-                if(rows[i].username.toLowerCase() == targetUser)
-                    exact.push(rows[i].username);
-                else if(rows[i].username.toLowerCase().indexOf(targetUser) == 0)
-                    indexZero.push(rows[i].username);
-                else
-                    others.push(rows[i].username);
+                
+                if(rows[i].username.toLowerCase() == targetUser){
+                    user = {
+                        username: rows[i].username,
+                        bio: rows[i].bio,
+                    }
+                    exact.push(user);
+                }else if(rows[i].username.toLowerCase().indexOf(targetUser) == 0){
+                    user = {
+                        username: rows[i].username,
+                        bio: rows[i].bio
+                    }
+                    indexZero.push(user);
+                }else{
+                    user = {
+                        username: rows[i].username,
+                        bio: rows[i].bio
+                    }
+                    others.push(user);
+                }
+                    
             }
         }
-        indexZero.sort(function(a,b){ return a.length - b.length});     
-        others.sort(function(a,b){ return a.length - b.length});
+        indexZero.sort(function(a,b){ return a.username.length - b.username.length});     
+        others.sort(function(a,b){ return a.username.length - b.username.length});
         var userList = new Array();
         for(var i = 0; i < exact.length; i++)
             userList.push(exact[i]);
@@ -489,8 +502,8 @@ app.get("/results/users", function(req, res){
             userList.push(indexZero[i]);
         for(var i = 0; i < others.length; i++)
             userList.push(others[i]);
-        userList = userList.filter(e => e !== "admin");
-        userList = userList.filter(e => e !== req.session.user);  
+        userList = userList.filter(e => e.username !== "admin");
+        userList = userList.filter(e => e.username !== req.session.user);  
         res.render("results.ejs", {user: req.session.user, message: "Here's who we found", userList});
     });
 
@@ -540,7 +553,7 @@ app.get("/results", function(req, res){
                         picture: rows[i].picture,
                         snipbit: rows[i].snipbit,
                         cuisine: rows[i].cuisine,
-                        uername: rows[i].username,
+                        username: rows[i].username,
                         matches: matches,
                     }
                     dishes[counter] = dish;
