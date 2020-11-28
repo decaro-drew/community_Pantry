@@ -185,7 +185,12 @@ app.get("/home", function(req, res){
         var lists = await getShoppingListAndLikedRecipes();
         var shoppingList = lists.shoppingList;
         var info = await getBioandPic();
-
+        var bio = "";
+        if(info.bio != null)
+            bio = info.bio;
+        var pic = "/profile_images/default/profile.jpg";
+        if(info.pic != null)
+            pic = info.pic;
         var likedRecipes = [];
         if(lists.likedRecipes[0] != ''){
             for(var i=0; i <lists.likedRecipes.length; i++){
@@ -198,7 +203,7 @@ app.get("/home", function(req, res){
         keyWords = ["Chicken", "Beef", "Pork", "Lamb", "Fish", "Seafood", "Pasta", "Rice", "Stirfry", "Soup", "Stew", "Salad", "Vegeterian"];
 
         
-        res.render("home.ejs", {user: req.session.user, mainUser: req.session.user, likedRecipes, userRecipes, shoppingList, keyWords});
+        res.render("home.ejs", {user: req.session.user, mainUser: req.session.user, likedRecipes, userRecipes, shoppingList, keyWords, bio, pic});
     }
 
     compile();
