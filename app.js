@@ -38,8 +38,8 @@ db.connect(function(error){
 app.use(session({
     cookieName: 'session',
     secret: 'promise_me_you_wont_tell_anyone',
-    duration: 30 * 60 * 1000,
-    activeDuration: 5 * 60 * 1000,
+    //duration: 30 * 60 * 1000,
+    //activeDuration: 5 * 60 * 1000,
     httpOnly: true,
     secure: true,
     ephemeral: true
