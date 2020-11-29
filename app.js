@@ -887,6 +887,11 @@ app.post("/deleteuser", function(req, res){
 
 });
 
+app.get('/logout', function(req, res) {
+    req.session.reset();
+    res.redirect('/');
+});
+
 
 app.get("/", function(req, res){
     res.render("index.ejs");
