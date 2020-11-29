@@ -238,6 +238,8 @@ app.get("/user/:user", function(req, res){
                             name:rows[i].name,
                             picture: rows[i].picture,
                             snipbit: rows[i].snipbit,
+                            cuisine: rows[i].cuisine,
+                            username: rows[i].username
                         }
                         dishes[i] = dish;
                     }
@@ -256,18 +258,31 @@ app.get("/user/:user", function(req, res){
                 }
                 else{
     
-    
-                    
-                 
                         console.log(id);
                         dish = {
                             id: rows[0].id,
                             name:rows[0].name,
                             picture: rows[0].picture,
                             snipbit: rows[0].snipbit,
+                            cuisine: rows[0].cuisine,
+                            username: rows[0].username
                         }
                         resolve(dish);
                                   
+                }
+                
+            });
+        })
+    }
+
+    function getBio(){ 
+        return new Promise(function (resolve, reject){
+            db.query("Select bio from user where username = ?",[user], function(error, rows){
+                if(error){
+                    throw error;
+                }
+                else{
+                    resolve(rows[0].bio);
                 }
                 
             });
@@ -278,6 +293,7 @@ app.get("/user/:user", function(req, res){
     async function compile(){
         var userRecipes = await getUserRecipes();
         var likes = await getShoppingListAndLikedRecipes();
+        var bio = await getBio();
 
         var likedRecipes = [];
         if(likes[0] != ''){
@@ -286,7 +302,7 @@ app.get("/user/:user", function(req, res){
             }
         }
         
-        res.render("user.ejs", {user: req.session.user, targetUser: user, likedRecipes, userRecipes});
+        res.render("user.ejs", {user: req.session.user, targetUser: user, likedRecipes, userRecipes, bio});
     }
 
     compile();
