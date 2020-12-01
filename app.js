@@ -410,9 +410,9 @@ app.get("/top10", function(req, res){
 app.get("/search", function(req, res){
 
     proteins = ["Chicken", "Beef", "Pork", "Tuna", "Salmon"];
-    veggies = ["Broccoli", "Asparagus", "Corn", "Spinach", "Garlic", "Chili Pepper", "Cucumber"];
-    starches = ["Pasta", "Potatos", "Rice", "Couscous"];
-    herbs = ["Cilantro", "Parseley", "Mint", "Basil", "Dill"];
+    veggies = ["Artichoke", "Arugula", "Asparagus", "Bamboo Shoots", "Beets", "Broccoli", "Bok Choy", "Brussel Sprouts", "Green Cabbage", "Red Cabbage", "Carrot", "Cassava", "Cauliflower", "Celery", "Collard Greens", "Corn", "Cucumber", "Edamame", "Eggplant", "Garlic", "Ginger Root", "Green Beans", "Horseadish", "Kale", "Leeks", "Iceberg Lettuce", "Leaf Lettuce", "Romaine Lettuce", "Mushrooms", "Okra", "Onion", "Green Peas", "Snow Peas", "Green Pepper", "Red Pepper", "Sugar Snap Peas", "Red Potato", "Sweet Potato", "White Potato", "Pumpkin", "Radish", "Shallots", "Squash", "Spinach", "Swiss Chard", "Tomatillo", "Tomato", "Turnip", "Yam Root", "Zucchini"];
+    starches = ["Chickpeas", "Couscous", "Bagel", "Bread", "Beans", "Granola", "Oatmeal", "Pasta", "Spaghetti Pasta", "Fettuccine Pasta", "Angel Hair Pasta", "Macaroni Pasta", "Bow Ties Pasta", "Penne Pasta", "Ziti Pasta", "Linguine", "Lasagne", "Red Potato", "Sweet Potato", "White Potato", "Rice", "Black Rice", "Brown Rice", "White Rice", "Wild Rice", "Taco Shells", "Tortilla"];
+    herbs = ["Anise", "Basil", "Bay Leaf", "Caraway", "Cilantro", "Coriander", "Chamomile", "Chives", "Daikon", "Dill", "Fennel", "Lavender", "Lemon Balm", "Lemongrass", "Marjoram", "Mint", "Oregano", "Parsley", "Rosemary", "Sage", "Tarragon", "Thyme"];
     spices = ["Cumin", "Coriander", "Anese", "Cardamom", "Cinammon"];
     other = []
 
