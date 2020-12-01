@@ -5,79 +5,225 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-
+    
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="/styles/user.css">
     <link href="https://fonts.googleapis.com/css2?family=Allura&family=Open+Sans+Condensed:wght@300&display=swap" rel="stylesheet">
 
     <title>Community Pantry</title>
   </head>
   <body>
       
+       
+     
+     
+     <nav class="fixed-top">
+           <div class="container">
+            <div class="logo">
+                 <h4>Community Pantry</h4>
+             </div>
+             <ul class="nav-links">
+                 <li>
+                     <a class="" href="/top10">Top 10</a>
+                 </li>
+                 <li class="">
+                    <a class="" href="/search"> Search</a>
+                 </li>
+                <li class="">
+                    <a class="" href="/home" >Home</a>
+                </li>
+             </ul>
+             
+         </div>
+     </nav>
       
-      <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
-          <div class="container">
-                  <a class="navbar-brand" href="/">Community Pantry</a>
-                  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                  </button>
-                  <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                      <a class="nav-link" href="/top10">Top 10</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="/search"> Search</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link active"><%= user %> </a>
-                    </li>
-                  </ul>
+      
+      
+      
+      
+      
+      
+    <section id="top">
+    <div class="mb-0 jumbotron" id="title">
+        <div class="card">
+          <div class="row no-gutters">
+            <div class="col-md-4">
+              <img src="/profile_images/<%= targetUser %>.jpg" class="card-img" onerror="this.src='/profile_images/default_profile.jpg'">
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h1 class="card-title "><%= targetUser %></h1>
+                <p class="card-text mt-5"><%= bio %> </p>
+              
+              </div>
+            </div>
           </div>
-    </nav>
-      
-      
-    <div class="container mt-5 pt-5">
-    
-        <h1 class="display-1 my-5"><%= targetUser %> </h1>
-        <p class="my-5">potential profile picture or avatar</p>
-        <p class="my-5">potential optional Bio</p>
+          <div class="card-footer">
+              <a class="nav-link" href="#yourRecipes" id="yourRecipesbtn">
+                <%= targetUser %>'s Recipes
+              </a>
+          </div>
+          
+          <div class="card-footer">
+              <a class="nav-link" href="#savedRecipes" id="savedRecipesbtn">
+                <%= targetUser %>'s Saved Recipes
+              </a>
+          </div>
+          
+          </div>
+        </div>
         
-        <h3 class="display-4 mt-5">Your Recipes</h3>
-        <ul class="mb-5 my-5">
-              
-            <% userRecipes.forEach(recipe => { %>
-              <li class="m-5">
-                <a class="nav-link" href="/recipe/<%= recipe.id %> "><h4 class="my-5"><%= recipe.name %> </h4></a>
-                  <div class="container m-5">
-                       <h5>recipe Picture</h5>
-                       <p><%= recipe.snipbit %> </p>
-                  </div>
-              </li>
-            <% }); %> 
-                
-        </ul>
+    </div>
+   </section> 
+     
+    
+    
+    
+       
+       
+        <section id="yourRecipes">
+          <div class="container">
+           <br><br>
+            <div class="title">
+               <h3 class="display-4 mt-5 "><%= targetUser %>'s Recipes</h3>
+            </div>
+            <ul class="my-5 pl-0">
 
-        <h3 class="display-4 mt-5">Saved Recipes</h3>
-        <ul class="mb-5 my-5">
-              
-            <% likedRecipes.forEach(recipe => { %>
-              <li class="m-5">
-                <a class="nav-link" href="/recipe/<%= recipe.id %> "><h4 class="my-5"><%= recipe.name %> </h4></a>
-                  <div class="container m-5">
-                       <h5>recipe Picture</h5>
-                       <p><%= recipe.snipbit %> </p>
-                  </div>
-              </li>
-            <% }); %> 
+              <% userRecipes.forEach(recipe => { %>
+                <a href="/recipe/<%= recipe.id %> ">
+                  <li class="my-5" data-aos="fade-up">
+  
+                      <div class="card p-0" >
+                       
+                        <div class="row no-gutters">
+                          <div class="col-md-4 test">
+                            <img src="/recipe_images/<%= recipe.id %>.jpg" class="card-img" onerror="this.src='/recipe_images/default_recipe.jpg'">
+                          </div>
+                          <div class="col-md-8">
+                            <div class="card-body">
+                              <h5 class="card-title"><%= recipe.name %></h5>
+                              <p class="card-text"><%= recipe.cuisine %></p>
+                              <p class="card-text snipbit"><%= recipe.snipbit %></p>
+                              <div class="row mt-5 ml-1">
+                                <img class="mt-1 card-image" src="/profile_images/<%= recipe.username %>.jpg"  onerror="this.src='/profile_images/default_profile.jpg'">
+                                  <p class="card-text ml-2 pt-2"><%= recipe.username %></p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>  
+                      </div>
+                      
+                  </li>
+                  </a>
+              <% }); %>               
+               
+               
+            </ul>
+            <br><br>
+            </div>
+        </section>
+        
+                          
                 
-        </ul>
-    <div class="container">
+        <section id="savedRecipes">
+          <div class="container">
+           <br><br>
+            <div class="title">
+               <h3 class="display-4 mt-5 "><%= targetUser %>'s Saved Recipes</h3>
+            </div>
+            <ul class="my-5 pl-0">
+              <% likedRecipes.forEach(recipe => { %>
+                <a href="/recipe/<%= recipe.id %> ">
+                  <li class="my-5" data-aos="fade-up">
+  
+                      <div class="card p-0" >
+                       
+                        <div class="row no-gutters">
+                          <div class="col-md-4 test">
+                            <img src="/recipe_images/<%= recipe.id %>.jpg" class="card-img" onerror="this.src='/recipe_images/default_recipe.jpg'">
+                          </div>
+                          <div class="col-md-8">
+                            <div class="card-body">
+                              <h5 class="card-title"><%= recipe.name %></h5>
+                              <p class="card-text"><%= recipe.cuisine %></p>
+                              <p class="card-text snipbit"><%= recipe.snipbit %></p>
+                              <div class="row mt-5 ml-1">
+                                <img class="mt-1 card-image" src="/profile_images/<%= recipe.username %>.jpg"  onerror="this.src='/profile_images/default_profile.jpg'">
+                                  <p class="card-text ml-2 pt-2"><%= recipe.username %></p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>  
+                      </div>
+                      
+                  </li>
+                  </a>
+              <% }); %> 
+               
+            </ul>
+            <br>
+            
+            
+            
+            <br>
+            </div>
+        </section>
+        
+        
+        
+    
+    
+    
+    
+    
+  
     <script
       src="https://code.jquery.com/jquery-3.5.1.js"
       integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
             crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 900
+        });
+    </script>
+    <script>
     
+     
+      $(document).ready(function(){
+            var scrolllink = $('#yourRecipesbtn');
+            scrolllink.click(function(e){
+                e.preventDefault();
+                $('body,html').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 1000)
+            })
+        })
+        
+        $(document).ready(function(){
+            var scrolllink = $('#savedRecipesbtn');
+            scrolllink.click(function(e){
+                e.preventDefault();
+                $('body,html').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 1000)
+            })
+        })
+        
+        
+        
+        window.addEventListener('scroll', function(){
+            let nav = document.querySelector('nav');
+            nav.classList.toggle('scroll-active', window.scrollY > 0);
+            let menu = document.getElementById('menu');
+            menu.classList.toggle('scroll-active', window.scrollY > 40);
+        })
+        
+      
+    </script>
     
   </body>
 </html>
