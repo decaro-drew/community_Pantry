@@ -7,57 +7,176 @@
 
     
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <link rel="stylesheet" href="top10.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="/styles/results.css">
     <link href="https://fonts.googleapis.com/css2?family=Allura&family=Open+Sans+Condensed:wght@300&display=swap" rel="stylesheet">
 
     <title>Community Pantry</title>
+
+
+    <% if(message.length >= 25){ %> 
+      <style>
+           
+
+              #title h1{
+                   font-family: 'Open Sans Condensed', sans-serif;
+                   font-weight: 1000;
+                    font-size: 100px;
+                   text-shadow: 0px 0px 20px black;
+                     text-align: center;
+                    padding-top: 150px;
+                   color: white;
+                }
+
+                @media (max-width: 1100px){
+                    #title h1{
+                        font-family: 'Open Sans Condensed', sans-serif;
+                        font-weight: 1000;
+                         font-size: 75px;
+                         text-shadow: 0px 0px 20px black;
+                           text-align: center;
+                          padding-top: 100px;
+                         color: white;
+                    }   
+                 }
+        </style>
+<% }else{ %>
+
+    <style>
+         @media (max-width: 500px){
+                   #title h1{
+                       font-family: 'Open Sans Condensed', sans-serif;
+                       font-weight: 1000;
+                        font-size: 50px;
+                       text-shadow: 0px 0px 20px black;
+                         text-align: center;
+                        padding-top: 100px;
+                       color: white;
+                    }
+                 }
+
+               @media (max-width: 1600px){
+                      #title h1{
+                        font-family: 'Open Sans Condensed', sans-serif;
+                        font-weight: 1000;
+                         font-size: 100px;
+                         text-shadow: 0px 0px 20px black;
+                          text-align: center;
+                          padding-top: 100px;
+                        color: white;
+              
+                      }
+                  }
+
+   
+    
+</style>
+
+<% } %> 
+
+
   </head>
   <body>
      
      
-     <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
-          <div class="container">
-                  <a class="navbar-brand" href="/">Community Pantry</a>
-                  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                  </button>
-                  <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                      <a class="nav-link active">Top 10</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="/search">Search</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="/home"><%= user %> </a>
-                    </li>
-                  </ul>
-          </div>
-    </nav>
-     
-     
-          
-    <div class="container mt-5 pt-5">
-           <h1 class="my-5 display-1"><%= message %> </h1>
-          
-            <% if(message == "Here's who we found"){
-                for(var i = 0; i < userList.length; i++){ %>
-                  <div class="container">
-                    <a class="nav-link" href="/user/<%= userList[i] %> "><h2 class="display-3 my-5"><%= userList[i] %> </h2></a>
-                </div>
-                <%}
-            }
-            else{
-            for(var i=0; i < dishes.length; i++) { %>
+     <nav class="fixed-top">
+           <div class="container">
+            <div class="logo">
+                 <h4>Community Pantry</h4>
+             </div>
+             <ul class="nav-links">
+                 <li>
+                     <a class="" href="/top10">Top 10</a>
+                 </li>
+                 <li class="">
+                    <a class="" href="/search"> Search</a>
+                 </li>
+                <li class="">
+                    <a class="" href="/home">Home</a>
+                </li>
+             </ul>
+             
+         </div>
+     </nav>
     
-                <div class="container">
-                    <a class="nav-link" href="/recipe/<%= dishes[i].id %> "><h2 class="display-3 my-5"><%= dishes[i].name %> </h2></a>
-                    <div class="container m-5">
-                        <h5>recipe Picture</h5>
-                        <p><%= dishes[i].snipbit %> </p>
+    
+    
+    <div id="title">
+        <h1><%= message %> </h1>
+    </div>
+    
+    
+
+    
+    
+    
+     
+      
+    <div class="container">
+          
+      <ul class="my-5 pl-0">
+
+
+        <% if(message == "Here's who we found"){
+          
+            userList.forEach(user =>{ %>
+              <a href="/user/<%= user.username %>">
+                <li class="my-5" data-aos="fade-up">
+
+                <div class="card p-0" >
+                 
+                  <div class="row no-gutters">
+                    <div class="col-md-4 test">
+                      <img src="/profile_images/<%= user.username %>.jpg" class="card-img" onerror="this.src='/profile_images/default_profile.jpg'">
                     </div>
+                    <div class="col-md-8">
+                      <div class="card-body">
+                        <h4 class="card-title"><%= user.username %></h5>
+                        <p class="card-text snipbit mt-5"><%= user.bio %></p>
+                        
+                      </div>
+                    </div>
+                  </div>  
                 </div>
-            <% }} %>
+                
+              </li>
+              </a>
+
+            <% })
+
+      }
+      else{
+         dishes.forEach(dish => { %>
+          <a href="/recipe/<%= dish.id %>">
+            <li class="my-5" data-aos="fade-up">
+
+                <div class="card p-0" >
+                 
+                  <div class="row no-gutters">
+                    <div class="col-md-4 test">
+                      <img src="/recipe_images/<%= dish.id %>.jpg" class="card-img" onerror="this.src='/recipe_images/default_recipe.jpg'">
+                    </div>
+                    <div class="col-md-8">
+                      <div class="card-body">
+                        <h5 class="card-title"><%= dish.name %></h5>
+                        <p class="card-text"><%= dish.cuisine %></p>
+                        <p class="card-text snipbit"><%= dish.snipbit %></p>
+                        <div class="row mt-5 ml-1">
+                          <img class="mt-1 card-image" src="/profile_images/<%= dish.username %>.jpg"  onerror="this.src='/profile_images/default_profile.jpg'">
+                            <p class="card-text ml-2 pt-2"><%= dish.username %></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>  
+                </div>
+                
+            </li>
+            </a>
+        <% }); %>  
+      <% } %>             
+         
+         
+      </ul>
             
       </div>
     <script
@@ -66,7 +185,20 @@
             crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-    
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 900
+        });
+    </script>
+    <script>
+        window.addEventListener('scroll', function(){
+            let nav = document.querySelector('nav');
+            nav.classList.toggle('scroll-active', window.scrollY > 0);
+            
+        })  
+      
+    </script>
     
   </body>
 </html>
