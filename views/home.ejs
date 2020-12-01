@@ -21,7 +21,7 @@
      <nav class="fixed-top">
            <div class="container">
             <div class="logo">
-                 <a href="/logout"><h4>Community Pantry</h4></a>
+                 <h4>Community Pantry</h4>
              </div>
              <ul class="nav-links">
                  <li>
@@ -177,7 +177,7 @@
             <ul class="my-5 pl-0">
 
               <% userRecipes.forEach(recipe => { %>
-                <a href="/recipe/<%= recipe.id %>">
+                <a href="/recipe/<%= recipe.id %> ">
                   <li class="my-5" data-aos="fade-up">
   
                       <div class="card p-0" >
@@ -185,6 +185,7 @@
                         <div class="row no-gutters">
                           <div class="col-md-4 test">
                             <img src="/recipe_images/<%= recipe.id %>.jpg" class="card-img" onerror="this.src='/recipe_images/default_recipe.jpg'">
+                          </div>
                           <div class="col-md-8">
                             <div class="card-body">
                               <h5 class="card-title"><%= recipe.name %></h5>
@@ -253,7 +254,7 @@
                 </div>
                 <div class="form-group">
                   <label for="exampleFormControlFile1">Recipe Image</label>
-                  <input type="file" class="form-control-file" name="image" id="exampleFormControlFile1">
+                  <input type="file" class="form-control-file" name="image" id="exampleFormControlFile1" required>
                 </div>
                 
                 <div class="form-group">
