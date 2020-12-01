@@ -1,0 +1,166 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+nav{
+    height: 10vh;
+    transition: .5s ease;
+    background-color: black;
+}
+
+nav .container{
+    display: flex;
+    align-items: center;
+    height: inherit;
+}
+
+.nav-links{
+    margin-left: auto;
+    display: flex;
+    justify-content: space-between;
+    width: 30%;
+    margin-bottom: 0;
+    transition: .5s ease;
+}
+
+.nav-links a{
+    color: white;
+    font-family: 'Open Sans Condensed', sans-serif;
+    text-decoration: none;
+    letter-spacing: 2px;
+    font-weight: bold;
+    font-size: 30px;
+    transition: .5s ease;
+}
+
+.nav-links a:hover{
+    color: cornflowerblue;
+}
+
+.nav-links .active{
+    color: slategray;
+}
+
+.nav-links .active:hover{
+    color: slategray;
+}
+
+.logo h4{
+    color: white;
+    font-family: 'Allura', cursive;
+    font-size: 55px;
+    text-shadow: 5px 5px 10px #000000;
+    margin-bottom: 0;
+    transition: .5s ease;
+}
+
+
+.scroll-active:nth-child(1){
+    background-color: black;
+    height: 8vh;
+}
+
+.scroll-active .logo h4{
+    font-size: 35px;
+    transition: .5s ease;
+}
+
+.scroll-active .nav-links{
+    width: 20%;
+    transition: .5s ease;
+}
+
+.scroll-active .nav-links a{
+    font-size: 20px;
+}
+
+
+body{
+    background-color: #f5f5f5;
+}
+
+
+
+#title{
+    background: url("background_20.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 45vh; 
+    width: 100%;
+}
+
+#title h1{
+    font-family: 'Open Sans Condensed', sans-serif;
+    font-weight: 1000;
+    font-size: 200px;
+    text-shadow: 0px 0px 20px black;
+    text-align: center;
+    padding-top: 100px;
+    color: white;
+}
+
+
+h2{
+    margin: auto;
+    font-family: 'Open Sans Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 200px;
+    color: white;
+    text-shadow: 0px 0px 15px black;
+}
+
+
+ul{
+    list-style: none;
+}
+
+.card-body{
+    overflow: hidden;
+}
+
+.card-body img{
+    height: 25px;
+    width: 25px;
+    
+}
+
+
+
+
+.card-img{
+    height: 246px;
+    object-fit: cover;
+}
+
+@media (max-width: 767px){
+    .card-img{
+        display: none;
+    }
+}
+
+.card{
+    transition: 0.3s;
+    width: 80%;
+    margin-left: auto;
+}
+
+.card:hover{
+    transform: scale(1.10);
+}
+
+.snipbit{
+    margin: 0px;
+    min-height: 42px;
+}
+
+
+a{
+    color: black;
+}
+
+a:hover{
+    color: black;
+    text-decoration: none;
+}

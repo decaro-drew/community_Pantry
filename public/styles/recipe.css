@@ -1,0 +1,187 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+nav{
+    height: 10vh;
+    transition: .5s ease;
+    background-color: black;
+}
+
+nav .container{
+    display: flex;
+    align-items: center;
+    height: inherit;
+}
+
+.nav-links{
+    margin-left: auto;
+    display: flex;
+    justify-content: space-between;
+    width: 30%;
+    margin-bottom: 0;
+    transition: .5s ease;
+}
+
+.nav-links a{
+    color: white;
+    font-family: 'Open Sans Condensed', sans-serif;
+    text-decoration: none;
+    letter-spacing: 2px;
+    font-weight: bold;
+    font-size: 30px;
+    transition: .5s ease;
+}
+
+.nav-links a:hover{
+    color: cornflowerblue;
+}
+
+.nav-links .active{
+    color: slategray;
+}
+
+.nav-links .active:hover{
+    color: slategray;
+}
+
+.logo h4{
+    color: white;
+    font-family: 'Allura', cursive;
+    font-size: 55px;
+    text-shadow: 5px 5px 10px #000000;
+    margin-bottom: 0;
+    transition: .5s ease;
+}
+
+
+.scroll-active:nth-child(1){
+    background-color: black;
+    height: 8vh;
+}
+
+.scroll-active .logo h4{
+    font-size: 35px;
+    transition: .5s ease;
+}
+
+.scroll-active .nav-links{
+    width: 20%;
+    transition: .5s ease;
+}
+
+.scroll-active .nav-links a{
+    font-size: 20px;
+}
+
+
+body{
+    background-color: #f5f5f5;
+}
+
+
+
+#title{
+    background: url("background_20.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 45vh; 
+    width: 100%;
+}
+
+#title h1{
+    font-family: 'Open Sans Condensed', sans-serif;
+    font-weight: 1000;
+    font-size: 200px;
+    text-shadow: 0px 0px 20px black;
+    text-align: center;
+    padding-top: 100px;
+    color: white;
+}
+
+
+h2{
+    font-family: 'Open Sans Condensed', sans-serif;
+    letter-spacing: 1px;
+    font-size: 40px;
+    margin-top:auto;
+}
+
+
+ul{
+    list-style: none;
+}
+
+.left{
+    width: 35%;
+
+}
+
+.right{
+    width: 60%;
+    margin-left: auto;
+}
+
+.left img{
+    width: 100%;
+    height: 266px;
+    object-fit: cover;
+}
+
+.right img{
+    height: 50px;
+    width: 50px;
+    object-fit: cover;
+}
+
+a{
+    color: black;
+}
+
+a:hover{
+    text-decoration: none;
+}
+
+h3{
+    font-family: 'Open Sans Condensed', sans-serif;
+    letter-spacing: 1px;
+    height: 40px;
+    border-bottom-color: black;
+    border-bottom: 2px solid black;
+}
+
+.left li{
+    background-color: transparent;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 20px;
+}
+
+p, pre{
+    white-space: pre-line;
+    font-family: "Times New Roman", Times, serif;;
+    font-size: 20px;
+}
+
+.details .right{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+
+
+.sticky{
+    position: sticky;
+    top: 110px;
+}
+
+.scroll{
+    max-height: 55vh;
+    overflow: auto;
+}
+
+.footer{
+    height: 20vh;
+}
