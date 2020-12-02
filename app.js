@@ -57,7 +57,7 @@ app.use(function(req, res, next) {
         // finishing processing the middleware and run the route
         next();
     } else {
-      next();
+      next(); 
     }
   });
 /*
@@ -410,11 +410,11 @@ app.get("/top10", function(req, res){
 app.get("/search", function(req, res){
 
     proteins = ["Chicken", "Beef", "Pork", "Tuna", "Salmon"];
-    veggies = ["Artichoke", "Arugula", "Asparagus", "Bamboo Shoots", "Beets", "Broccoli", "Bok Choy", "Brussel Sprouts", "Green Cabbage", "Red Cabbage", "Carrot", "Cassava", "Cauliflower", "Celery", "Collard Greens", "Corn", "Cucumber", "Edamame", "Eggplant", "Garlic", "Ginger Root", "Green Beans", "Horseadish", "Kale", "Leeks", "Iceberg Lettuce", "Leaf Lettuce", "Romaine Lettuce", "Mushrooms", "Okra", "Onion", "Green Peas", "Snow Peas", "Green Pepper", "Red Pepper", "Sugar Snap Peas", "Red Potato", "Sweet Potato", "White Potato", "Pumpkin", "Radish", "Shallots", "Squash", "Spinach", "Swiss Chard", "Tomatillo", "Tomato", "Turnip", "Yam Root", "Zucchini"];
+    veggies = ["Artichoke", "Arugula", "Asparagus", "Bamboo Shoots", "Beets", "Broccoli", "Bok Choy", "Brussel Sprouts", "Green Cabbage", "Red Cabbage", "Carrot", "Cassava", "Cauliflower", "Celery", "Collard Greens", "Corn", "Cucumber", "Edamame", "Eggplant", "Garlic", "Ginger", "Green Beans", "Horseadish", "Kale", "Leeks", "Iceberg Lettuce", "Leaf Lettuce", "Romaine Lettuce", "Mushrooms", "Okra", "Onion", "Green Peas", "Snow Peas", "Green Pepper", "Red Pepper", "Sugar Snap Peas", "Red Potato", "Sweet Potato", "White Potato", "Pumpkin", "Radish", "Shallots", "Squash", "Spinach", "Swiss Chard", "Tomatillo", "Tomato", "Turnip", "Yam Root", "Zucchini"];
     starches = ["Chickpeas", "Couscous", "Bagel", "Bread", "Beans", "Granola", "Oatmeal", "Pasta", "Spaghetti Pasta", "Fettuccine Pasta", "Angel Hair Pasta", "Macaroni Pasta", "Bow Ties Pasta", "Penne Pasta", "Ziti Pasta", "Linguine", "Lasagne", "Red Potato", "Sweet Potato", "White Potato", "Rice", "Black Rice", "Brown Rice", "White Rice", "Wild Rice", "Taco Shells", "Tortilla"];
-    herbs = ["Anise", "Basil", "Bay Leaf", "Caraway", "Cilantro", "Coriander", "Chamomile", "Chives", "Daikon", "Dill", "Fennel", "Lavender", "Lemon Balm", "Lemongrass", "Marjoram", "Mint", "Oregano", "Parsley", "Rosemary", "Sage", "Tarragon", "Thyme"];
-    spices = ["Cumin", "Coriander", "Anese", "Cardamom", "Cinammon"];
-    other = []
+    herbs = ["Anise", "Basil", "Bay Leaf", "Caper", "Caraway", "Cilantro", "Chives", "Daikon", "Dill", "Fennel", "Lavender", "Lemon Balm", "Lemongrass", "Marjoram", "Mint", "Oregano", "Parsley", "Rosemary", "Sage", "Tarragon", "Thyme", "Watercress"];
+    spices = ["Allspice", "Anise", "Star anise", "Black pepper", "Caraway", "Cardamom", "Cayenne pepper", "Celery seed", "Chili pepper", "Cinnamon", "Clove", "Coriander", "Cumin", "Curry powder", "Fennel", "Fenugreek", "Garlic powder", "Horseradish", "Mustard seed", "Nutmeg", "Oregano", "Paprika", "Saffron", "Salt", "Sesame seed", "Sumac", "Turmeric", "Za'atar"];
+    condiments = ["Aioli", "Barbecue sauce", "Butter", "Caramel", "Cheese", "Chili oil", "Cream", "Chocolate syrup", "Cocktail sauce", "Fish sauce", "Harissa", "Hoisin sauce", "Honey", "Horseradish", "Hot Sauce", "Hummus", "Ketchup", "Lemon juice", "Lime juice", "Maple syrup", "Mayonnaise", "Mirin", "Dijon Mustard", "Yellow Mustard", "Olive oil", "Oyster sauce", "Peanut butter", "Pesto", "Pico de gallo", "Relish", "Salsa", "Sesame oil", "Sour cream", "Soy sauce", "Steak sauce", "Sriracha sauce","White sugar", "Brown sugar", "Sweet Chili sauce", "Syrup", "Tahini", "Tobasco sauce", "Tartar sauce", "Teriyaki sauce", "Truffle oil", "Tzatziki", "Vanilla extract", "Balsamic vinegar", "White vinegar", "Red Wine vinegar", "Rice Vinegar", "Wasabi", "Whipped cream"]
 
     res.render("search.ejs", {user: req.session.user, proteins, veggies, starches, herbs, spices, other});
 });
