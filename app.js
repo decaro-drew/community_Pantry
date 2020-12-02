@@ -60,17 +60,25 @@ app.use(function(req, res, next) {
       next(); 
     }
   });
-/*
-function requireLogin (req, res, next) {
-    if (!req.user) {
-      //res.redirect('/login');
+
+app.use(function (req, res, next) {
+    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.header('Expires', '-1');
+    res.header('Pragma', 'no-cache');
+    next()
+});
+
+function  requireLogin(req, res, next) {
+    //console.log(req.user);
+    console.log(req.session.user);
+    if (!req.session.user) {
+       res.redirect("/");
     } else {
       next();
     }
 };
-*/
 
-app.get("/home", function(req, res){
+app.get("/home", requireLogin, function(req, res){
     function getShoppingListAndLikedRecipes(){
         return new Promise(function (resolve, reject){
             var dishes = new Array();
@@ -584,7 +592,7 @@ app.get("/results", function(req, res){
 
 
 
-app.post("/saveRecipe/:id", function(req, res){
+app.post("/saveRecipe/:id", requireLogin, function(req, res){
     const {id} = req.params;
     
     db.query("select likedRecipes from user where username = ?", [req.session.user], function(error, rows){
@@ -608,7 +616,7 @@ app.post("/saveRecipe/:id", function(req, res){
     })
 });
 
-app.post("/unSaveRecipe/:id", function(req, res){
+app.post("/unSaveRecipe/:id", requireLogin, function(req, res){
     const {id} = req.params;
     console.log(id);
     db.query("select likedRecipes from user where username = ?", [req.session.user], function(error, rows){
@@ -647,7 +655,7 @@ app.post("/clearSavedRecipes", function(req, res){
 
 
 
-app.post("/saveIngredients/:id/:ingredients", function(req, res){
+app.post("/saveIngredients/:id/:ingredients", requireLogin, function(req, res){
     const {ingredients} = req.params;
     const {id} = req.params;
     db.query("select shoppingList from user where username = ?", [req.session.user], function(error, rows){
