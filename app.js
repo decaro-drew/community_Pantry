@@ -424,7 +424,7 @@ app.get("/search", function(req, res){
     spices = ["Allspice", "Anise", "Star anise", "Black pepper", "Caraway", "Cardamom", "Cayenne pepper", "Celery seed", "Chili pepper", "Cinnamon", "Clove", "Coriander", "Cumin", "Curry powder", "Fennel", "Fenugreek", "Garlic powder", "Horseradish", "Mustard seed", "Nutmeg", "Oregano", "Paprika", "Saffron", "Salt", "Sesame seed", "Sumac", "Turmeric", "Za'atar"];
     condiments = ["Aioli", "Barbecue sauce", "Butter", "Caramel", "Cheese", "Chili oil", "Cream", "Chocolate syrup", "Cocktail sauce", "Fish sauce", "Harissa", "Hoisin sauce", "Honey", "Horseradish", "Hot Sauce", "Hummus", "Ketchup", "Lemon juice", "Lime juice", "Maple syrup", "Mayonnaise", "Mirin", "Dijon Mustard", "Yellow Mustard", "Olive oil", "Oyster sauce", "Peanut butter", "Pesto", "Pico de gallo", "Relish", "Salsa", "Sesame oil", "Sour cream", "Soy sauce", "Steak sauce", "Sriracha sauce","White sugar", "Brown sugar", "Sweet Chili sauce", "Syrup", "Tahini", "Tobasco sauce", "Tartar sauce", "Teriyaki sauce", "Truffle oil", "Tzatziki", "Vanilla extract", "Balsamic vinegar", "White vinegar", "Red Wine vinegar", "Rice Vinegar", "Wasabi", "Whipped cream"]
 
-    res.render("search.ejs", {user: req.session.user, proteins, veggies, starches, herbs, spices, other});
+    res.render("search.ejs", {user: req.session.user, proteins, veggies, starches, herbs, spices, condiments});
 });
 
 app.get("/results/dish", function(req, res){
