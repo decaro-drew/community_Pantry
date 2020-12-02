@@ -733,8 +733,10 @@ app.get("/recipe/:id", function(req, res){
                 var username = rows[0].username;
                 var snipbit = rows[0].snipbit;
                 var cuisine = rows[0].cuisine;
-
-                db.query("SELECT likedRecipes FROM user WHERE username = ?", [req.session.user], function(error, rows){
+                if(!req.session.user){
+                    res.render("recipe.ejs", {user: req.session.user, saved: false, dishName, instructions, ingredients, ingredientString, image, id, snipbit, username, cuisine});
+                }else{
+                    db.query("SELECT likedRecipes FROM user WHERE username = ?", [req.session.user], function(error, rows){
                         if(error){
                             throw error;
                         }
@@ -742,7 +744,9 @@ app.get("/recipe/:id", function(req, res){
                             var saved = rows[0].likedRecipes.includes(id);
                             res.render("recipe.ejs", {user: req.session.user, saved, dishName, instructions, ingredients, ingredientString, image, id, snipbit, username, cuisine});
                         }
-                });
+                    });
+                }
+                
                 
         }      
     });
