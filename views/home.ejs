@@ -353,8 +353,8 @@
     
     
     
-    
-    
+        <br><br><br><br><br>
+        <p id="location" style="display:none"><%= location %></p>
   
     <script
       src="https://code.jquery.com/jquery-3.5.1.js"
@@ -369,6 +369,10 @@
         });
     </script>
     <script>
+
+      var location = document.getElementById("location").innerHTML;
+      console.log(location.hash); 
+      window.location = location.hash;
     
       $(document).ready(function(){
             var scrolllink = $('#topbtn');
