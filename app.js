@@ -202,7 +202,7 @@ app.get("/home", requireLogin, function(req, res){
         keyWords = ["Chicken", "Beef", "Pork", "Lamb", "Fish", "Seafood", "Pasta", "Rice", "Stirfry", "Soup", "Stew", "Salad", "Vegeterian"];
 
         
-        res.render("home.ejs", {user: req.session.user, mainUser: req.session.user, likedRecipes, userRecipes, shoppingList, keyWords, bio});
+        res.render("home.ejs", {user: req.session.user, mainUser: req.session.user, likedRecipes, userRecipes, shoppingList, keyWords, bio, location: "#shoppingList"});
     }
     compile();
     
