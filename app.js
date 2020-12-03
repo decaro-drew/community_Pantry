@@ -534,13 +534,39 @@ app.get("/results/users", function(req, res){
 });
 
 app.get("/results", function(req, res){
-    //console.log("1,2, 3, 4".split(", "));
+    //checks to see if ingredient A contains B by wrapping it around spaces, as opposed to it being just a substring
+    function compare(a, b){
+        if(a.indexOf(b) == 0){
+            if(a.charAt(b.length) == ' ')
+                return true;
+        }
+        else if(a.indexOf(b) + b.length == a.length){
+            if(a.charAt(a.indexOf(b) - 1 == ' '))
+                return true;
+        }
+        else if(a.charAt(a.indexOf(b)-1) == ' ' && a.charAt(a.indexOf(b) + b.length) == ' '){
+            return true;
+        }
+        return false;   
+    }
+    //makes sure ingredients searched won't find hits for edge cases
+    function edgeCases(ingredient){
+        edges = ["chicken broth", "chicken stock", "beef broth", "beef stock"];
+        for(var i = 0; i < edges.length; i++){
+            if(ingredient == edges[i]){
+                return true;
+            }
+        }
+        return false;
+    }
+
     var ingredientsTemp = url.parse(req.url, true).query;
     var ingredients = Object.keys(ingredientsTemp);
     var dishes = new Array();
     for(i = 0; i < ingredients.length; i++){
         ingredients[i] = ingredients[i].toLowerCase();
     }
+
     db.query("Select * from recipe", function(error, rows){
         if(error){
             throw error;
@@ -549,6 +575,7 @@ app.get("/results", function(req, res){
             var counter = 0;
             var matches;
             for(i=0; i<rows.length; i++){
+                console.log(rows[i].name);
                 lowerIng = rows[i].ingredients.toLowerCase();
                 if(!rows[i].keywords)
                     lowerKeys = "";
@@ -556,16 +583,25 @@ app.get("/results", function(req, res){
                     lowerKeys = rows[i].keywords.toLowerCase();
                 matches = 0;
                 for(j=0; j<ingredients.length; j++){
-                   // lowerIng.includes(ingredients[j]) || 
-                    if(lowerKeys.includes(ingredients[j])){
+                    if(lowerKeys.includes(ingredients[j]))
                         matches++;
-                    }
                     else{
                         ingList = lowerIng.split(", ");
                         for(k = 0; k < ingList.length; k++){
                             if(ingredients[j] == ingList[k]){
                                 matches++;
                                 break;
+                            }
+                            else if(ingList[k].includes(ingredients[j])) {
+                                if(compare(ingList[k], ingredients[j])){
+                                    if(ingredients[j] == "chicken" || ingredients[j] == "beef"){
+                                        if(!edgeCases(ingList[k]))
+                                            matches++;
+                                    }
+                                    else
+                                        matches++;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -577,6 +613,7 @@ app.get("/results", function(req, res){
                         picture: rows[i].picture,
                         snipbit: rows[i].snipbit,
                         cuisine: rows[i].cuisine,
+                        ingredients: rows[i].ingredients,
                         username: rows[i].username,
                         matches: matches,
                     }
@@ -585,11 +622,10 @@ app.get("/results", function(req, res){
                 }
             }
         }
-        dishes.sort((a,b) => parseFloat(b.matches) - parseFloat(a.matches));
+        dishes.sort((a,b) => parseFloat(b.matches/b.ingredients.split(", ").length - parseFloat(a.matches/a.ingredients.split(", ").length)));
         res.render("results.ejs", {user: req.session.user, message: "Here's what you can make", dishes, userSearch: false});
     });
 });
-
 
 
 app.post("/saveRecipe/:id", requireLogin, function(req, res){
