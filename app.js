@@ -417,14 +417,23 @@ app.get("/top10", function(req, res){
 
 app.get("/search", function(req, res){
 
-    proteins = ["Chicken", "Beef", "Pork", "Tuna", "Salmon"];
-    veggies = ["Artichoke", "Arugula", "Asparagus", "Bamboo Shoots", "Beets", "Broccoli", "Bok Choy", "Brussel Sprouts", "Green Cabbage", "Red Cabbage", "Carrot", "Cassava", "Cauliflower", "Celery", "Collard Greens", "Corn", "Cucumber", "Edamame", "Eggplant", "Garlic", "Ginger", "Green Beans", "Horseadish", "Kale", "Leeks", "Iceberg Lettuce", "Leaf Lettuce", "Romaine Lettuce", "Mushrooms", "Okra", "Onion", "Green Peas", "Snow Peas", "Green Pepper", "Red Pepper", "Sugar Snap Peas", "Red Potato", "Sweet Potato", "White Potato", "Pumpkin", "Radish", "Shallots", "Squash", "Spinach", "Swiss Chard", "Tomatillo", "Tomato", "Turnip", "Yam Root", "Zucchini"];
+    keyProteins = ["Chicken", "Eggs", "Turkey", "Beef",, "Lamb", "Pork", "Fish", "Seafood"];
+    chickens = ["Chicken breast", "Chicken thighs", "Chicken wings", "Chicken leg", "Chicken Liver", "Ground Chicken", "Chicken sausage"];
+    beefs = ["Flat iron", "Chuck roast", "Chuck short ribs", "Chuck eye roast", "Ribeye", "Prime rib", "Cowboy steak", "Short ribs", "Strip steak", "T-bone", "Porterhouse", "Filet mignon", "Sirloin", "Tri-tip", "London broil", "Top round", "Bottom round", "Flank steak", "Skirt steak", "Brisket"];
+    porks = ["Bacon", "Pork chops", "Pork belly", "Ground Pork", "Ham", "Pork ribs", "Sausage", "Pork tenderloin"];
+    lambs = ["Lamb leg", "Ground lamb", "Kabob", "Lamb chop", "Rack of lamb", "Lamb shank"];
+    seafoods = ["Shrimp", "Clams", "Crab", "Scallop", "Squid", "Octopus", "Lobster", "Mussels", "Oysters"];
+    fishes = ["Sea Bass", "Salmon", "Arctic char", "Tilapia", "Snapper", "Tuna", "Mahimahi", "Halibut", "Cod", "Swordfish", "Shark"];
+    veggies = ["Artichoke", "Arugula", "Asparagus", "Bamboo Shoots", "Beets", "Broccoli", "Bok Choy", "Brussel Sprouts", "Green Cabbage", "Red Cabbage", "Carrot", "Cassava", "Cauliflower", "Celery", "Collard Greens", "Corn", "Cucumber", "Edamame", "Eggplant", "Garlic", "Ginger", "Green Beans", "Horseadish", "Kale", "Leeks", "Iceberg Lettuce", "Leaf Lettuce", "Romaine Lettuce", "Mushrooms", "Okra", "Onion", "Green Peas", "Snow Peas", "Green Pepper", "Red Pepper", "Sugar Snap Peas", "Red Potato", "Sweet Potato", "White Potato", "Pumpkin", "Radish", "Shallots", "Squash", "Spinach", "Swiss Chard", "Tomatillo", "Tomato", "Turnip", "Yam", "Zucchini"];
+    fruits = ["Apple", "Apricot", "Avocado", "Banana", "Blackberries", "Blackcurrant", "Redcurrant", "Blueberries", "Cantaloupe", "Cherries", "Clementine", "Coconut", "Cranberries", "Dates", "Figs", "Grapefruit", "Grapes", "Guava", "Honeydew", "Plum", "Kiwi", "Lemon", "Lime", "Lychee", "Mandarin", "Mango", "Nectarine", "Olives", "Peach", "Pear", "Persimmon", "Dragonfruit", "Pineapple", "Plantain", "Pomegranate", "Raspberries", "Strawberries", "Tangerine", "Watermelon"];
     starches = ["Chickpeas", "Couscous", "Bagel", "Bread", "Beans", "Granola", "Oatmeal", "Pasta", "Spaghetti Pasta", "Fettuccine Pasta", "Angel Hair Pasta", "Macaroni Pasta", "Bow Ties Pasta", "Penne Pasta", "Ziti Pasta", "Linguine", "Lasagne", "Red Potato", "Sweet Potato", "White Potato", "Rice", "Black Rice", "Brown Rice", "White Rice", "Wild Rice", "Taco Shells", "Tortilla"];
     herbs = ["Anise", "Basil", "Bay Leaf", "Caper", "Caraway", "Cilantro", "Chives", "Daikon", "Dill", "Fennel", "Lavender", "Lemon Balm", "Lemongrass", "Marjoram", "Mint", "Oregano", "Parsley", "Rosemary", "Sage", "Tarragon", "Thyme", "Watercress"];
     spices = ["Allspice", "Anise", "Star anise", "Black pepper", "Caraway", "Cardamom", "Cayenne pepper", "Celery seed", "Chili pepper", "Cinnamon", "Clove", "Coriander", "Cumin", "Curry powder", "Fennel", "Fenugreek", "Garlic powder", "Horseradish", "Mustard seed", "Nutmeg", "Oregano", "Paprika", "Saffron", "Salt", "Sesame seed", "Sumac", "Turmeric", "Za'atar"];
     condiments = ["Aioli", "Barbecue sauce", "Butter", "Caramel", "Cheese", "Chili oil", "Cream", "Chocolate syrup", "Cocktail sauce", "Fish sauce", "Harissa", "Hoisin sauce", "Honey", "Horseradish", "Hot Sauce", "Hummus", "Ketchup", "Lemon juice", "Lime juice", "Maple syrup", "Mayonnaise", "Mirin", "Dijon Mustard", "Yellow Mustard", "Olive oil", "Oyster sauce", "Peanut butter", "Pesto", "Pico de gallo", "Relish", "Salsa", "Sesame oil", "Sour cream", "Soy sauce", "Steak sauce", "Sriracha sauce","White sugar", "Brown sugar", "Sweet Chili sauce", "Syrup", "Tahini", "Tobasco sauce", "Tartar sauce", "Teriyaki sauce", "Truffle oil", "Tzatziki", "Vanilla extract", "Balsamic vinegar", "White vinegar", "Red Wine vinegar", "Rice Vinegar", "Wasabi", "Whipped cream"]
 
-    res.render("search.ejs", {user: req.session.user, proteins, veggies, starches, herbs, spices, condiments});
+    letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+
+    res.render("search.ejs", {user: req.session.user, keyProteins, veggies, starches, herbs, spices, condiments, letters});
 });
 
 app.get("/results/dish", function(req, res){
