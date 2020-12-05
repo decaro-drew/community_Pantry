@@ -78,6 +78,7 @@ function  requireLogin(req, res, next) {
     }
 };
 
+
 app.get("/home", requireLogin, function(req, res){
     function getShoppingListAndLikedRecipes(){
         return new Promise(function (resolve, reject){
@@ -201,8 +202,7 @@ app.get("/home", requireLogin, function(req, res){
 
         keyWords = ["Chicken", "Beef", "Pork", "Lamb", "Fish", "Seafood", "Pasta", "Rice", "Stirfry", "Soup", "Stew", "Salad", "Vegeterian"];
 
-        
-        res.render("home.ejs", {user: req.session.user, mainUser: req.session.user, likedRecipes, userRecipes, shoppingList, keyWords, bio, location: "#shoppingList"});
+        res.render("home.ejs", {user: req.session.user, mainUser: req.session.user, likedRecipes, userRecipes, shoppingList, keyWords, bio, location: ""});
     }
     compile();
     
@@ -417,8 +417,8 @@ app.get("/top10", function(req, res){
 
 app.get("/search", function(req, res){
 
-    keyProteins = ["Chicken", "Eggs", "Turkey", "Beef",, "Lamb", "Pork", "Fish", "Seafood"];
-    chickens = ["Chicken breast", "Chicken thighs", "Chicken wings", "Chicken leg", "Chicken Liver", "Ground Chicken", "Chicken sausage"];
+    keyProteins = ["Chicken", "Eggs", "Turkey", "Beef", "Lamb", "Pork", "Fish", "Seafood"];
+    chickens = ["Chicken breast", "Chicken thighs", "Chicken wings", "Chicken leg", "Chicken liver", "Ground Chicken", "Chicken sausage"];
     beefs = ["Flat iron", "Chuck roast", "Chuck short ribs", "Chuck eye roast", "Ribeye", "Prime rib", "Cowboy steak", "Short ribs", "Strip steak", "T-bone", "Porterhouse", "Filet mignon", "Sirloin", "Tri-tip", "London broil", "Top round", "Bottom round", "Flank steak", "Skirt steak", "Brisket"];
     porks = ["Bacon", "Pork chops", "Pork belly", "Ground Pork", "Ham", "Pork ribs", "Sausage", "Pork tenderloin"];
     lambs = ["Lamb leg", "Ground lamb", "Kabob", "Lamb chop", "Rack of lamb", "Lamb shank"];
@@ -584,7 +584,6 @@ app.get("/results", function(req, res){
             var counter = 0;
             var matches;
             for(i=0; i<rows.length; i++){
-                console.log(rows[i].name);
                 lowerIng = rows[i].ingredients.toLowerCase();
                 if(!rows[i].keywords)
                     lowerKeys = "";
@@ -820,14 +819,13 @@ app.post("/login", function(req, res){
                            req.session.user = req.body.username;
                            res.redirect("/home");
                        }else{
-                           console.log("incorrect password");
                            success = true;
-                           res.redirect("/");
+                           res.render("login.ejs", {message: "Incorrect Password", message2: ""});
                        }
                    }
                }
                if(!success)
-                    res.send("No such user");
+               res.render("login.ejs", {message: "Username does not exist", message2: ""});
             }
         });
     }
@@ -892,22 +890,22 @@ app.post("/updateBio", function(req, res){
 app.post("/createAccount", function(req, res){
     var valid = true;
     if(req.body.uName.length < 6){
-        res.send("Username must be at least 6 characters");
+        res.render("login.ejs", {message: "", message2: "Username must be at least 6 characters"});
         valid = false;
     }
-    if(req.body.email.indexOf('@') == -1 || req.body.email.length == 0){
-        res.send("Invalid email address")
+    else if(req.body.email.indexOf('@') == -1 || req.body.email.length == 0){
+        res.render("login.ejs", {message: "", message2: "Invalid email address"});
         valid = false;
     }
-    if(req.body.pWord.length < 6){
-        res.send("Password must be at least 6 characters");
+    else if(req.body.pWord.length < 6){
+        res.render("login.ejs", {message: "", message2: "Password must be at least 6 characters"});
         valid = false;
     }
-    if(req.body.cPword != req.body.pWord){
-        res.send("Passwords are not equal")
+    else if(req.body.cPword != req.body.pWord){
+        res.render("login.ejs", {message: "", message2: "Passwords do not match"});
         valid = false;
     }
-    if(valid){
+    else if(valid){
         db.query("Insert into user (username, email, pWord, shoppingList, likedRecipes, bio) VALUES ('"+req.body.uName+"','"+req.body.email+"','"+req.body.pWord+"', '', '', '')",function(err, result){   
             if(err){
                 res.send("Username already exists");
@@ -951,7 +949,7 @@ app.get('/logout', function(req, res) {
 
 
 app.get("/", function(req, res){
-    res.render("index.ejs");
+    res.render("login.ejs", {message: "", message2: ""});
 });
 
 
