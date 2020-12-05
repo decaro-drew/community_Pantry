@@ -7,7 +7,8 @@
 
     
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <link rel="stylesheet" href="recipe.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="/styles/search.css">
     <link href="https://fonts.googleapis.com/css2?family=Allura&family=Open+Sans+Condensed:wght@300&display=swap" rel="stylesheet">
 
     <title>Community Pantry</title>
@@ -15,161 +16,376 @@
   <body>
      
      
-     
-     <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
-          <div class="container">
-                  <a class="navbar-brand" href="/">Community Pantry</a>
-                  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                  </button>
-                  <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                      <a class="nav-link" href="/top10">Top 10</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link active"> Search</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="/home"><%= user %> </a>
-                    </li>
-                  </ul>
-          </div>
-    </nav>
-     
-     
-     
-    <div class="container mb-5 pt-5">
-  
-       
-        <h1 class="display-1 pt-5">Find A Dish</h1>
-        <form class="form-inline pt-5 mb-5" action="/results/dish">
-          <div class="col-6 form-group mb-2">
-            <label for="inputPassword2" class="sr-only">Dish</label>
-            <input type="text" class="col-12 form-control" id="inputPassword2" placeholder="What would you like?" name="dishName">
-          </div>
-          <button type="submit" class="btn btn-primary mb-2">Find a dish</button>
-        </form>
+     <nav class="fixed-top">
+           <div class="container">
+            <div class="logo">
+                 <h4>Community Pantry</h4>
+             </div>
+             <ul class="nav-links">
+                 <li>
+                     <a class="" href="/top10">Top 10</a>
+                 </li>
+                 <li class="">
+                    <a class="active" href="/search" disbale> Search</a>
+                 </li>
+                <li class="">
+                    <a class="" href="/home">Home</a>
+                </li>
+             </ul>
+             
+         </div>
+     </nav>
+    
+    
+    
+    <div id="title">
+        <div class="basic-search">
+            <div class="card-deck">
+                <div class="card">
 
-        <h1 class="display-1 pt-5">Explore a Cuisine</h1>
-        <form class="form-inline pt-5 mb-5" action="/results/cuisine" method="GET">
-          <div class="col-6 form-group mb-2">
-            <input type="text" class="col-12 form-control" id="inputPassword2" placeholder="What would you like?" name="cuisine">
-          </div>
-          <button class="btn btn-primary mb-2">Explore a Cuisine</button>
-        </form>
+                    <div class="card-body">
+                      <h5 class="card-title">Find a Dish</h5>
+                      <p class="card-text mt-4">Already have a dish in mind? Let us know and we'll find you a recipe!</p>
+                    
+                      
+                      <form action="/results/dish" method="get">
+                          <div class="form">
+                              <input type="text" name="dishName" required/>
+                              <label for="" class="label-name">
+                                  <span class="content-name">Dish</span>
+                              </label>
+                          </div>
+                          <button class="btn btn-block btn-outline-dark mt-2">Search</button>
+                      </form>
+         
+                    </div>
+                </div>
+                <div class="card">
+
+                    <div class="card-body">
+                      <h5 class="card-title">Explore a Cuisine</h5>
+                      <p class="card-text mt-4">There's a whole world of flavors out there. If you're stuck at home, you can do some travelling right from your kitchen!</p>
+                          
+                      <form action="/results/cuisine" method="get">
+                          <div class="form">
+                              <input type="text" name="cuisine" required/>
+                              <label for="" class="label-name">
+                                  <span class="content-name">Explore</span>
+                              </label>
+                          </div>
+                          <button class="btn btn-block btn-outline-dark mt-2">Search</button>
+                      </form>
+                          
+                    </div>
+              </div>
+              <div class="card">
+
+                    <div class="card-body">
+                        <h5 class="card-title">Find a Cook</h5>
+                        <p class="card-text mt-4">Want to find a friend? You can give us a partial or whole username and we'll try to connect you with the right person.</p>
+      
+                        <form action="/results/users" method="get">
+                          <div class="form">
+                              <input type="text" name="targetUser" required/>
+                              <label for="" class="label-name">
+                                  <span class="content-name">Username</span>
+                              </label>
+                          </div>
+                          <button class="btn btn-block btn-outline-dark mt-2">Search</button>
+                       
+                      </form>
+                    </div>
+              </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    
+    
+    <div class="container">
         
-        <h1 class="display-1 mt-5 pt-5">Search By Ingredient</h1>
         
         <form action="/results" method="GET">
-          <div class="row row-cols-1 row-cols-md-3 mt-5">
-            <div class="col mb-4">
-              <div class="card">
-                <img src="..." class="card-img-top" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title display-4 mb-4">Proteins</h5>
-  
-                  <% proteins.forEach(protein => { %> 
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" name="<%= protein %>" value="True" id="">
+         
+         <div class="sticky">
+             <h3>Search by Ingredient</h3>
+             <button class="btn btn-outline-dark">Search</button>
+         </div>
+         
+          <div class="card my-5">
+            <h2 class="card-title mb-0 h2-1">Proteins</h2>
+            <div class="collapse" id="collapse-proteins">
+                <p class="protein mt-3">General Proteins</p>
+                <div class="container row my-3" id="keyProteins">
+               
+               
+                <% keyProteins.forEach(protein => { %> 
+                  <div class="form-check col my-1">
+                    <input class="form-check-input" type="checkbox" name="<%= protein %>" value="True" id="">
+                    <label class="form-check-label" for="">
+                        <%= protein %>  
+                    </label>
+                  </div> 
+                <% }); %> 
+              
+              
+            </div>
+            <br>
+            <p class="protein mb-4">Specific Cuts </p>
+
+            <ul class="nav nav-tabs nav-justified" id="proteinTab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="chicken-tab" data-toggle="tab" href="#chicken" role="tab" aria-controls="home" aria-selected="true">Chicken</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" id="beef-tab" data-toggle="tab" href="#beef" role="tab" aria-controls="profile" aria-selected="false">Beef</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" id="pork-tab" data-toggle="tab" href="#pork" role="tab" aria-controls="contact" aria-selected="false">Pork</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" id="lamb-tab" data-toggle="tab" href="#lamb" role="tab" aria-controls="contact" aria-selected="false">Lamb</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" id="fish-tab" data-toggle="tab" href="#fish" role="tab" aria-controls="contact" aria-selected="false">Fish</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" id="seafood-tab" data-toggle="tab" href="#seafood" role="tab" aria-controls="contact" aria-selected="false">Seafood</a>
+              </li>
+            </ul>
+
+            
+            <div class="tab-content" id="myTabContent">
+              <div class="tab-pane fade show active" id="chicken" role="tabpanel" aria-labelledby="home-tab">
+                <div class="container row my-5 ml-3 list">
+                   
+            
+                    <% chickens.forEach(chicken => { %> 
+                      <div class="form-check col-3 my-1">
+                        <input class="form-check-input" type="checkbox" name="<%= chicken %>" value="True" id="">
+                        <label class="form-check-label" for="">
+                            <%= chicken %>  
+                        </label>
+                      </div> 
+                    <% }); %> 
+                    
+                  
+                </div>
+              </div>
+              <div class="tab-pane fade" id="beef" role="tabpanel" aria-labelledby="profile-tab">
+                <div class="container row my-5 ml-3 list">
+                   
+                  <% beefs.forEach(beef => { %> 
+                    <div class="form-check col-3 my-1">
+                      <input class="form-check-input" type="checkbox" name="<%= beef %>" value="True" id="">
                       <label class="form-check-label" for="">
-                          <%= protein %> 
+                          <%= beef %>  
                       </label>
                     </div> 
                   <% }); %> 
-  
-                </div>
-              </div>
-            </div>
-            <div class="col mb-4">
-              <div class="card">
-                <img src="..." class="card-img-top" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title display-4 mb-4">Vegetables</h5>
-                  
-                  <% veggies.forEach(veggie => { %> 
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" name="<%= veggie %>" value="True" id="">
-                      <label class="form-check-label" for="">
-                          <%= veggie %> 
-                      </label>
-                    </div> 
-                  <% }); %>
-                
-                </div>
-              </div>
-            </div>
-            <div class="col mb-4">
-              <div class="card">
-                <img src="..." class="card-img-top" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title display-4 mb-4">Starches</h5>
-                  <% starches.forEach(starch => { %> 
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" name="<%= starch %>" value="True" id="">
-                      <label class="form-check-label" for="">
-                          <%= starch %> 
-                      </label>
-                    </div> 
-                  <% }); %>
-                
-                </div>
-              </div>
-            </div>
-            <div class="col mb-4">
-              <div class="card">
-                <img src="..." class="card-img-top" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title display-4 mb-4">Herbs &amp; Spices</h5>
-                  <% herbs.forEach(herb => { %> 
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" name="<%= herb %>" value="True" id="">
-                      <label class="form-check-label" for="">
-                          <%= herb %> 
-                      </label>
-                    </div> 
-                  <% }); %>
-  
-                  <% spices.forEach(spice => { %> 
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" name="<%= spice %>" value="True"" id="">
-                      <label class="form-check-label" for="">
-                          <%= spice %> 
-                      </label>
-                    </div> 
-                  <% }); %>
                   
                 </div>
               </div>
+              <div class="tab-pane fade" id="pork" role="tabpanel" aria-labelledby="contact-tab">
+                <div class="container row my-5 ml-3 list">
+                   
+                  <% porks.forEach(pork => { %> 
+                    <div class="form-check col-3 my-1">
+                      <input class="form-check-input" type="checkbox" name="<%= pork %>" value="True" id="">
+                      <label class="form-check-label" for="">
+                          <%= pork %>  
+                      </label>
+                    </div> 
+                  <% }); %> 
+                  
+                </div>
+              </div>
+              <div class="tab-pane fade" id="lamb" role="tabpanel" aria-labelledby="contact-tab">
+                <div class="container row my-5 ml-3 list">
+                   
+                  <% lambs.forEach(lamb => { %> 
+                    <div class="form-check col-3 my-1">
+                      <input class="form-check-input" type="checkbox" name="<%= lamb %>" value="True" id="">
+                      <label class="form-check-label" for="">
+                          <%= lamb %>  
+                      </label>
+                    </div> 
+                  <% }); %> 
+                  
+                </div>
+              </div>
+              <div class="tab-pane fade" id="fish" role="tabpanel" aria-labelledby="contact-tab">
+                <div class="container row my-5 ml-3 list">
+                   
+                  <% fishes.forEach(fish => { %> 
+                    <div class="form-check col-3 my-1">
+                      <input class="form-check-input" type="checkbox" name="<%= fish %>" value="True" id="">
+                      <label class="form-check-label" for="">
+                          <%= fish %>  
+                      </label>
+                    </div> 
+                  <% }); %> 
+                  
+                </div>
+              </div>
+              <div class="tab-pane fade" id="seafood" role="tabpanel" aria-labelledby="contact-tab">
+                <div class="container row my-5 ml-3 list">
+                   
+                  <% seafoods.forEach(seafood => { %> 
+                    <div class="form-check col-3 my-1">
+                      <input class="form-check-input" type="checkbox" name="<%= seafood %>" value="True" id="">
+                      <label class="form-check-label" for="">
+                          <%= seafood %>  
+                      </label>
+                    </div> 
+                  <% }); %> 
+                  
+                </div>
+              </div>
+   
+            
+              </div>
             </div>
-            <div class="col mb-4">
-             <button type="submit" class="btn btn-primary mb-2" style="width: 600px; height: 200px">Let's Find Something to Make</button>
+            <button type="button" class="btn btn-dark btn-block border" data-toggle="collapse" data-target="#collapse-proteins">View</button>
+          </div>
+        
+           
+            <div class="card my-5">
+              <h2 class="card-title mb-0 h2-2">Fruits &amp; Vegetables</h2>
+              <div class="collapse" id="collapse-veggies">
+              <div class="container row my-5 list">
+                 
+                <% veggies.forEach(veggie => { %> 
+                  <div class="form-check col-3 my-1">
+                    <input class="form-check-input" type="checkbox" name="<%= veggie %>" value="True" id="">
+                    <label class="form-check-label" for="">
+                        <%= veggie %>  
+                    </label>
+                  </div> 
+                <% }); %> 
+                
+              </div>
+            </div>      
+            <button type="button" class="btn btn-dark btn-block border" data-toggle="collapse" data-target="#collapse-veggies">View</button> 
+            </div>  
+            
+            
+            
+            <div class="card my-5">
+              <h2 class="card-title mb-0 h2-3">Starches</h2>
+              <div class="collapse" id="collapse-starches">
+              <div class="container row my-5 list">
+                 
+                <% starches.forEach(starch => { %> 
+                  <div class="form-check col-3 my-1">
+                    <input class="form-check-input" type="checkbox" name="<%= starch %>" value="True" id="">
+                    <label class="form-check-label" for="">
+                        <%= starch %>  
+                    </label>
+                  </div> 
+                <% }); %> 
+
+                </div>
+              </div>
+              <button type="button" class="btn btn-dark btn-block border" data-toggle="collapse" data-target="#collapse-starches">View</button>
+              </div>
+            
+            <div class="card my-5">
+              <h2 class="card-title mb-0 h2-4">Herbs &amp; spices</h2>
+              <div class="collapse" id="collapse-herbs">
+              <ul class="nav nav-tabs nav-justified mt-3" id="herbsSpicesTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link active" id="herbs-tab" data-toggle="tab" href="#herbs" role="tab" aria-controls="home" aria-selected="true">Herbs</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link" id="spices-tab" data-toggle="tab" href="#spices" role="tab" aria-controls="profile" aria-selected="false">Spices</a>
+                </li>
+          
+              </ul>
+              <div class="container row mb-3">
+                <div class="tab-content" id="myTabContent">
+                  <div class="tab-pane fade active show" id="herbs" role="tabpanel" aria-labelledby="home-tab">
+                    <div class="container row my-5 ml-3 list">
+                       
+                      <% herbs.forEach(herb => { %> 
+                        <div class="form-check col-3 my-1">
+                          <input class="form-check-input" type="checkbox" name="<%= herb %>" value="True" id="">
+                          <label class="form-check-label" for="">
+                              <%= herb %>  
+                          </label>
+                        </div> 
+                      <% }); %> 
+                      
+      
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="spices" role="tabpanel" aria-labelledby="profile-tab">
+                    <div class="container row my-5 ml-3 list">
+                       
+                      <% spices.forEach(spice => { %> 
+                        <div class="form-check col-3 my-1">
+                          <input class="form-check-input" type="checkbox" name="<%= spice %>" value="True" id="">
+                          <label class="form-check-label" for="">
+                              <%= spice %>  
+                          </label>
+                        </div> 
+                      <% }); %> 
+                      
+                    </div>
+                  </div>
+                  
+                </div>
+                </div>
+              </div>
+              <button type="button" class="btn btn-dark btn-block border" data-toggle="collapse" data-target="#collapse-herbs">View</button>
             </div>
+            <div class="card my-5">
+              <h2 class="card-title mb-0 h2-5">Condiments</h2>
+              <div class="collapse" id="collapse-condiments">
+              <div class="container row my-5 list">
+                 
+                <% condiments.forEach(condiment => { %> 
+                  <div class="form-check col-3 my-1">
+                    <input class="form-check-input" type="checkbox" name="<%= condiment %>" value="True" id="">
+                    <label class="form-check-label" for="">
+                        <%= condiment %>  
+                    </label>
+                  </div> 
+                <% }); %> 
+
+                </div>
+              </div>
+              <button type="button" class="btn btn-dark btn-block border" data-toggle="collapse" data-target="#collapse-condiments">View</button>
+            </div>
+        
         </form>
-        
-        <h2 class="display-1 pt-5">Find A User</h1>
-          <form class="form-inline pt-5 mb-5" action="/results/users">
-            <div class="col-6 form-group mb-2">
-              <label for="inputPassword2" class="sr-only">Dish</label>
-              <input type="text" class="col-12 form-control" id="inputPassword2" placeholder="enter someone's username" name="targetUser">
-            </div>
-            <button type="submit" class="btn btn-primary mb-2">Find a User</button>
-          </form>  
-        
-        </div>        
+
         
         
-    </div> 
+    </div>
     
-                
-    
-    
+
+    <br><br><br><br>
     <script
       src="https://code.jquery.com/jquery-3.5.1.js"
       integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
             crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-    
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 900
+        });
+    </script>
+    <script>
+        window.addEventListener('scroll', function(){
+            let nav = document.querySelector('nav');
+            nav.classList.toggle('scroll-active', window.scrollY > 0);
+            
+        })  
+      
+    </script>
     
   </body>
 </html>
