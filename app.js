@@ -568,6 +568,17 @@ app.get("/results", function(req, res){
         }
         return false;
     }
+    //if an ingredient in a recipe is the plural of an ingredient searched, then it should be a match
+    function plurality(a, b){
+        if(a.charAt(a.length-1) == 'y'){
+            if(a.substring(0, a.length-2) + "ies" == b)
+                return true;
+        }
+        else if(a + "s" == b){
+            return true;
+        }
+        return false;
+    }
 
     var ingredientsTemp = url.parse(req.url, true).query;
     var ingredients = Object.keys(ingredientsTemp);
@@ -584,6 +595,7 @@ app.get("/results", function(req, res){
             var counter = 0;
             var matches;
             for(i=0; i<rows.length; i++){
+                console.log(rows[i].name);
                 lowerIng = rows[i].ingredients.toLowerCase();
                 if(!rows[i].keywords)
                     lowerKeys = "";
@@ -611,6 +623,8 @@ app.get("/results", function(req, res){
                                     break;
                                 }
                             }
+                            else if(plurality(ingList[k], ingredients[j]) || plurality(ingList[k], ingredients[j]))
+                                matches++;
                         }
                     }
                 }
@@ -634,7 +648,6 @@ app.get("/results", function(req, res){
         res.render("results.ejs", {user: req.session.user, message: "Here's what you can make", dishes, userSearch: false});
     });
 });
-
 
 app.post("/saveRecipe/:id", requireLogin, function(req, res){
     const {id} = req.params;
@@ -921,6 +934,18 @@ app.post("/createAccount", function(req, res){
 app.get("/admin", function(req, res){
     keyWords = ["Chicken", "Beef", "Pork", "Lamb", "Fish", "Seafood", "Pasta", "Rice"];
     res.render("admin.ejs", {message : "", keyWords});
+});
+
+app.post("/deleteRecipe/:id", function(req, res){
+    const {id} = req.params;
+    db.query("Update recipe set username = 'admin' where id = '"+id+"'", function(err, result){
+        if(err){
+            throw err;
+        }
+        else{
+            res.redirect("/recipe/" +id); 
+        }
+    })
 });
 
 app.post("/deleteuser", function(req, res){
