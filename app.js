@@ -7,6 +7,7 @@ var upload = require('express-fileupload');
 var busboy = require('connect-busboy');
 var path = require('path');
 var url = require('url');
+var httpMsgs = require('http-msgs')
 const { isNull } = require("util");
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -649,6 +650,7 @@ app.get("/results", function(req, res){
     });
 });
 
+
 app.post("/saveRecipe/:id", requireLogin, function(req, res){
     const {id} = req.params;
     
@@ -738,9 +740,8 @@ app.post("/saveIngredients/:id/:ingredients", requireLogin, function(req, res){
 
 
 
-app.post("/deleteIngredient/:index", function(req, res){
-    const {index} = req.params;
-    console.log(index);
+app.post("/deleteIngredient", function(req, res){
+    var index = req.body.index;
     db.query("select shoppingList from user where username = ?", [req.session.user], function(error,rows) {
         if(error){
             throw error;
@@ -755,12 +756,15 @@ app.post("/deleteIngredient/:index", function(req, res){
                     throw error;
                 }
                 else{
-                    res.redirect("/home");
+                    httpMsgs.sendJSON(req, res, {
+                        from: ""
+                    })
                 }
             })
         }
     })
 });
+
 
 app.post("/clearShoppingList", function(req, res){
     db.query("update user set shoppingList = '' where username = ?", [req.session.user], function(error, rows){
@@ -768,7 +772,9 @@ app.post("/clearShoppingList", function(req, res){
             throw error;
         }
         else{
-            res.redirect("/home")
+            httpMsgs.sendJSON(req, res, {
+                from: ""
+            })
         }
     })
 });
@@ -947,6 +953,7 @@ app.post("/deleteRecipe/:id", function(req, res){
         }
     })
 });
+
 
 app.post("/deleteuser", function(req, res){
     db.query("update recipe set username = 'admin' where username = ?",[req.body.username], function(err, result){   
