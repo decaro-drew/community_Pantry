@@ -17,8 +17,11 @@
       
        
      
-     
-     <nav class="fixed-top">
+     <%if(location == ""){ %>
+        <nav class="fixed-top">
+     <% }else{ %>
+      <nav class="fixed-top scroll-active">
+      <% } %>
            <div class="container">
             <div class="logo">
                  <h4>Community Pantry</h4>
@@ -324,13 +327,13 @@
                <h3 class="display-4 mt-5 ">Shopping List</h3>
             </div>
             <div class="row mt-5">
-              <ul class="col-8 list-group list-group-flush">
+              <ul id="ingredientList" class="col-8 list-group list-group-flush">
                   <% var count = 0; 
                     shoppingList.forEach(ingredient => { %>
                 
                       <li class="list-group-item d-flex justify-content-between align-items-center">
                           <%= ingredient %>
-                          <form action="/deleteIngredient/<%= count %>" method="POST">
+                          <form id="<%= count %>" class="ingredientItem" action="" method="POST">
                               <button class="btn btn-sm btn-outline-danger">Remove from Shopping List</button>
                           </form>
                       </li>
@@ -342,7 +345,7 @@
                 
                 <ul class="col">
                     <li>
-                        <form action="/clearShoppingList" method="POST">
+                        <form class="clearShoppingList" action="" method="POST">
                             <button class="btn btn-outline-primary btn-block mt-2 mb-4">Clear Shopping List</button>
                         </form>
                     </li>
@@ -354,7 +357,7 @@
     
     
         <br><br><br><br><br>
-        <p id="location" style="display:none"><%= location %></p>
+        <p id="location" style="display:none"></p>
   
     <script
       src="https://code.jquery.com/jquery-3.5.1.js"
@@ -370,9 +373,8 @@
     </script>
     <script>
 
-      var location = document.getElementById("location").innerHTML;
-      console.log(location.hash); 
-      window.location = location.hash;
+      // var location = document.getElementById("location").innerHTML; 
+      // window.location = location.hash;
     
       $(document).ready(function(){
             var scrolllink = $('#topbtn');
@@ -463,6 +465,54 @@
             menu.classList.toggle('scroll-active', window.scrollY > 40);
         })
         
+
+        $(document).ready(function(){
+
+            $("form.ingredientItem").submit(function(e){
+                e.preventDefault();
+                var myindex = this.id;
+
+                $(this).parent().slideUp(function(){
+                    this.remove();
+                });
+
+                $.ajax({
+                  url: "/deleteIngredient",
+                  data: {
+                    index: myindex
+                  },
+                  method: "POST",
+                  contentType: "application/x-www-form-urlencoded",
+                  success: function(res){
+                      console.log(res.from);
+                  }, error: function(err){
+                      console.log(err);
+                  }
+                })
+                
+            })
+
+            $("form.clearShoppingList").submit(function(e){
+                e.preventDefault();
+  
+                $("#ingredientList").children().slideUp(function(){
+                    this.remove();
+                });
+
+
+                $.ajax({
+                  url: "/clearShoppingList",
+                  method: "POST",
+                  contentType: "application/x-www-form-urlencoded",
+                  success: function(res){
+                      console.log(res.from);
+                  }, error: function(err){
+                      console.log(err);
+                  }
+                })
+            })
+
+        })
       
     </script>
     
