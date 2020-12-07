@@ -287,7 +287,7 @@
             <div class="title">
                <h3 class="display-4 mt-5 ">Saved Recipes</h3>
             </div>
-            <ul class="my-5 pl-0">
+            <ul id="savedList" class="my-5 pl-0">
               <% likedRecipes.forEach(recipe => { %>
                 <a href="/recipe/<%= recipe.id %> ">
                   <li class="my-5" data-aos="fade-up">
@@ -319,7 +319,7 @@
             </ul>
             <br>
             
-            <form action="/clearSavedRecipes" method="POST">
+            <form class="clearSavedRecipes" action="/clearSavedRecipes" method="POST">
               <button class="btn btn-outline-primary btn-block mt-2 mb-4">Clear Saved Recipes</button>
             </form>
             
@@ -510,6 +510,27 @@
 
                 $.ajax({
                   url: "/clearShoppingList",
+                  method: "POST",
+                  contentType: "application/x-www-form-urlencoded",
+                  success: function(res){
+                      console.log(res.from);
+                  }, error: function(err){
+                      console.log(err);
+                  }
+                })
+            })
+
+
+            $("form.clearSavedRecipes").submit(function(e){
+                e.preventDefault();
+  
+                $("#savedList").children().slideUp(function(){
+                    this.remove();
+                });
+
+
+                $.ajax({
+                  url: "/clearSavedRecipes",
                   method: "POST",
                   contentType: "application/x-www-form-urlencoded",
                   success: function(res){
