@@ -5,8 +5,9 @@
 }
 
 nav{
-    height: 10vh;
+    height: 9vh;
     transition: .5s ease;
+    background-color: black;
 }
 
 nav .container{
@@ -19,7 +20,7 @@ nav .container{
     margin-left: auto;
     display: flex;
     justify-content: space-between;
-    width: 30%;
+    width: 45%;
     margin-bottom: 0;
     transition: .5s ease;
 }
@@ -43,10 +44,39 @@ nav .container{
     transition: .5s ease;
 }
 
+#login{
+    color: black;
+    background-color: white;
+    padding: 2px 20px 5px 20px;
+    border-radius: 50px;
+    border: 1px solid black;
+}
+
+#login:hover{
+    color: white;
+    background-color: #292b2c;
+    border: 1px solid white;
+    transition: .25s ease;
+}
+
+.scroll-active #login{
+    color: black;
+    background-color: white;
+    padding: 1px 15px 4px 15px;
+    border-radius: 50px;
+    border: 1px solid black;
+}
+
+.scroll-active #login:hover{
+    color: white;
+    background-color: #292b2c;
+    border: 1px solid white;
+    transition: .25s ease;
+}
 
 .scroll-active:nth-child(1){
     background-color: black;
-    height: 8vh;
+    height: 6vh;
 }
 
 .scroll-active .logo h4{
@@ -55,7 +85,7 @@ nav .container{
 }
 
 .scroll-active .nav-links{
-    width: 20%;
+    width: 30%;
     transition: .5s ease;
 }
 
