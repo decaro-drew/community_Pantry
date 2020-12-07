@@ -7,7 +7,6 @@
 
     
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    
     <link rel="stylesheet" href="/styles/recipe.css">
     <link href="https://fonts.googleapis.com/css2?family=Allura&family=Open+Sans+Condensed:wght@300&display=swap" rel="stylesheet">
 
@@ -63,6 +62,8 @@
   <% } %> 
   </head>
   <body>
+
+    
      
      
      <nav class="fixed-top">
@@ -85,10 +86,19 @@
          </div>
      </nav>
     
+     <div class="alert-wrapper">
+        <div id="alert" class="alert alert-dark  collapse" role="alert">
+            <strong>vrgrgregreg</strong>
+            <button type="button" class="close" id="alert-close" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+     </div>
+     
 
     
     <div id="title">
-        <h1><%= dishName %> </h1>
+        <h1 id="dishName"><%= dishName %> </h1>
     </div>
      
      
@@ -108,24 +118,24 @@
                 <div class="row">
 
                     <% if(user == username){ %>
-                        <form class="col" action="" method="POST">
+                        <form id="save" class="col" action="" method="POST">
                             <button class="btn btn-outline-dark btn-block mt-2">Delete recipe</button>
                         </form>
                     <% }else{ %>
 
                         <% if(saved){ %>
-                            <form class="col" action="/unsaveRecipe/<%= id %> " method="POST">
-                                <button class="btn btn-outline-dark btn-block mt-2">Unsave recipe</button>
+                            <form id="save" class="col" action="" method="POST">
+                                <button class="btn btn-outline-dark btn-block mt-2">Unsave Recipe</button>
                             </form>
                           <% }else{ %>
-                             <form class="col" action="/saveRecipe/<%= id %>" method="POST">
-                                <button class="btn btn-outline-dark btn-block mt-2">Save recipe</button>
+                             <form id="save" class="col" action="" method="POST">
+                                <button class="btn btn-outline-dark btn-block mt-2">Save Recipe</button>
                               </form>
                           <% } %> 
 
                      <% } %> 
 
-                     <form class="col" action="/saveIngredients/<%= id %>/<%= ingredientString%> " method="post">
+                     <form class="saveIngredients col" action="" method="post">
                         <button class="btn btn-outline-dark btn-block mt-2">Add Ingredients to Shopping List</button>
                     </form>
           
@@ -153,7 +163,7 @@
                       
                 </ul>
                 </div>
-                <form class="col ml-0 mt-4" action="/saveIngredients/<%= id %>/<%= ingredientString%> " method="post">
+                <form class="saveIngredients col ml-0 mt-4" action="" method="post">
                   <button class="btn btn-outline-dark btn-block mt-2">Add Ingredients to Shopping List</button>
               </form>
              </div>
@@ -172,7 +182,9 @@
      
      
      
-     
+     <p id="id" style="display:none"><%= id %></p>
+     <p id="ingredientString" style="display:none"><%= ingredientString%></p>
+     <p id="user" style="display:none"><%= user%></p>
      <div class="footer"></div>
      
     
@@ -189,6 +201,103 @@
             nav.classList.toggle('scroll-active', window.scrollY > 0);
             
         })  
+
+        $(document).ready(function(){
+
+            $('#alert-close').click(function(){
+                $('#alert').hide('fade');
+            })
+
+            $('#save').submit(function(e){
+                e.preventDefault();
+                var myid = document.getElementById("id").innerHTML; 
+
+                if(document.getElementById("user").innerHTML == ""){
+                    window.location.href = "/";
+                }else{
+
+                if(this.children[0].innerHTML == "Save Recipe"){
+                    this.children[0].innerHTML = "Unsave Recipe";
+
+                    $.ajax({
+                        url: "/saveRecipe",
+                        data: {
+                            id: myid
+                        },
+                        method: "POST",
+                        contentType: "application/x-www-form-urlencoded",
+                        success: function(res){
+                             console.log(res.from);
+                        }, error: function(err){
+                              console.log(err);
+                        }
+                    })
+                    document.getElementById("alert").children[0].innerHTML = document.getElementById("dishName").innerHTML + " has been added to your saved recipes.";
+                    $('#alert').show('fade');
+                    setTimeout(function(){
+                         $('#alert').hide('fade');
+                     }, 5000)
+
+                }else{
+                    this.children[0].innerHTML = "Save Recipe";
+                    
+                    $.ajax({
+                        url: "/unsaveRecipe",
+                        data: {
+                            id: myid
+                        },
+                        method: "POST",
+                        contentType: "application/x-www-form-urlencoded",
+                        success: function(res){
+                             console.log(res.from);
+                        }, error: function(err){
+                              console.log(err);
+                        }
+                    })
+                    document.getElementById("alert").children[0].innerHTML = document.getElementById("dishName").innerHTML + " has been removed from your saved recipes.";
+                    $('#alert').show('fade');
+                    setTimeout(function(){
+                         $('#alert').hide('fade');
+                    }, 5000)
+                }
+            }
+            })
+        
+
+            $('.saveIngredients').submit(function(e){
+                e.preventDefault();
+                var myid = document.getElementById("id").innerHTML; 
+                var myingredientString = document.getElementById('ingredientString').innerHTML;
+
+                if(document.getElementById("user").innerHTML == ""){
+                    window.location.href = "/";
+                }else{
+                
+                $.ajax({
+                        url: "/saveIngredients",
+                        data: {
+                            id: myid,
+                            ingredientString: myingredientString
+                        },
+                        method: "POST",
+                        contentType: "application/x-www-form-urlencoded",
+                        success: function(res){
+                             console.log(res.from);
+                        }, error: function(err){
+                              console.log(err);
+                        }
+                })
+                document.getElementById("alert").children[0].innerHTML = "Ingredients for " + document.getElementById("dishName").innerHTML + " have been added to your shopping list.";
+                $('#alert').show('fade');
+                setTimeout(function(){
+                    $('#alert').hide('fade');
+                }, 5000)
+                    
+                }
+            })
+
+
+        })
       
     </script>
   </body>
