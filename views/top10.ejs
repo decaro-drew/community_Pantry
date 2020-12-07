@@ -16,25 +16,37 @@
   <body>
      
      
-     <nav class="fixed-top">
-           <div class="container">
-            <div class="logo">
-                 <h4>Community Pantry</h4>
-             </div>
-             <ul class="nav-links">
-                 <li>
-                     <a class="active" href="/top10" disaled>Top 10</a>
-                 </li>
-                 <li class="">
-                    <a class="" href="/search"> Search</a>
-                 </li>
-                <li class="">
-                    <a class="" href="/home">Home</a>
-                </li>
-             </ul>
-             
-         </div>
-     </nav>
+          
+    <nav class="fixed-top">
+      <div class="container">
+       <div class="logo">
+            <h4>Community Pantry</h4>
+        </div>
+        <ul class="nav-links">
+           <li class="">
+               <a class="" href="/search" disabled> Search</a>
+            </li>
+            <li>
+                <a class="active" href="/top10" onclick="return false;">Top 10</a>
+            </li>
+           <li class="">
+               <a class="" href="/home">Home</a>
+           </li>
+           <% if(user == undefined){ %> 
+              <li class="">
+                 <a id="login" class="" href="/login">Login</a>
+              </li>
+           <% }else{ %>
+              <li class="">
+                  <a id="login" class="" href="/logout">Logout</a>
+              </li>
+            <% } %> 
+           
+        </ul>
+        
+    </div>
+</nav>
+    
     
     
     

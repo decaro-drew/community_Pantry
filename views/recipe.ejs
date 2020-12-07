@@ -66,25 +66,37 @@
     
      
      
-     <nav class="fixed-top">
-           <div class="container">
-            <div class="logo">
-                 <h4>Community Pantry</h4>
-             </div>
-             <ul class="nav-links">
-                 <li>
-                     <a class="" href="/top10" disaled>Top 10</a>
-                 </li>
-                 <li class="">
-                    <a class="" href="/search"> Search</a>
-                 </li>
+          
+    <nav class="fixed-top">
+        <div class="container">
+         <div class="logo">
+              <h4>Community Pantry</h4>
+          </div>
+          <ul class="nav-links">
+             <li class="">
+                 <a class="" href="/search" > Search</a>
+              </li>
+              <li>
+                  <a class="" href="/top10">Top 10</a>
+              </li>
+             <li class="">
+                 <a class="" href="/home">Home</a>
+             </li>
+             <% if(user == undefined){ %> 
                 <li class="">
-                    <a class="" href="/home">Home</a>
+                   <a id="login" class="" href="/login">Login</a>
                 </li>
-             </ul>
+             <% }else{ %>
+                <li class="">
+                    <a id="login" class="" href="/logout">Logout</a>
+                </li>
+              <% } %> 
              
-         </div>
-     </nav>
+          </ul>
+          
+      </div>
+  </nav>
+      
     
      <div class="alert-wrapper">
         <div id="alert" class="alert alert-dark  collapse" role="alert">
@@ -213,7 +225,7 @@
                 var myid = document.getElementById("id").innerHTML; 
 
                 if(document.getElementById("user").innerHTML == ""){
-                    window.location.href = "/";
+                    window.location.href = "/login";
                 }else{
 
                 if(this.children[0].innerHTML == "Save Recipe"){
@@ -270,7 +282,7 @@
                 var myingredientString = document.getElementById('ingredientString').innerHTML;
 
                 if(document.getElementById("user").innerHTML == ""){
-                    window.location.href = "/";
+                    window.location.href = "/login";
                 }else{
                 
                 $.ajax({
