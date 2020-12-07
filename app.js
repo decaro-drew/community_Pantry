@@ -74,7 +74,7 @@ function  requireLogin(req, res, next) {
 
     if (!req.session.user) {
         console.log("redirecting");
-       res.redirect("/");
+       res.redirect("/login");
     } else {
       next();
     }
@@ -410,7 +410,7 @@ app.get("/top10", function(req, res){
 
             }
          
-            res.render("top10.ejs", {dishes});
+            res.render("top10.ejs", {dishes, user: req.session.user});
         }
         
     });
@@ -980,12 +980,16 @@ app.post("/deleteuser", function(req, res){
 
 app.get('/logout', function(req, res) {
     req.session.reset();
-    res.redirect('/');
+    res.redirect('/search');
 });
 
 
-app.get("/", function(req, res){
+app.get("/login", function(req, res){
     res.render("login.ejs", {message: "", message2: ""});
+});
+
+app.get("/", function(req, res){
+    res.redirect("/search");
 });
 
 
