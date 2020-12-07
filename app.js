@@ -70,9 +70,10 @@ app.use(function (req, res, next) {
 });
 
 function  requireLogin(req, res, next) {
-    //console.log(req.user);
-    console.log(req.session.user);
+    console.log("here");
+
     if (!req.session.user) {
+        console.log("redirecting");
        res.redirect("/");
     } else {
       next();
@@ -596,7 +597,7 @@ app.get("/results", function(req, res){
             var counter = 0;
             var matches;
             for(i=0; i<rows.length; i++){
-                console.log(rows[i].name);
+                
                 lowerIng = rows[i].ingredients.toLowerCase();
                 if(!rows[i].keywords)
                     lowerKeys = "";
@@ -651,9 +652,9 @@ app.get("/results", function(req, res){
 });
 
 
-app.post("/saveRecipe/:id", requireLogin, function(req, res){
-    const {id} = req.params;
-    
+app.post("/saveRecipe", requireLogin, function(req, res){
+    var id = req.body.id;
+    console.log("save");
     db.query("select likedRecipes from user where username = ?", [req.session.user], function(error, rows){
         if(error){
             throw error;
@@ -668,16 +669,17 @@ app.post("/saveRecipe/:id", requireLogin, function(req, res){
                     throw error;
                 }
                 else{
-                    res.redirect("/recipe/" + id)
+                    httpMsgs.sendJSON(req, res, {
+                        from: ""
+                    })
                 } 
             })
         }
     })
 });
 
-app.post("/unSaveRecipe/:id", requireLogin, function(req, res){
-    const {id} = req.params;
-    console.log(id);
+app.post("/unSaveRecipe", requireLogin, function(req, res){
+    var id = req.body.id;
     db.query("select likedRecipes from user where username = ?", [req.session.user], function(error, rows){
         if(error){
             throw error;
@@ -692,7 +694,9 @@ app.post("/unSaveRecipe/:id", requireLogin, function(req, res){
                     throw error;
                 }
                 else{
-                    res.redirect("/recipe/" + id)
+                    httpMsgs.sendJSON(req, res, {
+                        from: ""
+                    })
                 }
             })
 
@@ -714,9 +718,9 @@ app.post("/clearSavedRecipes", function(req, res){
 
 
 
-app.post("/saveIngredients/:id/:ingredients", requireLogin, function(req, res){
-    const {ingredients} = req.params;
-    const {id} = req.params;
+app.post("/saveIngredients", requireLogin, function(req, res){
+    var id = req.body.id;
+    var ingredients = req.body.ingredientString;
     db.query("select shoppingList from user where username = ?", [req.session.user], function(error, rows){
         if(error){
             throw error;
@@ -949,7 +953,7 @@ app.post("/deleteRecipe/:id", function(req, res){
             throw err;
         }
         else{
-            res.redirect("/recipe/" +id); 
+            res.redirect("/home"); 
         }
     })
 });
