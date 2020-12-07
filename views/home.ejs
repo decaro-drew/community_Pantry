@@ -17,29 +17,37 @@
       
        
      
-     <%if(location == ""){ %>
-        <nav class="fixed-top">
-     <% }else{ %>
-      <nav class="fixed-top scroll-active">
-      <% } %>
-           <div class="container">
-            <div class="logo">
-                 <h4>Community Pantry</h4>
-             </div>
-             <ul class="nav-links">
-                 <li>
-                     <a class="" href="/top10">Top 10</a>
-                 </li>
-                 <li class="">
-                    <a class="" href="/search"> Search</a>
-                 </li>
-                <li class="">
-                    <a class="active" href="/home" disabled>Home</a>
-                </li>
-             </ul>
-             
-         </div>
-     </nav>
+          
+    <nav class="fixed-top">
+      <div class="container">
+       <div class="logo">
+            <h4>Community Pantry</h4>
+        </div>
+        <ul class="nav-links">
+           <li class="">
+               <a class="" href="/search" disabled> Search</a>
+            </li>
+            <li>
+                <a class="" href="/top10">Top 10</a>
+            </li>
+           <li class="">
+               <a class="active" href="/home" onclick="return false;">Home</a>
+           </li>
+           <% if(user == undefined){ %> 
+              <li class="">
+                 <a id="login" class="" href="/login">Login</a>
+              </li>
+           <% }else{ %>
+              <li class="">
+                  <a id="login" class="" href="/logout">Logout</a>
+              </li>
+            <% } %> 
+           
+        </ul>
+        
+    </div>
+</nav>
+    
       
       <div class="fixed-bottom" id="menu">
           <ul class="nav justify-content-center">
