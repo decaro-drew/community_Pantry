@@ -8,15 +8,20 @@
     
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-    <link rel="stylesheet" href="/styles/search.css">
+    <link rel="stylesheet" href="/styles/home.css">
     <link href="https://fonts.googleapis.com/css2?family=Allura&family=Open+Sans+Condensed:wght@300&display=swap" rel="stylesheet">
 
     <title>Community Pantry</title>
   </head>
   <body>
+      
+       
      
-     
-     <nav class="fixed-top">
+     <%if(location == ""){ %>
+        <nav class="fixed-top">
+     <% }else{ %>
+      <nav class="fixed-top scroll-active">
+      <% } %>
            <div class="container">
             <div class="logo">
                  <h4>Community Pantry</h4>
@@ -26,346 +31,334 @@
                      <a class="" href="/top10">Top 10</a>
                  </li>
                  <li class="">
-                    <a class="active" href="/search" disbale> Search</a>
+                    <a class="" href="/search"> Search</a>
                  </li>
                 <li class="">
-                    <a class="" href="/home">Home</a>
+                    <a class="active" href="/home" disabled>Home</a>
                 </li>
              </ul>
              
          </div>
      </nav>
-    
-    
-    
-    <div id="title">
-        <div class="basic-search">
-            <div class="card-deck">
-                <div class="card">
-
-                    <div class="card-body">
-                      <h5 class="card-title">Find a Dish</h5>
-                      <p class="card-text mt-4">Already have a dish in mind? Let us know and we'll find you a recipe!</p>
-                    
-                      
-                      <form action="/results/dish" method="get">
-                          <div class="form">
-                              <input type="text" name="dishName" required/>
-                              <label for="" class="label-name">
-                                  <span class="content-name">Dish</span>
-                              </label>
-                          </div>
-                          <button class="btn btn-block btn-outline-dark mt-2">Search</button>
-                      </form>
-         
-                    </div>
-                </div>
-                <div class="card">
-
-                    <div class="card-body">
-                      <h5 class="card-title">Explore a Cuisine</h5>
-                      <p class="card-text mt-4">There's a whole world of flavors out there. If you're stuck at home, you can do some travelling right from your kitchen!</p>
-                          
-                      <form action="/results/cuisine" method="get">
-                          <div class="form">
-                              <input type="text" name="cuisine" required/>
-                              <label for="" class="label-name">
-                                  <span class="content-name">Explore</span>
-                              </label>
-                          </div>
-                          <button class="btn btn-block btn-outline-dark mt-2">Search</button>
-                      </form>
-                          
-                    </div>
-              </div>
-              <div class="card">
-
-                    <div class="card-body">
-                        <h5 class="card-title">Find a Cook</h5>
-                        <p class="card-text mt-4">Want to find a friend? You can give us a partial or whole username and we'll try to connect you with the right person.</p>
       
-                        <form action="/results/users" method="get">
-                          <div class="form">
-                              <input type="text" name="targetUser" required/>
-                              <label for="" class="label-name">
-                                  <span class="content-name">Username</span>
-                              </label>
-                          </div>
-                          <button class="btn btn-block btn-outline-dark mt-2">Search</button>
-                       
-                      </form>
-                    </div>
+      <div class="fixed-bottom" id="menu">
+          <ul class="nav justify-content-center">
+              <li class="nav-item">
+                <a class="nav-link" href="#top" id="topbtn">Top</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#yourRecipes" id="yourRecipesbtn">Your Recipes</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#createRecipe" id ="createRecipebtn">Create Recipe</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#savedRecipes" id="savedRecipesbtn">Saved Recipes</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#shoppingList" id="shoppingListbtn">Shopping List</a>
+              </li>
+         </ul>
+      </div>
+      
+      
+      
+<div class="modal fade" id="bioModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update your Bio</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
               </div>
-            </div>
-        </div>
-    </div>
-    <br>
-    
-    
-    <div class="container">
-        
-        
-        <form action="/results" method="GET">
-         
-         <div class="sticky">
-             <h3>Search by Ingredient</h3>
-             <button class="btn btn-outline-dark">Search</button>
-         </div>
-         
-          <div class="card my-5">
-            <h2 class="card-title mb-0 h2-1">Proteins</h2>
-            <div class="collapse" id="collapse-proteins">
-                <p class="protein mt-3">General Proteins</p>
-                <div class="container row my-3" id="keyProteins">
-               
-               
-                <% keyProteins.forEach(protein => { %> 
-                  <div class="form-check col my-1">
-                    <input class="form-check-input" type="checkbox" name="<%= protein %>" value="True" id="">
-                    <label class="form-check-label" for="">
-                        <%= protein %>  
-                    </label>
-                  </div> 
-                <% }); %> 
-              
-              
-            </div>
-            <br>
-            <p class="protein mb-4">Specific Cuts </p>
+              <div class="modal-body">
+              <form action="/updateBio" method="POST" enctype="multipart/form-data">      
+                <div class="form-group">
+                  <label for="name">Bio : </label>
+                  <textarea class="form-control" rows="5" name="bio"><%= bio %> </textarea>
+                </div>
 
-            <ul class="nav nav-tabs nav-justified" id="proteinTab" role="tablist">
-              <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="chicken-tab" data-toggle="tab" href="#chicken" role="tab" aria-controls="home" aria-selected="true">Chicken</a>
-              </li>
-              <li class="nav-item" role="presentation">
-                <a class="nav-link" id="beef-tab" data-toggle="tab" href="#beef" role="tab" aria-controls="profile" aria-selected="false">Beef</a>
-              </li>
-              <li class="nav-item" role="presentation">
-                <a class="nav-link" id="pork-tab" data-toggle="tab" href="#pork" role="tab" aria-controls="contact" aria-selected="false">Pork</a>
-              </li>
-              <li class="nav-item" role="presentation">
-                <a class="nav-link" id="lamb-tab" data-toggle="tab" href="#lamb" role="tab" aria-controls="contact" aria-selected="false">Lamb</a>
-              </li>
-              <li class="nav-item" role="presentation">
-                <a class="nav-link" id="fish-tab" data-toggle="tab" href="#fish" role="tab" aria-controls="contact" aria-selected="false">Fish</a>
-              </li>
-              <li class="nav-item" role="presentation">
-                <a class="nav-link" id="seafood-tab" data-toggle="tab" href="#seafood" role="tab" aria-controls="contact" aria-selected="false">Seafood</a>
-              </li>
-            </ul>
 
-            
-            <div class="tab-content" id="myTabContent">
-              <div class="tab-pane fade show active" id="chicken" role="tabpanel" aria-labelledby="home-tab">
-                <div class="container row my-5 ml-3 list">
-                   
-            
-                    <% chickens.forEach(chicken => { %> 
-                      <div class="form-check col-3 my-1">
-                        <input class="form-check-input" type="checkbox" name="<%= chicken %>" value="True" id="">
-                        <label class="form-check-label" for="">
-                            <%= chicken %>  
-                        </label>
-                      </div> 
-                    <% }); %> 
-                    
-                  
-                </div>
               </div>
-              <div class="tab-pane fade" id="beef" role="tabpanel" aria-labelledby="profile-tab">
-                <div class="container row my-5 ml-3 list">
-                   
-                  <% beefs.forEach(beef => { %> 
-                    <div class="form-check col-3 my-1">
-                      <input class="form-check-input" type="checkbox" name="<%= beef %>" value="True" id="">
-                      <label class="form-check-label" for="">
-                          <%= beef %>  
-                      </label>
-                    </div> 
-                  <% }); %> 
-                  
-                </div>
-              </div>
-              <div class="tab-pane fade" id="pork" role="tabpanel" aria-labelledby="contact-tab">
-                <div class="container row my-5 ml-3 list">
-                   
-                  <% porks.forEach(pork => { %> 
-                    <div class="form-check col-3 my-1">
-                      <input class="form-check-input" type="checkbox" name="<%= pork %>" value="True" id="">
-                      <label class="form-check-label" for="">
-                          <%= pork %>  
-                      </label>
-                    </div> 
-                  <% }); %> 
-                  
-                </div>
-              </div>
-              <div class="tab-pane fade" id="lamb" role="tabpanel" aria-labelledby="contact-tab">
-                <div class="container row my-5 ml-3 list">
-                   
-                  <% lambs.forEach(lamb => { %> 
-                    <div class="form-check col-3 my-1">
-                      <input class="form-check-input" type="checkbox" name="<%= lamb %>" value="True" id="">
-                      <label class="form-check-label" for="">
-                          <%= lamb %>  
-                      </label>
-                    </div> 
-                  <% }); %> 
-                  
-                </div>
-              </div>
-              <div class="tab-pane fade" id="fish" role="tabpanel" aria-labelledby="contact-tab">
-                <div class="container row my-5 ml-3 list">
-                   
-                  <% fishes.forEach(fish => { %> 
-                    <div class="form-check col-3 my-1">
-                      <input class="form-check-input" type="checkbox" name="<%= fish %>" value="True" id="">
-                      <label class="form-check-label" for="">
-                          <%= fish %>  
-                      </label>
-                    </div> 
-                  <% }); %> 
-                  
-                </div>
-              </div>
-              <div class="tab-pane fade" id="seafood" role="tabpanel" aria-labelledby="contact-tab">
-                <div class="container row my-5 ml-3 list">
-                   
-                  <% seafoods.forEach(seafood => { %> 
-                    <div class="form-check col-3 my-1">
-                      <input class="form-check-input" type="checkbox" name="<%= seafood %>" value="True" id="">
-                      <label class="form-check-label" for="">
-                          <%= seafood %>  
-                      </label>
-                    </div> 
-                  <% }); %> 
-                  
-                </div>
-              </div>
-   
-            
+              <div class="modal-footer">
+                <button class="btn btn-primary">Save changes</button>
+              </form>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
               </div>
             </div>
-            <button type="button" class="btn btn-dark btn-block border" data-toggle="collapse" data-target="#collapse-proteins">View</button>
           </div>
-        
-           
-            <div class="card my-5">
-              <h2 class="card-title mb-0 h2-2">Fruits &amp; Vegetables</h2>
-              <div class="collapse" id="collapse-veggies">
-              <div class="container row my-5 list">
-                 
-                <% veggies.forEach(veggie => { %> 
-                  <div class="form-check col-3 my-1">
-                    <input class="form-check-input" type="checkbox" name="<%= veggie %>" value="True" id="">
-                    <label class="form-check-label" for="">
-                        <%= veggie %>  
-                    </label>
-                  </div> 
-                <% }); %> 
+     </div>
+      
+     <div class="modal fade" id="picModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Update your Profile Picture</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">   
+          <form action="/updateProfilePhoto" method="POST" enctype="multipart/form-data">      
+            <div class="form-group">
+              <label for="exampleFormControlFile1" class="mb-4">Upload an Image</label>
+              <input type="file" class="form-control-file" name="image" id="exampleFormControlFile1">
+            </div>               
+          </div>
+
+          <div class="modal-footer">
+            <button  class="btn btn-primary">Save changes</button>
+          </form> 
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+ </div>
+      
+      
+      
+    <section id="top">
+    <div class="mb-0 jumbotron" id="title">
+        <div class="card">
+          <div class="row no-gutters">
+            <div class="col-md-4">
+              <img src="/profile_images/<%= user %>.jpg" class="card-img" onerror="this.src='/profile_images/default_profile.jpg'">
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h1 class="card-title "><%= user %></h1>
+                <p class="card-text"><%= bio %> </p>
+                <div class="row ml-0">
+                   <button class="btn btn-outline-primary btn-sm mr-2" data-toggle="modal" data-target="#picModal">
+                      Edit Profile Picture
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm " data-toggle="modal" data-target="#bioModal">
+                      Edit Bio
+                    </button>
+                </div>
                 
               </div>
-            </div>      
-            <button type="button" class="btn btn-dark btn-block border" data-toggle="collapse" data-target="#collapse-veggies">View</button> 
-            </div>  
-            
-            
-            
-            <div class="card my-5">
-              <h2 class="card-title mb-0 h2-3">Starches</h2>
-              <div class="collapse" id="collapse-starches">
-              <div class="container row my-5 list">
-                 
-                <% starches.forEach(starch => { %> 
-                  <div class="form-check col-3 my-1">
-                    <input class="form-check-input" type="checkbox" name="<%= starch %>" value="True" id="">
-                    <label class="form-check-label" for="">
-                        <%= starch %>  
-                    </label>
-                  </div> 
-                <% }); %> 
-
-                </div>
-              </div>
-              <button type="button" class="btn btn-dark btn-block border" data-toggle="collapse" data-target="#collapse-starches">View</button>
-              </div>
-            
-            <div class="card my-5">
-              <h2 class="card-title mb-0 h2-4">Herbs &amp; spices</h2>
-              <div class="collapse" id="collapse-herbs">
-              <ul class="nav nav-tabs nav-justified mt-3" id="herbsSpicesTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                  <a class="nav-link active" id="herbs-tab" data-toggle="tab" href="#herbs" role="tab" aria-controls="home" aria-selected="true">Herbs</a>
-                </li>
-                <li class="nav-item" role="presentation">
-                  <a class="nav-link" id="spices-tab" data-toggle="tab" href="#spices" role="tab" aria-controls="profile" aria-selected="false">Spices</a>
-                </li>
-          
-              </ul>
-              <div class="container row mb-3">
-                <div class="tab-content" id="myTabContent">
-                  <div class="tab-pane fade active show" id="herbs" role="tabpanel" aria-labelledby="home-tab">
-                    <div class="container row my-5 ml-3 list">
-                       
-                      <% herbs.forEach(herb => { %> 
-                        <div class="form-check col-3 my-1">
-                          <input class="form-check-input" type="checkbox" name="<%= herb %>" value="True" id="">
-                          <label class="form-check-label" for="">
-                              <%= herb %>  
-                          </label>
-                        </div> 
-                      <% }); %> 
-                      
-      
-                    </div>
-                  </div>
-                  <div class="tab-pane fade" id="spices" role="tabpanel" aria-labelledby="profile-tab">
-                    <div class="container row my-5 ml-3 list">
-                       
-                      <% spices.forEach(spice => { %> 
-                        <div class="form-check col-3 my-1">
-                          <input class="form-check-input" type="checkbox" name="<%= spice %>" value="True" id="">
-                          <label class="form-check-label" for="">
-                              <%= spice %>  
-                          </label>
-                        </div> 
-                      <% }); %> 
-                      
-                    </div>
-                  </div>
-                  
-                </div>
-                </div>
-              </div>
-              <button type="button" class="btn btn-dark btn-block border" data-toggle="collapse" data-target="#collapse-herbs">View</button>
             </div>
-            <div class="card my-5">
-              <h2 class="card-title mb-0 h2-5">Condiments</h2>
-              <div class="collapse" id="collapse-condiments">
-              <div class="container row my-5 list">
-                 
-                <% condiments.forEach(condiment => { %> 
-                  <div class="form-check col-3 my-1">
-                    <input class="form-check-input" type="checkbox" name="<%= condiment %>" value="True" id="">
-                    <label class="form-check-label" for="">
-                        <%= condiment %>  
-                    </label>
-                  </div> 
-                <% }); %> 
-
-                </div>
-              </div>
-              <button type="button" class="btn btn-dark btn-block border" data-toggle="collapse" data-target="#collapse-condiments">View</button>
-            </div>
-        
-        </form>
-
-        
+          </div>
+          <div class="card-footer">
+              <a class="nav-link" href="#yourRecipes" id="yourRecipesbtn2">
+                  Your Recipes
+              </a>
+          </div>
+          <div class="card-footer">
+              <a class="nav-link" href="#createRecipe" id ="createRecipebtn2">
+                  Create a Recipe
+              </a>
+          </div>
+          <div class="card-footer">
+              <a class="nav-link" href="#savedRecipes" id="savedRecipesbtn2">
+                  Saved Recipes
+              </a>
+          </div>
+          <div class="card-footer">
+              <a class="nav-link" href="#shoppingList" id="shoppingListbtn2">
+                  Shopping List
+              </a>
+          </div>
+        </div>
         
     </div>
+   </section> 
+     
     
+    
+    
+       
+       
+        <section id="yourRecipes">
+          <div class="container">
+           <br><br>
+            <div class="title">
+               <h3 class="display-4 mt-5 ">Your Recipes</h3>
+            </div>
+            <ul class="my-5 pl-0">
 
-    <br><br><br><br>
+              <% userRecipes.forEach(recipe => { %>
+                <a href="/recipe/<%= recipe.id %> ">
+                  <li class="my-5" data-aos="fade-up">
+  
+                      <div class="card p-0" >
+                       
+                        <div class="row no-gutters">
+                          <div class="col-md-4 test">
+                            <img src="/recipe_images/<%= recipe.id %>.jpg" class="card-img" onerror="this.src='/recipe_images/default_recipe.jpg'">
+                          </div>
+                          <div class="col-md-8">
+                            <div class="card-body">
+                              <h5 class="card-title"><%= recipe.name %></h5>
+                              <p class="card-text"><%= recipe.cuisine %></p>
+                              <p class="card-text snipbit"><%= recipe.snipbit %></p>
+                              <div class="row mt-5 ml-1">
+                                <img class="mt-1 card-image" src="/profile_images/<%= recipe.username %>.jpg"  onerror="this.src='/profile_images/default_profile.jpg'">
+                                  <p class="card-text ml-2 pt-2"><%= recipe.username %></p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>  
+                      </div>
+                      
+                  </li>
+                  </a>
+              <% }); %>               
+               
+               
+            </ul>
+            <br><br>
+            </div>
+        </section>
+        
+        
+        <section id="createRecipe">
+          <div class="container">
+           <br><br>
+            <div class="title mb-4 ">
+               <h3 class="display-4 mt-5 ">Create a Recipe</h3>
+            </div>
+            <form action="/createRecipe/tmpUser" method="POST" enctype="multipart/form-data">
+              <div class="createform mb-4" style="margin: auto">
+                <div class="form-group">
+                  <label for="name">Recipe name</label>
+                  <input class="form-control" type="text" placeholder="Recipe Name" name="rName" required>
+                </div>
+                <div class="form-group">
+                  <label for="name">Cuisine</label>
+                  <input class="form-control" type="text" placeholder="Cusiine" name = "cuisine" required>
+                </div>
+                <div class="form-group">
+                  <label for="name">Short description</label>
+                  <textarea class="form-control" rows="5" name="snipbit" required></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="name">Ingredients (use commas to seperate values)</label>
+                  <textarea class="form-control" rows="5" name="ingredients" required></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="name">Instructions</label>
+                  <textarea class="form-control" rows="10" name="instructions" required></textarea>
+                </div>
+                <div class="keyWords py-4">
+                  <label class="pb-2" for="name">Please select one or more keywords</label>
+                  <div class="container row">
+                    <% keyWords.forEach(key => { %> 
+                      <div class="form-check col">
+                        <input class="form-check-input" type="checkbox" name="<%= key %>" value="True" id="">
+                        <label class="form-check-label" for="">
+                            <%= key %> 
+                        </label>
+                      </div> 
+                    <% }); %>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="exampleFormControlFile1">Recipe Image</label>
+                  <input type="file" class="form-control-file" name="image" id="exampleFormControlFile1" required>
+                </div>
+                
+                <div class="form-group">
+                  <button class="btn btn-outline-primary btn-block my-5">Add recipee</button>        
+                </div>
+            </div>
+            </form>
+            </div>
+        </section>
+        
+        
+        
+        
+        
+        
+        <section id="savedRecipes">
+          <div class="container">
+           <br><br>
+            <div class="title">
+               <h3 class="display-4 mt-5 ">Saved Recipes</h3>
+            </div>
+            <ul class="my-5 pl-0">
+              <% likedRecipes.forEach(recipe => { %>
+                <a href="/recipe/<%= recipe.id %> ">
+                  <li class="my-5" data-aos="fade-up">
+  
+                      <div class="card p-0" >
+                       
+                        <div class="row no-gutters">
+                          <div class="col-md-4 test">
+                            <img src="/recipe_images/<%= recipe.id %>.jpg" class="card-img" onerror="this.src='/recipe_images/default_recipe.jpg'">
+                          </div>
+                          <div class="col-md-8">
+                            <div class="card-body">
+                              <h5 class="card-title"><%= recipe.name %></h5>
+                              <p class="card-text"><%= recipe.cuisine %></p>
+                              <p class="card-text snipbit"><%= recipe.snipbit %></p>
+                              <div class="row mt-5 ml-1">
+                                <img class="mt-1 card-image" src="/profile_images/<%= recipe.username %>.jpg"  onerror="this.src='/profile_images/default_profile.jpg'">
+                                  <p class="card-text ml-2 pt-2"><%= recipe.username %></p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>  
+                      </div>
+                      
+                  </li>
+                  </a>
+              <% }); %> 
+               
+            </ul>
+            <br>
+            
+            <form action="/clearSavedRecipes" method="POST">
+              <button class="btn btn-outline-primary btn-block mt-2 mb-4">Clear Saved Recipes</button>
+            </form>
+            
+            <br>
+            </div>
+        </section>
+        
+        
+        <section id="shoppingList">
+          <div class="container">
+           <br><br>
+            <div class="title">
+               <h3 class="display-4 mt-5 ">Shopping List</h3>
+            </div>
+            <div class="row mt-5">
+              <ul id="ingredientList" class="col-8 list-group list-group-flush">
+                  <% var count = 0; 
+                    shoppingList.forEach(ingredient => { %>
+                
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                          <%= ingredient %>
+                          <form id="<%= count %>" class="ingredientItem" action="" method="POST">
+                              <button class="btn btn-sm btn-outline-danger">Remove from Shopping List</button>
+                          </form>
+                      </li>
+                  
+                   <% count += 1;
+                  }); %> 
+                  
+                </ul>
+                
+                <ul class="col">
+                    <li>
+                        <form class="clearShoppingList" action="" method="POST">
+                            <button class="btn btn-outline-primary btn-block mt-2 mb-4">Clear Shopping List</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            </div>
+        </section>
+    
+    
+    
+        <br><br><br><br><br>
+        <p id="location" style="display:none"></p>
+  
     <script
       src="https://code.jquery.com/jquery-3.5.1.js"
       integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
@@ -379,11 +372,147 @@
         });
     </script>
     <script>
+
+      // var location = document.getElementById("location").innerHTML; 
+      // window.location = location.hash;
+    
+      $(document).ready(function(){
+            var scrolllink = $('#topbtn');
+            scrolllink.click(function(e){
+                e.preventDefault();
+                $('body,html').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 1000)
+            })
+        })
+      $(document).ready(function(){
+            var scrolllink = $('#yourRecipesbtn');
+            scrolllink.click(function(e){
+                e.preventDefault();
+                $('body,html').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 1000)
+            })
+        })
+        $(document).ready(function(){
+            var scrolllink = $('#createRecipebtn');
+            scrolllink.click(function(e){
+                e.preventDefault();
+                $('body,html').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 1000)
+            })
+        })
+        $(document).ready(function(){
+            var scrolllink = $('#savedRecipesbtn');
+            scrolllink.click(function(e){
+                e.preventDefault();
+                $('body,html').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 1000)
+            })
+        })
+        $(document).ready(function(){
+            var scrolllink = $('#shoppingListbtn');
+            scrolllink.click(function(e){
+                e.preventDefault();
+                $('body,html').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 1000)
+            })
+        })
+        $(document).ready(function(){
+            var scrolllink = $('#yourRecipesbtn2');
+            scrolllink.click(function(e){
+                e.preventDefault();
+                $('body,html').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 1000)
+            })
+        })
+        $(document).ready(function(){
+            var scrolllink = $('#createRecipebtn2');
+            scrolllink.click(function(e){
+                e.preventDefault();
+                $('body,html').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 1000)
+            })
+        })
+        $(document).ready(function(){
+            var scrolllink = $('#savedRecipesbtn2');
+            scrolllink.click(function(e){
+                e.preventDefault();
+                $('body,html').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 1000)
+            })
+        })
+        $(document).ready(function(){
+            var scrolllink = $('#shoppingListbtn2');
+            scrolllink.click(function(e){
+                e.preventDefault();
+                $('body,html').animate({
+                    scrollTop: $(this.hash).offset().top
+                }, 1000)
+            })
+        })
+        
         window.addEventListener('scroll', function(){
             let nav = document.querySelector('nav');
             nav.classList.toggle('scroll-active', window.scrollY > 0);
-            
-        })  
+            let menu = document.getElementById('menu');
+            menu.classList.toggle('scroll-active', window.scrollY > 40);
+        })
+        
+
+        $(document).ready(function(){
+
+            $("form.ingredientItem").submit(function(e){
+                e.preventDefault();
+                var myindex = this.id;
+
+                $(this).parent().slideUp(function(){
+                    this.remove();
+                });
+
+                $.ajax({
+                  url: "/deleteIngredient",
+                  data: {
+                    index: myindex
+                  },
+                  method: "POST",
+                  contentType: "application/x-www-form-urlencoded",
+                  success: function(res){
+                      console.log(res.from);
+                  }, error: function(err){
+                      console.log(err);
+                  }
+                })
+                
+            })
+
+            $("form.clearShoppingList").submit(function(e){
+                e.preventDefault();
+  
+                $("#ingredientList").children().slideUp(function(){
+                    this.remove();
+                });
+
+
+                $.ajax({
+                  url: "/clearShoppingList",
+                  method: "POST",
+                  contentType: "application/x-www-form-urlencoded",
+                  success: function(res){
+                      console.log(res.from);
+                  }, error: function(err){
+                      console.log(err);
+                  }
+                })
+            })
+
+        })
       
     </script>
     
