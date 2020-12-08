@@ -963,6 +963,7 @@ app.get("/admin", function(req, res){
 });
 
 app.post("/deleteRecipe/:id", function(req, res){
+    console.log(2);
     const {id} = req.params;
     db.query("Update recipe set username = 'Community Pantry' where id = '"+id+"'", function(err, result){
         if(err){
@@ -975,12 +976,14 @@ app.post("/deleteRecipe/:id", function(req, res){
 });
 
 app.post("/deleteRecipe", function(req, res){
+    console.log(1);
+    console.log([req.body.recipe]);
     db.query("Update recipe set username = 'Community Pantry' where id = '"+[req.body.recipe]+"'", function(err, result){
         if(err){
             throw err;
         }
         else{
-            res.redirect("/home"); 
+            res.redirect("/admin"); 
         }
     })
 });
