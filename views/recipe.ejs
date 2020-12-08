@@ -100,7 +100,7 @@
     
      <div class="alert-wrapper">
         <div id="alert" class="alert alert-dark  collapse" role="alert">
-            <strong>vrgrgregreg</strong>
+            <strong></strong>
             <button type="button" class="close" id="alert-close" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -124,7 +124,7 @@
             <div class="right">
                <div class="row">
                    <a href=""><img class="ml-3" src="/profile_images/<%= username %>.jpg" class="card-img" onerror="this.src='/profile_images/default_profile.jpg'"></a>
-                   <a href="/user/<%= username %> "><h2 class="col"><%= username %> </h2></a>
+                   <a href="/user/<%= username %> " <% if(username == 'Community Pantry'){ %>onclick="return false;" <%} %> ><h2 class="col"><%= username %> </h2></a>
                </div>
                 <p><%= snipbit %></p>
                 <div class="row">
