@@ -7,7 +7,7 @@
 
     
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <link rel="stylesheet" href="recipe.css">
+    <link rel="stylesheet" href="styles/admin.css">
     <link href="https://fonts.googleapis.com/css2?family=Allura&family=Open+Sans+Condensed:wght@300&display=swap" rel="stylesheet">
 
     <title>Community Pantry</title>
@@ -16,165 +16,195 @@
      
      
      
-     <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
-          <div class="container">
-                  <a class="navbar-brand" href="/">Community Pantry</a>
-                  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                  </button>
-                  <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                      <a class="nav-link active" href="/top10">Administrator</a>
-                    </li>
-                    
-                  </ul>
-          </div>
-    </nav>
+    <nav class="fixed-top">
+      <div class="container">
+       <div class="logo">
+            <h4>Community Pantry</h4>
+        </div>
+        <ul class="nav-links">
+           <li class="">
+               <a class="" href="" disabled>Adminastrator</a>
+            </li>
+           
+        </ul>
+        
+    </div>
+</nav>
+    
+    
+    
+    
+    <div id="title">
+        <h1>Adminastrator</h1>
+    </div>
      
      
      
      
-    <div class="container mt-5 pt-5">
-         <h2 class="my-5 pt-5"><u></u>Delete A User</h2>
-         <form class="" action="/deleteuser" method="POST">
-             <div class="input-group mb-3">
+    <div class="container mt-5">
+
+      <div class="title mb-4 ">
+        <h3 class="display-4 mt-5 ">Delete a User</h3>
+      </div>
+
+         <form class="mt-5" action="/deleteuser" method="POST">
+             <div class="input-group">
                    <input type="text" name="username" class="form-control" placeholder="Username" aria-label="username" aria-describedby="button-addon2">
                    <div class="input-group-append">
                      <button class="btn btn-outline-secondary" id="button-addon2">Delete This User</button>
                    </div>
              </div>
          </form>
-         <% if(message.lenth > 0){ %>
-            <p><%= message %></p>
-         <% } %> 
-        <br><br><hr>
+
+        <br><br>
+
+
+        <div class="title mb-4 ">
+          <h3 class="display-4 mt-5 ">Delete a Recipe</h3>
+        </div>
+  
+           <form class="mt-5" action="/deleteuser" method="POST">
+               <div class="input-group mb-3">
+                     <input type="text" name="username" class="form-control" placeholder="Username" aria-label="username" aria-describedby="button-addon2">
+                     <div class="input-group-append">
+                       <button class="btn btn-outline-secondary" id="button-addon2">Delete This User</button>
+                     </div>
+               </div>
+           </form>
+
+
+           <br><br>
+
+           <div class="title mb-4 ">
+            <h3 class="display-4 mt-5 ">Set Top 10</h3>
+          </div>
+
+
         
-         <h2 class="my-5"><u></u>Set the Top 10 Recipes</h2>
-        <div class="offset-2">
-            <div class="form-group row">
-                <label for="staticEmail" class="col-sm-1 col-form-label pl-0">Position :</label>
-                <div class="col-sm-2 pl-0">
-                  <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="ID # of Recipe">
+         
+        
+          <form class="mb-5" action="settop10" method="post">
+
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="basic-addon1">1.</span>
+                  <input name="first" type="text" class="form-control" placeholder="Current Dish ID in First position : <%= dishes[0] %> " aria-label="Username" aria-describedby="basic-addon1">
                 </div>
-              </div>
-              <form action="settop10" method="post">
-                  <div class="form-group row">
-                        <label for="" class="col-sm-1 col-form-label pl-4">1 :</label>
-                        <div class="col-sm-2 pl-0">
-                          <input type="text" name="first" class="form-control" id="">
-                        </div>
-                  </div>   
-                  <div class="form-group row">
-                        <label for="" class="col-sm-1 col-form-label pl-4">2 :</label>
-                        <div class="col-sm-2 pl-0">
-                          <input type="text" name="second" class="form-control" id="">
-                        </div>
-                  </div>  
-                  <div class="form-group row">
-                        <label for="" class="col-sm-1 col-form-label pl-4">3 :</label>
-                        <div class="col-sm-2 pl-0">
-                          <input type="text" name="third" class="form-control" id="">
-                        </div>
-                  </div>   
-                  <div class="form-group row">
-                        <label for="" class="col-sm-1 col-form-label pl-4">4 :</label>
-                        <div class="col-sm-2 pl-0">
-                          <input type="text" name="fourth" class="form-control" id="">
-                        </div>
-                  </div>   
-                  <div class="form-group row">
-                        <label for="" class="col-sm-1 col-form-label pl-4">5 :</label>
-                        <div class="col-sm-2 pl-0">
-                          <input type="text" name="fifth" class="form-control" id="">
-                        </div>
-                  </div>   
-                  <div class="form-group row">
-                        <label for="" class="col-sm-1 col-form-label pl-4">6 :</label>
-                        <div class="col-sm-2 pl-0">
-                          <input type="text" name="sixth" class="form-control" id="">
-                        </div>
-                  </div>   
-                  <div class="form-group row">
-                        <label for="" class="col-sm-1 col-form-label pl-4">7 :</label>
-                        <div class="col-sm-2 pl-0">
-                          <input type="text" name="seventh" class="form-control" id="">
-                        </div>
-                  </div>   
-                  <div class="form-group row">
-                        <label for="" class="col-sm-1 col-form-label pl-4">8 :</label>
-                        <div class="col-sm-2 pl-0">
-                          <input type="text" name="eigth" class="form-control" id="">
-                        </div>
-                  </div>   
-                  <div class="form-group row">
-                        <label for="" class="col-sm-1 col-form-label pl-4">9 :</label>
-                        <div class="col-sm-2 pl-0">
-                          <input type="text" name="ninth" class="form-control" id="">
-                        </div>
-                  </div>   
-                  <div class="form-group row">
-                        <label for="" class="col-sm-1 col-form-label pl-4">10 :</label>
-                        <div class="col-sm-2 pl-0">
-                          <input type="text" name="tenth" class="form-control" id="">
-                        </div>
-                  </div>   
-                  <button class="col-3 btn btn-outline-dark">Submit</button>              
+
+                <div class="input-group mb-3 ">
+                  <span class="input-group-text" id="basic-addon1">2.</span>
+                  <input name="second" type="text" class="form-control" placeholder="Current Dish ID in First position : <%= dishes[1] %> " aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="basic-addon1">3.</span>
+                  <input name="third" type="text" class="form-control" placeholder="Current Dish ID in First position : <%= dishes[2] %> " aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+          
+                <div class="input-group mb-3 ">
+                  <span class="input-group-text" id="basic-addon1">4.</span>
+                  <input name="fourth" type="text" class="form-control" placeholder="Current Dish ID in First position : <%= dishes[3] %> " aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="basic-addon1">5.</span>
+                  <input name="fifth" type="text" class="form-control" placeholder="Current Dish ID in First position : <%= dishes[4] %> " aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+
+                <div class="input-group mb-3 ">
+                  <span class="input-group-text" id="basic-addon1">6.</span>
+                  <input name="sixth" type="text" class="form-control" placeholder="Current Dish ID in First position : <%= dishes[5] %> " aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+
+                <div class="input-group mb-3 ">
+                  <span class="input-group-text" id="basic-addon1">7.</span>
+                  <input name="seventh" type="text" class="form-control" placeholder="Current Dish ID in First position : <%= dishes[6] %> " aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+
+                <div class="input-group mb-3 ">
+                  <span class="input-group-text" id="basic-addon1">8.</span>
+                  <input name="eighth" type="text" class="form-control" placeholder="Current Dish ID in First position : <%= dishes[7] %> " aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="basic-addon1">9.</span>
+                  <input name="ninth" type="text" class="form-control" placeholder="Current Dish ID in First position : <%= dishes[8] %> " aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+
+                <div class="input-group mb-3 ">
+                  <span class="input-group-text" id="basic-addon1">10.</span>
+                  <input name="tenth" type="text" class="form-control" placeholder="Current Dish ID in First position : <%= dishes[9] %> " aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+
+                  <button class="btn btn-block btn-outline-dark">Submit</button>              
               </form>
+
+
+              <div class="title mt-5 mb-4">
+                <h3 class="display-4 mt-5 ">Create a Recipe</h3>
+             </div>
+             <form action="/createRecipe/tmpUser" method="POST" enctype="multipart/form-data">
+               <div class="createform mb-4" style="margin: auto">
+                 <div class="form-group">
+                   <label for="name">Recipe name</label>
+                   <input class="form-control" type="text" placeholder="Recipe Name" name="rName" required>
+                 </div>
+                 <div class="form-group">
+                   <label for="name">Cuisine</label>
+                   <input class="form-control" type="text" placeholder="Cusiine" name = "cuisine" required>
+                 </div>
+                 <div class="form-group">
+                   <label for="name">Short description</label>
+                   <textarea class="form-control" rows="5" name="snipbit" required></textarea>
+                 </div>
+                 <div class="form-group">
+                   <label for="name">Ingredients (use commas to seperate values)</label>
+                   <textarea class="form-control" rows="5" name="ingredients" required></textarea>
+                 </div>
+                 <div class="form-group">
+                   <label for="name">Instructions</label>
+                   <textarea class="form-control" rows="10" name="instructions" required></textarea>
+                 </div>
+                 <div class="keyWords py-4">
+                   <label class="pb-2" for="name">Please select one or more keywords</label>
+                   <div class="container row">
+                     <% keyWords.forEach(key => { %> 
+                       <div class="form-check col">
+                         <input class="form-check-input" type="checkbox" name="<%= key %>" value="True" id="">
+                         <label class="form-check-label" for="">
+                             <%= key %> 
+                         </label>
+                       </div> 
+                     <% }); %>
+                   </div>
+                 </div>
+                 <div class="form-group">
+                   <label for="exampleFormControlFile1">Recipe Image</label>
+                   <input type="file" class="form-control-file" name="image" id="exampleFormControlFile1" required>
+                 </div>
+                 
+                 <div class="form-group">
+                   <button class="btn btn-outline-dark btn-block my-5">Add recipe</button>        
+                 </div>
+             </div>
+             </form>
+
+
+
+
+
+
+
+
+
+
+
+
         </div>        
     </div> 
       
-    <br><br><br><br>
-          <div class="container">
-            <center><h2 class="my-5 pt-5">Create a Recipe</h2></center>
-          <form action="/createRecipe/admin" method="POST" enctype="multipart/form-data">
-            <div class="createform mb-4" style="margin: auto">
-              <div class="form-group">
-                <label for="name">Recipe name</label>
-                <input class="form-control" type="text" placeholder="Recipe Name" name="rName">
-              </div>
-              <div class="form-group">
-                <label for="name">Cuisine</label>
-                <input class="form-control" type="text" placeholder="Cusiine" name = "cuisine">
-              </div>
-              <div class="form-group">
-                <label for="name">Short description</label>
-                <textarea class="form-control" rows="5" name="snipbit"></textarea>
-              </div>
-              <div class="form-group">
-                <label for="name">Ingredients (use commas to seperate values)</label>
-                <textarea class="form-control" rows="5" name="ingredients"></textarea>
-              </div>
-              <div class="form-group">
-                <label for="name">Instructions</label>
-                <textarea class="form-control" rows="10" name="instructions"></textarea>
-              </div>
-              <div class="keyWords py-4">
-                <label class="pb-2" for="name">Please select one or more keywords</label>
-                <div class="container row">
-                  <% keyWords.forEach(key => { %> 
-                    <div class="form-check col">
-                      <input class="form-check-input" type="checkbox" name="<%= key %>" value="True" id="">
-                      <label class="form-check-label" for="">
-                          <%= key %> 
-                      </label>
-                    </div> 
-                  <% }); %>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="exampleFormControlFile1">Recipe Image</label>
-                <input type="file" class="form-control-file" name="image" id="exampleFormControlFile1">
-              </div>
-              
-              <div class="form-group">
-                <button class="btn btn-outline-primary btn-block my-5">Add recipee</button>        
-              </div>
-          </div>
-          </form>
-          <br>
-      </div>
-        </form>
-          </div>
+    <br><br>
+          
+          
     <br><br>
     <script
       src="https://code.jquery.com/jquery-3.5.1.js"
@@ -183,6 +213,14 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     
+    <script>
+      window.addEventListener('scroll', function(){
+          let nav = document.querySelector('nav');
+          nav.classList.toggle('scroll-active', window.scrollY > 0);
+          
+      })  
     
+  </script>
+  
   </body>
 </html>
