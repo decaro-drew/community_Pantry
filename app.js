@@ -999,10 +999,15 @@ app.get('/logout', function(req, res) {
     res.redirect('/search');
 });
 
+app.get("/login/:id", function(req, res){
+    console.log(req.params.id);
+    res.render("login.ejs", {message: "", message2: "", id : req.params.id});
+});
 
 app.get("/login", function(req, res){
-    res.render("login.ejs", {message: "", message2: "", id: -1});
+    res.render("login.ejs", {message: "", message2: "", id:-1});
 });
+
 
 app.get("/", function(req, res){
     res.redirect("/search");
