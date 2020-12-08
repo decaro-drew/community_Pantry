@@ -816,7 +816,8 @@ app.get("/recipe/:id", function(req, res){
 
 
 
-app.post("/login", function(req, res){
+
+function loggingIn(landing, req, res){
     if(req.body.username == "admin" && req.body.pword == "admin"){
         req.session.user = "admin";
         res.redirect("/admin");
@@ -834,7 +835,7 @@ app.post("/login", function(req, res){
                            //console.log("password match");
                            success = true;
                            req.session.user = req.body.username;
-                           res.redirect("/home");
+                           res.redirect(landing);
                        }else{
                            success = true;
                            res.render("login.ejs", {message: "Incorrect Password", message2: ""});
@@ -842,10 +843,19 @@ app.post("/login", function(req, res){
                    }
                }
                if(!success)
-               res.render("login.ejs", {message: "Username does not exist", message2: ""});
+                    res.render("login.ejs", {message: "Username does not exist", message2: ""});
             }
         });
     }
+}
+app.post("/login/:id", function(req, res){
+    const {id} = req.params;
+    loggingIn("/recipe/" + id, req, res);
+
+});
+
+app.post("/login", function(req, res){
+    loggingIn("/home", req, res);
 });
 
 app.post("/createRecipe/:username", function(req, res){
@@ -1018,6 +1028,9 @@ app.get('/logout', function(req, res) {
     res.redirect('/search');
 });
 
+app.get("/login/:id", function(req, res){
+    res.render("login.ejs", {message: "", message2: "", id : req.params.id});
+});
 
 app.get("/login", function(req, res){
     res.render("login.ejs", {message: "", message2: "", id: -1});
