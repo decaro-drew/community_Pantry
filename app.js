@@ -937,9 +937,13 @@ app.post("/createAccount", function(req, res){
 
 app.get("/admin", function(req, res){
 
+    if(!req.session.user || req.session.user != "admin")
+        res.redirect("/login");
+    else{
+        
     const dishes = new Array ();
 
-    db.query("Select * from top10", function(error, rows){
+    db.query("Select * from top10 order by positionId", function(error, rows){
 
         if(error){
             throw error;
@@ -958,7 +962,8 @@ app.get("/admin", function(req, res){
             res.render("admin.ejs", {message : "", keyWords, dishes});
         }
         
-    });
+    }); 
+    }
 
 });
 
