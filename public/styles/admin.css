@@ -1,0 +1,108 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+nav{
+    height: 9vh;
+    transition: .5s ease;
+    background-color: black;
+}
+
+nav .container{
+    display: flex;
+    align-items: center;
+    height: inherit;
+}
+
+.nav-links{
+    margin-left: auto;
+    display: flex;
+    justify-content: space-between;
+    width: 45%;
+    margin-bottom: 0;
+    transition: .5s ease;
+
+}
+
+.nav-links li{
+    margin-left: auto;
+}
+
+.nav-links a{
+    color: white;
+    font-family: 'Open Sans Condensed', sans-serif;
+    text-decoration: none;
+    letter-spacing: 2px;
+    font-weight: 1000;
+    font-size: 30px;
+    transition: .5s ease;
+
+}
+
+
+
+.logo h4{
+    color: white;
+    font-family: 'Allura', cursive;
+    font-size: 55px;
+    text-shadow: 5px 5px 10px #000000;
+    margin-bottom: 0;
+    transition: .5s ease;
+}
+
+
+
+.scroll-active:nth-child(1){
+    background-color: black;
+    height: 6vh;
+}
+
+.scroll-active .logo h4{
+    font-size: 35px;
+    transition: .5s ease;
+}
+
+.scroll-active .nav-links{
+    width: 30%;
+    transition: .5s ease;
+}
+
+.scroll-active .nav-links a{
+    font-size: 20px;
+}
+
+
+
+#title{
+    background: url("background_20.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 45vh; 
+    width: 100%;
+}
+
+#title h1{
+    font-family: 'Open Sans Condensed', sans-serif;
+    font-weight: 1000;
+    font-size: 200px;
+    text-shadow: 0px 0px 20px black;
+    text-align: center;
+    padding-top: 100px;
+    color: white;
+}
+
+ul{
+    list-style: none;
+}
+
+.title{
+    height: 80px;
+    border-bottom-color: black;
+    border-bottom: 5px solid black;
+}
+
+h3{
+    font-family: 'Open Sans Condensed', sans-serif;
+ }
