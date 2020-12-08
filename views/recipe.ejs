@@ -130,7 +130,7 @@
                 <div class="row">
 
                     <% if(user == username){ %>
-                        <form id="save" class="col" action="" method="POST">
+                        <form id="save" class="col" action="/deleteRecipe/<%= id %>" method="POST">
                             <button class="btn btn-outline-dark btn-block mt-2">Delete recipe</button>
                         </form>
                     <% }else{ %>
