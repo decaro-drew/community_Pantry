@@ -870,7 +870,7 @@ app.post("/createRecipe/:username", function(req, res){
             file.mv('public/recipe_images/'+file.name, function(err) {                      
                 if (err)
                   return res.status(500).send(err);
-                db.query("Insert into recipe (name, picture, cuisine, snipbit, ingredients, instructions, username, keywords) VALUES ('"+req.body.rName+"','"+imgName+"','"+req.body.cuisine+"','"+req.body.snipbit+"', '"+req.body.ingredients+"', '"+req.body.instructions+"', '"+req.session.user+"', '"+keyString+"')",function(err, result){   
+                db.query("Insert into recipe (name, picture, cuisine, snipbit, ingredients, instructions, username, keywords) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [req.body.rName, imgName, req.body.cuisine, req.body.snipbit, req.body.ingredients, req.body.instructions, req.session.user, keyString], function(err, result){   
                       if(err){
                           res.send("Error");
                       }
@@ -886,6 +886,7 @@ app.post("/createRecipe/:username", function(req, res){
         } 
     }); 	    
 });
+
 
 app.post("/updateProfilePhoto", function(req, res){
     var file = req.files.image;
