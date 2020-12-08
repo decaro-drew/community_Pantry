@@ -70,10 +70,8 @@ app.use(function (req, res, next) {
 });
 
 function  requireLogin(req, res, next) {
-    console.log("here");
 
     if (!req.session.user) {
-        console.log("redirecting");
        res.redirect("/login");
     } else {
       next();
@@ -349,15 +347,7 @@ app.post("/settop10", function(req, res){
                 res.send("recipe id entered does not exist")
                 return;
             }
-            /*
-            if(ids[i] > max || ids[i] < min){
-                console.log(ids[i]);
-                console.log(max);
-                console.log(min);
-                valid = false;
-                res.send("recipe id entered does not exist")
-                return;
-            }*/
+           
         }
         if(valid){
             var sql = "Insert into top10 (positionId, dishId) VALUES ? ON DUPLICATE KEY UPDATE dishId = VALUES(dishId)";
@@ -378,7 +368,7 @@ app.post("/settop10", function(req, res){
                     throw error;
                 }
             });
-            res.redirect("/top10");
+            res.redirect("/admin");
         }
     });  
 });
@@ -711,7 +701,9 @@ app.post("/clearSavedRecipes", function(req, res){
             throw error;
         }
         else{
-            res.redirect("/home")
+            httpMsgs.sendJSON(req, res, {
+                from: ""
+            })
         }
     })
 });
@@ -735,7 +727,9 @@ app.post("/saveIngredients", requireLogin, function(req, res){
                     throw error;
                 }
                 else{
-                    res.redirect("/recipe/" + id)
+                    httpMsgs.sendJSON(req, res, {
+                        from: ""
+                    })
                 }
             })
         }
@@ -942,8 +936,30 @@ app.post("/createAccount", function(req, res){
 });
 
 app.get("/admin", function(req, res){
-    keyWords = ["Chicken", "Beef", "Pork", "Lamb", "Fish", "Seafood", "Pasta", "Rice"];
-    res.render("admin.ejs", {message : "", keyWords});
+
+    const dishes = new Array ();
+
+    db.query("Select * from top10", function(error, rows){
+
+        if(error){
+            throw error;
+        }
+        else{
+        
+             
+            for(i=0; i<rows.length; i++){
+
+                dishes[i] = rows[i].dishId;
+
+            }
+            
+            keyWords = ["Chicken", "Beef", "Pork", "Lamb", "Fish", "Seafood", "Pasta", "Rice", "Stirfry", "Soup", "Stew", "Salad", "Vegeterian"];
+
+            res.render("admin.ejs", {message : "", keyWords, dishes});
+        }
+        
+    });
+
 });
 
 app.post("/deleteRecipe/:id", function(req, res){
@@ -960,7 +976,7 @@ app.post("/deleteRecipe/:id", function(req, res){
 
 
 app.post("/deleteuser", function(req, res){
-    db.query("update recipe set username = 'admin' where username = ?",[req.body.username], function(err, result){   
+    db.query("update recipe set username = 'Community Pantry' where username = ?",[req.body.username], function(err, result){   
         if(err){
             throw err;
         }
@@ -985,7 +1001,7 @@ app.get('/logout', function(req, res) {
 
 
 app.get("/login", function(req, res){
-    res.render("login.ejs", {message: "", message2: ""});
+    res.render("login.ejs", {message: "", message2: "", id: -1});
 });
 
 app.get("/", function(req, res){
