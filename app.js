@@ -46,15 +46,19 @@ app.use(session({
     ephemeral: true
 }));
 
+/**
+ * This function allows the active user to be stored in the session's cookie
+ * @param req data from request
+ * @param res response
+ * @param next middleware
+ */
 app.use(function(req, res, next) {
     if (req.session && req.session.user) { 
           user = req.session.user;    
-          //console.log(user); 
           req.user = user;
           delete req.user.password; // delete the password from the session
           req.session.user = user;  //refresh the session value
-          res.locals.user = user;
-        
+          res.locals.user = user;      
         // finishing processing the middleware and run the route
         next();
     } else {
@@ -62,6 +66,12 @@ app.use(function(req, res, next) {
     }
   });
 
+/**
+ * This function prevents caching
+ * @param req data from request
+ * @param res response
+ * @param next middleware
+ */
 app.use(function (req, res, next) {
     res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
     res.header('Expires', '-1');
@@ -69,8 +79,13 @@ app.use(function (req, res, next) {
     next()
 });
 
+/**
+ * This function gets called in routes that require a user's session to be active. If a user session does not exist, the user gets redirected to the login page
+ * @param req request
+ * @param res response
+ * @param next middleware
+*/
 function requireLogin(req, res, next) {
-
     if (!req.session.user) {
        res.redirect("/login");
     } else {
@@ -78,8 +93,15 @@ function requireLogin(req, res, next) {
     }
 };
 
-
+/*
+* This route generates the user's home page.
+* @param req is the data coming from the req
+* @param res is the response
+*/
 app.get("/home", requireLogin, function(req, res){
+    /**
+     * @returns shoppingList and id's of likedRecipes belonging to the active user
+     */
     function getShoppingListAndLikedRecipes(){
         return new Promise(function (resolve, reject){
             var dishes = new Array();
@@ -121,6 +143,9 @@ app.get("/home", requireLogin, function(req, res){
         })
     }
 
+    /**
+     * @returns the recipes created by the active user
+     */
     function getUserRecipes(){
         return new Promise(function (resolve, reject){
             var dishes = new Array();
@@ -147,6 +172,10 @@ app.get("/home", requireLogin, function(req, res){
         })
     }
 
+    /**
+     * @param id id of likedRecipe
+     * @returns an object containing the fields of the likedRecipe
+     */
     function getLikedRecipe(id){ 
         return new Promise(function (resolve, reject){
             db.query("Select * from recipe where id = ?",[id], function(error, rows){
@@ -163,13 +192,14 @@ app.get("/home", requireLogin, function(req, res){
                         username: rows[0].username
                     }
                     resolve(dish);
-                }
-                
+                }             
             });
         })
     }
 
-
+    /**
+     * @returns bio of the active user
+     */
     function getBio(){ 
         return new Promise(function (resolve, reject){
             db.query("Select bio from user where username = ?",[req.session.user], function(error, rows){
@@ -178,13 +208,14 @@ app.get("/home", requireLogin, function(req, res){
                 }
                 else{
                     resolve(rows[0].bio);
-                }
-                
+                }             
             });
         })
     }
 
-
+    /**
+     * This function calls the above functions, forcing the program to wait until they are all finishing
+     */
     async function compile(){
         var userRecipes = await getUserRecipes();
         var lists = await getShoppingListAndLikedRecipes();
@@ -208,6 +239,9 @@ app.get("/home", requireLogin, function(req, res){
     
 });
 
+/**
+ * This route 
+ */
 app.get("/user/:user", function(req, res){
     const {user} = req.params;
    // var user = url.parse(req.url, true).query.otherUser;
@@ -973,7 +1007,7 @@ app.post("/createAccount", function(req, res){
         valid = false;
     }
     else if(valid){
-        db.query("Insert into user (username, email, pWord, shoppingList, likedRecipes, bio) VALUES ('"+req.body.uName+"','"+req.body.email+"','"+req.body.pWord+"', '', '', '')",function(err, result){   
+        db.query("Insert into user (username, email, pWord, shoppingList, likedRecipes, bio) VALUES (?, ?, ?, '', '', '')", [req.body.uName, req.body.email, req.body.pWord], function(err, result){   
             if(err){
                 res.send("Username already exists");
             }
