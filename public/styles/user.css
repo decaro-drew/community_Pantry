@@ -54,7 +54,7 @@ nav .container{
 
 #login:hover{
     color: white;
-    background-color: #292b2c;
+    background-color: cornflowerblue;
     border: 1px solid white;
     transition: .25s ease;
 }
@@ -69,7 +69,7 @@ nav .container{
 
 .scroll-active #login:hover{
     color: white;
-    background-color: #292b2c;
+    background-color: cornflowerblue;
     border: 1px solid white;
     transition: .25s ease;
 }
