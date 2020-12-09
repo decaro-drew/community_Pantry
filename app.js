@@ -991,25 +991,25 @@ app.post("/updateBio", function(req, res){
 app.post("/createAccount", function(req, res){
     var valid = true;
     if(req.body.uName.length < 6){
-        res.render("login.ejs", {message: "", message2: "Username must be at least 6 characters"});
+        res.render("login.ejs", {message: "", message2: "Username must be at least 6 characters", id: -1});
         valid = false;
     }
     else if(req.body.email.indexOf('@') == -1 || req.body.email.length == 0){
-        res.render("login.ejs", {message: "", message2: "Invalid email address"});
+        res.render("login.ejs", {message: "", message2: "Invalid email address", id: -1});
         valid = false;
     }
     else if(req.body.pWord.length < 6){
-        res.render("login.ejs", {message: "", message2: "Password must be at least 6 characters"});
+        res.render("login.ejs", {message: "", message2: "Password must be at least 6 characters", id: -1});
         valid = false;
     }
     else if(req.body.cPword != req.body.pWord){
-        res.render("login.ejs", {message: "", message2: "Passwords do not match"});
+        res.render("login.ejs", {message: "", message2: "Passwords do not match", id: -1});
         valid = false;
     }
     else if(valid){
         db.query("Insert into user (username, email, pWord, shoppingList, likedRecipes, bio) VALUES (?, ?, ?, '', '', '')", [req.body.uName, req.body.email, req.body.pWord], function(err, result){   
             if(err){
-                res.render("login.ejs", {message: "", message2: "This username already exists"});
+                res.render("login.ejs", {message: "", message2: "This username already exists", id: -1});
             }
             else{
                 req.session.user = req.body.uName;
