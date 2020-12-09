@@ -1009,7 +1009,7 @@ app.post("/createAccount", function(req, res){
     else if(valid){
         db.query("Insert into user (username, email, pWord, shoppingList, likedRecipes, bio) VALUES (?, ?, ?, '', '', '')", [req.body.uName, req.body.email, req.body.pWord], function(err, result){   
             if(err){
-                res.send("Username already exists");
+                res.render("login.ejs", {message: "", message2: "This username already exists"});
             }
             else{
                 req.session.user = req.body.uName;
