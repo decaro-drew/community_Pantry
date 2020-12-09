@@ -26,7 +26,15 @@
              <div class="offset-1 login container card border border-rounded border-light">
               <div class="form" action="/login" method="POST">
                     <h2 id="login"><u>Login</u></h2>
-                    <form class="mb-4" action="/login" method="POST">
+                    <% 
+                    var action = "";
+                    if(id < 0){
+                      action = "/login";
+                    }
+                    else{
+                      action = "/login/"+id;
+                    }%>
+                    <form class="mb-4" action= "<%=action%>" method="POST">
                       <div class="inputsection mt-4">
                         <input type="text" name="username" autocomplete="off" required />
                         <label for="name" class="label-name">
