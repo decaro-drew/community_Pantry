@@ -93,9 +93,9 @@ function requireLogin(req, res, next) {
     }
 };
 
-/*
+/**
 * This route generates the user's home page.
-* @param req is the data coming from the req
+* @param req is the data coming from the request
 * @param res is the response
 */
 app.get("/home", requireLogin, function(req, res){
@@ -240,11 +240,15 @@ app.get("/home", requireLogin, function(req, res){
 });
 
 /**
- * This route 
+ * This route generates pages owned by users other than the current active user
+ * @param req request
+ * @param res response
  */
 app.get("/user/:user", function(req, res){
     const {user} = req.params;
-   // var user = url.parse(req.url, true).query.otherUser;
+    /**
+     * @returns id's of likedRecipes belonging to the active user
+     */
     function getShoppingListAndLikedRecipes(){
         return new Promise(function (resolve, reject){
             var dishes = new Array();
@@ -265,7 +269,9 @@ app.get("/user/:user", function(req, res){
             });
         })
     }
-
+    /**
+     * @returns the recipes created by the user we are viewing
+     */
     function getUserRecipes(){
         return new Promise(function (resolve, reject){
             var dishes = new Array();
@@ -291,7 +297,10 @@ app.get("/user/:user", function(req, res){
             });
         })
     }
-
+    /**
+     * @param id id of likedRecipe
+     * @returns an object containing the fields of the likedRecipe
+     */
     function getLikedRecipe(id){ 
         return new Promise(function (resolve, reject){
             db.query("Select * from recipe where id = ?",[id], function(error, rows){
@@ -316,7 +325,9 @@ app.get("/user/:user", function(req, res){
             });
         })
     }
-
+    /**
+     * @returns bio of the user we are trying to view
+     */
     function getBio(){ 
         return new Promise(function (resolve, reject){
             db.query("Select bio from user where username = ?",[user], function(error, rows){
@@ -331,7 +342,9 @@ app.get("/user/:user", function(req, res){
         })
     }
 
-
+    /**
+     * This function calls the above functions, forcing the program to wait until they are all finishing
+     */
     async function compile(){
         var userRecipes = await getUserRecipes();
         var likes = await getShoppingListAndLikedRecipes();
@@ -342,23 +355,24 @@ app.get("/user/:user", function(req, res){
             for(var i=0; i <likes.length; i++){
                 likedRecipes[i] = await getLikedRecipe(likes[i]);
             }
-        }
-        
+        }     
         res.render("user.ejs", {user: req.session.user, targetUser: user, likedRecipes, userRecipes, bio});
     }
-
     compile();
 });
 
+/**
+ * This route allows the admin user to enter the id values of recipes to create the top 10
+ * @param req request
+ * @param res response
+ */
 app.post("/settop10", function(req, res){
     var valid = true;
     ids = [req.body.first, req.body.second, req.body.third, req.body.fourth, req.body.fifth, req.body.sixth, req.body.seventh, req.body.eighth, req.body.ninth, req.body.tenth];
-    console.log(ids);
     db.query("SELECT id FROM recipe", function(error, rows){
         if(error){
             throw error;
         }
-        ///console.log(rows.length);
         var max = rows[rows.length-1].id;
         var min = rows[0].id;
         console.log(max);
@@ -408,18 +422,18 @@ app.post("/settop10", function(req, res){
     });  
 });
 
+/**
+ * This route generates the top 10 page
+ * @param req request
+ * @param res response
+ */
 app.get("/top10", function(req, res){
-
     const dishes = new Array ();
-
     db.query("Select * from recipe, top10 WHERE recipe.id =top10.dishid order by positionId", function(error, rows){
-
         if(error){
             throw error;
         }
-        else{
-            //console.log("cool, alright");
-             
+        else{             
             for(i=0; i<rows.length; i++){
 
                 dish = {
@@ -430,20 +444,20 @@ app.get("/top10", function(req, res){
                     cuisine: rows[i].cuisine,
                     username: rows[i].username
                 }
-
                 dishes[i] = dish;
-
             }
-            console.log(dishes);
             res.render("top10.ejs", {dishes, user: req.session.user});
         }
         
     });
 });
 
-
+/**
+ * This route generates the search page
+ * @param req request
+ * @param res response
+ */
 app.get("/search", function(req, res){
-
     keyProteins = ["Chicken", "Eggs", "Turkey", "Beef", "Lamb", "Pork", "Fish", "Seafood"];
     chickens = ["Chicken breast", "Chicken thighs", "Chicken wings", "Chicken leg", "Chicken liver", "Ground Chicken", "Chicken sausage"];
     beefs = ["Flat iron", "Chuck roast", "Chuck short ribs", "Chuck eye roast", "Ribeye", "Prime rib", "Cowboy steak", "Short ribs", "Strip steak", "T-bone", "Porterhouse", "Filet mignon", "Sirloin", "Tri-tip", "London broil", "Top round", "Bottom round", "Flank steak", "Skirt steak", "Brisket"];
@@ -463,6 +477,13 @@ app.get("/search", function(req, res){
     res.render("search.ejs", {user: req.session.user, keyProteins, veggies, starches, herbs, spices, condiments, letters});
 });
 
+/**
+ * Finds matches for the search term
+ * @param name name of search term
+ * @param rows the rows returned from DB query
+ * @param type if we are searching for dishes or for users
+ * @returns a list of matches for the search term
+ */
 function search(name, rows, type){
     var exact = new Array();
     var indexZero = new Array();
@@ -522,6 +543,11 @@ function search(name, rows, type){
     return list;
 }
 
+/**
+ * Generates the result page when searching for a dish
+ * @param req request
+ * @param res response
+ */
 app.get("/results/dish", function(req, res){
     var dishName = url.parse(req.url, true).query.dishName;
     db.query("Select * from recipe", function(error, rows){
@@ -537,6 +563,11 @@ app.get("/results/dish", function(req, res){
     
 });
 
+/**
+ * Generates the result page when searching for another user
+ * @param req request
+ * @param res response
+ */
 app.get("/results/users", function(req, res){
     var targetUser = url.parse(req.url, true).query.targetUser.toLowerCase();
     db.query("SELECT * FROM user", function(err, rows){
@@ -552,6 +583,11 @@ app.get("/results/users", function(req, res){
     });
 });
 
+/**
+ * Generates the result page for searching a cusine
+ * @param req request
+ * @param res response
+ */
 app.get("/results/cuisine", function(req, res){
 
     var cuisine = url.parse(req.url, true).query.cuisine;
@@ -581,8 +617,18 @@ app.get("/results/cuisine", function(req, res){
     
 });
 
+/**
+ * Generates result page when searching by ingredients
+ * @param req request
+ * @param res response
+ */
 app.get("/results", function(req, res){
-    //checks to see if ingredient A contains B by wrapping it around spaces, as opposed to it being just a substring
+    /**
+     * Checks to see if ingredient A contains B by wrapping it around spaces, as opposed to it being just a substring
+     * @param a the superset string
+     * @param b the subset string
+     * @returns true if A contains B by wrapping it around spaces. False if not
+     */
     function compare(a, b){
         if(a.indexOf(b) == 0){
             if(a.charAt(b.length) == ' ')
@@ -597,7 +643,11 @@ app.get("/results", function(req, res){
         }
         return false;   
     }
-    //makes sure ingredients searched won't find hits for edge cases
+    /**
+     * makes sure ingredients searched won't find hits for edge cases
+     * @param ingredient the ingredient that we are inspecting
+     * @returns true if this ingredient falls under in edge case, which implies that we are not counting this string as a match. False if it is not an edge case
+     */
     function edgeCases(ingredient){
         edges = ["chicken broth", "chicken stock", "beef broth", "beef stock"];
         for(var i = 0; i < edges.length; i++){
@@ -607,7 +657,11 @@ app.get("/results", function(req, res){
         }
         return false;
     }
-    //if an ingredient in a recipe is the plural of an ingredient searched, then it should be a match
+    /**
+     * Checks if a string is a plural form of another string
+     * @param a a string we are testing
+     * @param b 
+     */
     function plurality(a, b){
         if(a.charAt(a.length-1) == 'y'){
             if(a.substring(0, a.length-2) + "ies" == b)
@@ -904,20 +958,18 @@ function loggingIn(landing, req, res){
             }else{
                for(var i=0; i<rows.length; i++){
                    if(rows[i].username == req.body.username){
-                       //console.log("username match");
                        if(rows[i].pWord == req.body.pword){
-                           //console.log("password match");
                            success = true;
                            req.session.user = req.body.username;
                            res.redirect(landing);
                        }else{
                            success = true;
-                           res.render("login.ejs", {message: "Incorrect Password", message2: ""});
+                           res.render("login.ejs", {message: "Incorrect Password", message2: "", id: landing.substring(8, landing.length)});
                        }
                    }
                }
                if(!success)
-                    res.render("login.ejs", {message: "Username does not exist", message2: ""});
+                    res.render("login.ejs", {message: "Username does not exist", message2: "", id: landing.substring(8, landing.length)});
             }
         });
     }
@@ -995,15 +1047,15 @@ app.post("/createAccount", function(req, res){
         valid = false;
     }
     else if(req.body.email.indexOf('@') == -1 || req.body.email.length == 0){
-        res.render("login.ejs", {message: "", message2: "Invalid email address", id: -1});
+        res.render("login.ejs", {message: "", message2: "Invalid email address", id:-1});
         valid = false;
     }
     else if(req.body.pWord.length < 6){
-        res.render("login.ejs", {message: "", message2: "Password must be at least 6 characters", id: -1});
+        res.render("login.ejs", {message: "", message2: "Password must be at least 6 characters", id:-1});
         valid = false;
     }
     else if(req.body.cPword != req.body.pWord){
-        res.render("login.ejs", {message: "", message2: "Passwords do not match", id: -1});
+        res.render("login.ejs", {message: "", message2: "Passwords do not match", id:-1});
         valid = false;
     }
     else if(valid){
