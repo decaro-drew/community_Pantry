@@ -69,7 +69,7 @@ app.use(function (req, res, next) {
     next()
 });
 
-function  requireLogin(req, res, next) {
+function requireLogin(req, res, next) {
 
     if (!req.session.user) {
        res.redirect("/login");
@@ -318,7 +318,8 @@ app.get("/user/:user", function(req, res){
 
 app.post("/settop10", function(req, res){
     var valid = true;
-    ids = [req.body.first, req.body.second, req.body.third, req.body.fourth, req.body.fifth, req.body.sixth, req.body.seventh, req.body.eigth, req.body.ninth, req.body.tenth];
+    ids = [req.body.first, req.body.second, req.body.third, req.body.fourth, req.body.fifth, req.body.sixth, req.body.seventh, req.body.eighth, req.body.ninth, req.body.tenth];
+    console.log(ids);
     db.query("SELECT id FROM recipe", function(error, rows){
         if(error){
             throw error;
@@ -399,7 +400,7 @@ app.get("/top10", function(req, res){
                 dishes[i] = dish;
 
             }
-         
+            console.log(dishes);
             res.render("top10.ejs", {dishes, user: req.session.user});
         }
         
@@ -428,32 +429,93 @@ app.get("/search", function(req, res){
     res.render("search.ejs", {user: req.session.user, keyProteins, veggies, starches, herbs, spices, condiments, letters});
 });
 
+function search(name, rows, type){
+    var exact = new Array();
+    var indexZero = new Array();
+    var others = new Array()
+    for(var i = 0; i < rows.length; i++){
+        if(type == "dish"){
+            if(rows[i].name.toLowerCase().includes(name)){
+                dish = {
+                        id: rows[i].id,
+                        name:rows[i].name,
+                        picture: rows[i].picture,
+                        snipbit: rows[i].snipbit,
+                        cuisine: rows[i].cuisine,
+                        username: rows[i].username
+                }
+                if(rows[i].username.toLowerCase() == name){
+                    exact.push(dish);
+                }else if(rows[i].name.toLowerCase().indexOf(name) == 0){
+                    indexZero.push(dish);
+                }else{
+                    others.push(dish);
+                }     
+            }
+        }
+        else if(type == "user"){
+            if(rows[i].username.toLowerCase().includes(name)){                  
+                user = {
+                        username: rows[i].username,
+                        bio: rows[i].bio,
+                }
+                if(rows[i].username.toLowerCase() == name){
+                    exact.push(user);
+                }else if(rows[i].username.toLowerCase().indexOf(name) == 0){
+                    indexZero.push(user);
+                }else{
+                    others.push(user);
+                }
+                    
+            }
+        }               
+    }
+    if(type == "dish"){
+        indexZero.sort(function(a,b){ return a.name.length - b.name.length});     
+        others.sort(function(a,b){ return a.name.length - b.name.length});
+    }
+    else if(type == "user"){
+        indexZero.sort(function(a,b){ return a.username.length - b.username.length});     
+        others.sort(function(a,b){ return a.username.length - b.username.length});
+    }
+    var list = new Array();
+    for(var i = 0; i < exact.length; i++)
+        list.push(exact[i]);
+    for(var i = 0; i < indexZero.length; i++)
+        list.push(indexZero[i]);
+    for(var i = 0; i < others.length; i++)
+        list.push(others[i]);
+    return list;
+}
+
 app.get("/results/dish", function(req, res){
-
     var dishName = url.parse(req.url, true).query.dishName;
-
-    var dishes = new Array();
-    db.query("Select * from recipe where name = ?",[dishName], function(error, rows){
+    db.query("Select * from recipe", function(error, rows){
         if(error){
             throw error;
         }
         else{
-            for(i=0; i<rows.length; i++){
-                dish = {
-                    id: rows[i].id,
-                    name:rows[i].name,
-                    picture: rows[i].picture,
-                    snipbit: rows[i].snipbit,
-                    cuisine: rows[i].cuisine,
-                    username: rows[i].username
-                }
-                dishes[i] = dish;
-            }
+            dishes = search(dishName, rows, "dish");
         }
         res.render("results.ejs", {user: req.session.user, message: "Results for " + dishName, dishes, userSearch: false});
     });
     
     
+});
+
+app.get("/results/users", function(req, res){
+    var targetUser = url.parse(req.url, true).query.targetUser.toLowerCase();
+    db.query("SELECT * FROM user", function(err, rows){
+        if(err){
+            throw err;
+        }
+        else{
+            var userList = search(targetUser, rows, "user");
+            userList = userList.filter(e => e.username !== "admin");
+            userList = userList.filter(e => e.username !== req.session.user);  
+            res.render("results.ejs", {user: req.session.user, message: "Here's who we found", userList});  
+        }
+    });
 });
 
 app.get("/results/cuisine", function(req, res){
@@ -483,55 +545,6 @@ app.get("/results/cuisine", function(req, res){
     });
     
     
-});
-
-
-app.get("/results/users", function(req, res){
-    var targetUser = url.parse(req.url, true).query.targetUser.toLowerCase();
-    console.log(targetUser);
-    db.query("SELECT * FROM user", function(err, rows){
-        var exact = new Array();
-        var indexZero = new Array();
-        var others = new Array()
-        for(var i = 0; i < rows.length; i++){
-            if(rows[i].username.toLowerCase().includes(targetUser)){
-                
-                if(rows[i].username.toLowerCase() == targetUser){
-                    user = {
-                        username: rows[i].username,
-                        bio: rows[i].bio,
-                    }
-                    exact.push(user);
-                }else if(rows[i].username.toLowerCase().indexOf(targetUser) == 0){
-                    user = {
-                        username: rows[i].username,
-                        bio: rows[i].bio
-                    }
-                    indexZero.push(user);
-                }else{
-                    user = {
-                        username: rows[i].username,
-                        bio: rows[i].bio
-                    }
-                    others.push(user);
-                }
-                    
-            }
-        }
-        indexZero.sort(function(a,b){ return a.username.length - b.username.length});     
-        others.sort(function(a,b){ return a.username.length - b.username.length});
-        var userList = new Array();
-        for(var i = 0; i < exact.length; i++)
-            userList.push(exact[i]);
-        for(var i = 0; i < indexZero.length; i++)
-            userList.push(indexZero[i]);
-        for(var i = 0; i < others.length; i++)
-            userList.push(others[i]);
-        userList = userList.filter(e => e.username !== "admin");
-        userList = userList.filter(e => e.username !== req.session.user);  
-        res.render("results.ejs", {user: req.session.user, message: "Here's who we found", userList});
-    });
-
 });
 
 app.get("/results", function(req, res){
@@ -586,41 +599,52 @@ app.get("/results", function(req, res){
         else{
             var counter = 0;
             var matches;
-            for(i=0; i<rows.length; i++){
-                
+            var keyMatches;
+            for(i=0; i<rows.length; i++){              
                 lowerIng = rows[i].ingredients.toLowerCase();
                 if(!rows[i].keywords)
                     lowerKeys = "";
                 else
                     lowerKeys = rows[i].keywords.toLowerCase();
                 matches = 0;
+                keyMatches = 0;
                 for(j=0; j<ingredients.length; j++){
-                    if(lowerKeys.includes(ingredients[j]))
-                        matches++;
-                    else{
-                        ingList = lowerIng.split(", ");
-                        for(k = 0; k < ingList.length; k++){
-                            if(ingredients[j] == ingList[k]){
-                                matches++;
+                    var found = false;
+                    ingList = lowerIng.split(", ");
+                    for(k = 0; k < ingList.length; k++){
+                        if(ingredients[j] == ingList[k]){
+                            matches++;
+                            found = true;
+                            break;
+                        }
+                        else if(ingList[k].includes(ingredients[j])) {
+                            if(compare(ingList[k], ingredients[j])){
+                                if(ingredients[j] == "chicken" || ingredients[j] == "beef"){
+                                    if(!edgeCases(ingList[k])){
+                                        matches++;
+                                        found = true;
+                                    }
+                                }
+                                else{
+                                    matches++;
+                                    found = true;
+                                }
                                 break;
                             }
-                            else if(ingList[k].includes(ingredients[j])) {
-                                if(compare(ingList[k], ingredients[j])){
-                                    if(ingredients[j] == "chicken" || ingredients[j] == "beef"){
-                                        if(!edgeCases(ingList[k]))
-                                            matches++;
-                                    }
-                                    else
-                                        matches++;
-                                    break;
-                                }
-                            }
-                            else if(plurality(ingList[k], ingredients[j]) || plurality(ingList[k], ingredients[j]))
-                                matches++;
+                        }
+                        else if(plurality(ingList[k], ingredients[j]) || plurality(ingList[k], ingredients[j])){
+                            matches++;
+                            found = true;
+                            break;
                         }
                     }
+                    if(!found && lowerKeys.includes(ingredients[j])){
+                        keyMatches++;
+                        break;
+                    }
+
                 }
-                if(matches > 0){
+                if(matches > 0 || keyMatches > 0){
                     dish = {
                         id: rows[i].id,
                         name:rows[i].name,
@@ -630,13 +654,30 @@ app.get("/results", function(req, res){
                         ingredients: rows[i].ingredients,
                         username: rows[i].username,
                         matches: matches,
+                        keyMatches: keyMatches,
                     }
                     dishes[counter] = dish;
                     counter++;
                 }
             }
         }
-        dishes.sort((a,b) => parseFloat(b.matches/b.ingredients.split(", ").length - parseFloat(a.matches/a.ingredients.split(", ").length)));
+        var matchFromKeys = new Array();
+        var matchFromIngs = new Array();
+        for(var i = 0; i < dishes.length; i++){
+            if(dishes.matches == 0)
+                matchFromKeys.push(dishes[i]);
+            else
+                matchFromIngs.push(dishes[i]);
+        }
+        matchFromIngs.sort((a,b) => parseFloat(b.matches/b.ingredients.split(", ").length - parseFloat(a.matches/a.ingredients.split(", ").length)));
+        matchFromKeys.sort((a,b) => b.keyMatches - a.keyMatches);
+        dishes = matchFromIngs;
+        for(var i = 0; i < matchFromKeys.length; i++)
+            dishes.push(matchFromKeys[i]);
+        /*for(var i = 0; i < dishes.length; i++){
+            console.log("matches: " + parseFloat(dishes[i].matches/dishes[i].ingredients.split(", ").length) + " keyMatches: " + dishes[i].keyMatches);
+            console.log(dishes[i].matches + " " + dishes[i].ingredients.split(", ").length);
+        }*/
         res.render("results.ejs", {user: req.session.user, message: "Here's what you can make", dishes, userSearch: false});
     });
 });
@@ -816,7 +857,6 @@ app.get("/recipe/:id", function(req, res){
 
 
 
-
 function loggingIn(landing, req, res){
     if(req.body.username == "admin" && req.body.pword == "admin"){
         req.session.user = "admin";
@@ -886,7 +926,6 @@ app.post("/createRecipe/:username", function(req, res){
         } 
     }); 	    
 });
-
 
 app.post("/updateProfilePhoto", function(req, res){
     var file = req.files.image;
@@ -979,7 +1018,6 @@ app.get("/admin", function(req, res){
 });
 
 app.post("/deleteRecipe/:id", function(req, res){
-    console.log(2);
     const {id} = req.params;
     db.query("Update recipe set username = 'Community Pantry' where id = '"+id+"'", function(err, result){
         if(err){
@@ -992,7 +1030,6 @@ app.post("/deleteRecipe/:id", function(req, res){
 });
 
 app.post("/deleteRecipe", function(req, res){
-    console.log(1);
     console.log([req.body.recipe]);
     db.query("Update recipe set username = 'Community Pantry' where id = '"+[req.body.recipe]+"'", function(err, result){
         if(err){
@@ -1034,8 +1071,9 @@ app.get("/login/:id", function(req, res){
 });
 
 app.get("/login", function(req, res){
-    res.render("login.ejs", {message: "", message2: "", id: -1});
+    res.render("login.ejs", {message: "", message2: "", id:-1});
 });
+
 
 app.get("/", function(req, res){
     res.redirect("/search");
