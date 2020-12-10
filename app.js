@@ -4,11 +4,12 @@ var mysql = require("mysql");
 var bodyParser = require("body-parser");
 var session = require('client-sessions');
 var upload = require('express-fileupload');
-var busboy = require('connect-busboy');
+//var busboy = require('connect-busboy');
 var path = require('path');
 var url = require('url');
 var httpMsgs = require('http-msgs')
 const { isNull } = require("util");
+const { get } = require("http");
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('views', __dirname + '/views');
@@ -17,7 +18,7 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname,'public'))); 
 app.use(bodyParser.json());
 app.use(upload());
-app.use(busboy());
+//app.use(busboy());
 
 var db = mysql.createConnection({
     host: 'community-pantry.c2b5rjt4aoog.us-east-1.rds.amazonaws.com',
@@ -308,9 +309,7 @@ app.get("/user/:user", function(req, res){
                     throw error;
                 }
                 else{
-    
-                        console.log(id);
-                        dish = {
+                            dish = {
                             id: rows[0].id,
                             name:rows[0].name,
                             picture: rows[0].picture,
@@ -362,6 +361,44 @@ app.get("/user/:user", function(req, res){
 });
 
 /**
+ * Gets top 10 recipes.
+ * @param {*} req request
+ * @param {*} res response
+ * @param {*} message the message will showed on the admin page after admin performs an action
+ */
+function getTop10(req, res, message){
+    const dishes = new Array ();
+    db.query("Select * from recipe, top10 WHERE recipe.id =top10.dishid order by positionId", function(error, rows){
+        if(error){
+            throw error;
+        }
+        else{             
+            for(i=0; i<rows.length; i++){
+
+                dish = {
+                    id: rows[i].id,
+                    name:rows[i].name,
+                    picture: rows[i].picture,
+                    snipbit: rows[i].snipbit,
+                    cuisine: rows[i].cuisine,
+                    username: rows[i].username
+                }
+                dishes[i] = dish;
+            }
+            if(message){
+                keyWords = ["Chicken", "Beef", "Pork", "Lamb", "Fish", "Seafood", "Pasta", "Rice", "Stirfry", "Soup", "Stew", "Salad", "Vegeterian"];
+                for(var i = 0; i < dishes.length; i++){
+                    dishes[i] = dishes[i].id;
+                }
+                res.render("admin.ejs", {message, keyWords, dishes});
+            }
+            else
+                res.render("top10.ejs", {dishes, user: req.session.user});
+        }
+        
+    });
+}
+/**
  * This route allows the admin user to enter the id values of recipes to create the top 10
  * @param req request
  * @param res response
@@ -373,10 +410,6 @@ app.post("/settop10", function(req, res){
         if(error){
             throw error;
         }
-        var max = rows[rows.length-1].id;
-        var min = rows[0].id;
-        console.log(max);
-        console.log(min);
         for(var i = 0; i < ids.length; i++){
             var match = false;
             if(ids[i] == ''){
@@ -385,15 +418,15 @@ app.post("/settop10", function(req, res){
                 return;
             }
             for(var j = 0; j < rows.length; j ++){
-                if(ids[i] == rows[j])
-                    console.log("here");
+                if(ids[i] == rows[j].id){
                     match = true;
                     break;
+                }
 
             }
             if(!match){
                 valid = false;
-                res.send("recipe id entered does not exist")
+                getTop10(req, res, "Error: Recipe " + ids[i] + " does not exist");
                 return;
             }
            
@@ -417,7 +450,8 @@ app.post("/settop10", function(req, res){
                     throw error;
                 }
             });
-            res.redirect("/admin");
+            getTop10(req, res, "Success!");
+            //res.redirect("/admin");
         }
     });  
 });
@@ -428,28 +462,7 @@ app.post("/settop10", function(req, res){
  * @param res response
  */
 app.get("/top10", function(req, res){
-    const dishes = new Array ();
-    db.query("Select * from recipe, top10 WHERE recipe.id =top10.dishid order by positionId", function(error, rows){
-        if(error){
-            throw error;
-        }
-        else{             
-            for(i=0; i<rows.length; i++){
-
-                dish = {
-                    id: rows[i].id,
-                    name:rows[i].name,
-                    picture: rows[i].picture,
-                    snipbit: rows[i].snipbit,
-                    cuisine: rows[i].cuisine,
-                    username: rows[i].username
-                }
-                dishes[i] = dish;
-            }
-            res.render("top10.ejs", {dishes, user: req.session.user});
-        }
-        
-    });
+    getTop10(req, res, "");
 });
 
 /**
@@ -658,9 +671,10 @@ app.get("/results", function(req, res){
         return false;
     }
     /**
-     * Checks if a string is a plural form of another string
+     * Checks if a string A is the singular form of string B
      * @param a a string we are testing
-     * @param b 
+     * @param b a string we are testing
+     * @returns true if string A is the singular form of string B, false if not
      */
     function plurality(a, b){
         if(a.charAt(a.length-1) == 'y'){
@@ -762,18 +776,17 @@ app.get("/results", function(req, res){
         dishes = matchFromIngs;
         for(var i = 0; i < matchFromKeys.length; i++)
             dishes.push(matchFromKeys[i]);
-        /*for(var i = 0; i < dishes.length; i++){
-            console.log("matches: " + parseFloat(dishes[i].matches/dishes[i].ingredients.split(", ").length) + " keyMatches: " + dishes[i].keyMatches);
-            console.log(dishes[i].matches + " " + dishes[i].ingredients.split(", ").length);
-        }*/
         res.render("results.ejs", {user: req.session.user, message: "Here's what you can make", dishes, userSearch: false});
     });
 });
 
-
+/**
+ * Adds a recipe to the active user's liked recipes
+ * @param req request
+ * @param res response
+ */
 app.post("/saveRecipe", requireLogin, function(req, res){
     var id = req.body.id;
-    console.log("save");
     db.query("select likedRecipes from user where username = ?", [req.session.user], function(error, rows){
         if(error){
             throw error;
@@ -797,6 +810,11 @@ app.post("/saveRecipe", requireLogin, function(req, res){
     })
 });
 
+/**
+ * Removes a recipe from the active user's liked recipes
+ * @param req request
+ * @param res response
+ */
 app.post("/unSaveRecipe", requireLogin, function(req, res){
     var id = req.body.id;
     db.query("select likedRecipes from user where username = ?", [req.session.user], function(error, rows){
@@ -818,12 +836,15 @@ app.post("/unSaveRecipe", requireLogin, function(req, res){
                     })
                 }
             })
-
         }
     })
 });
 
-
+/**
+ * Empties the active user's liked recipes
+ * @param req request
+ * @param res response
+ */
 app.post("/clearSavedRecipes", function(req, res){
     db.query("update user set likedRecipes = '' where username = ?", [req.session.user], function(error, rows){
         if(error){
@@ -838,7 +859,11 @@ app.post("/clearSavedRecipes", function(req, res){
 });
 
 
-
+/**
+ * Adds the recipe's ingredienet list to the active user's shopping list
+ * @param req request
+ * @param res response
+ */
 app.post("/saveIngredients", requireLogin, function(req, res){
     var id = req.body.id;
     var ingredients = req.body.ingredientString;
@@ -866,7 +891,11 @@ app.post("/saveIngredients", requireLogin, function(req, res){
 });
 
 
-
+/**
+ * Removes selected ingredient from active user's ingredient list
+ * @param req request
+ * @param res response
+ */
 app.post("/deleteIngredient", function(req, res){
     var index = req.body.index;
     db.query("select shoppingList from user where username = ?", [req.session.user], function(error,rows) {
@@ -892,7 +921,11 @@ app.post("/deleteIngredient", function(req, res){
     })
 });
 
-
+/**
+ * Removes all ingredient from active user's ingredient list
+ * @param req request
+ * @param res response
+ */
 app.post("/clearShoppingList", function(req, res){
     db.query("update user set shoppingList = '' where username = ?", [req.session.user], function(error, rows){
         if(error){
@@ -906,10 +939,14 @@ app.post("/clearShoppingList", function(req, res){
     })
 });
 
+/**
+ * Generates a recipe page
+ * @param req request
+ * @param res response
+ */
 app.get("/recipe/:id", function(req, res){
     const {id} = req.params;
     var success = false;
-    //console.log(id);
     db.query("SELECT * FROM recipe WHERE id = ?", [id], function(error, rows){
         if(error){
             throw error;
@@ -935,16 +972,18 @@ app.get("/recipe/:id", function(req, res){
                             res.render("recipe.ejs", {user: req.session.user, saved, dishName, instructions, ingredients, ingredientString, image, id, snipbit, username, cuisine});
                         }
                     });
-                }
-                
-                
+                }               
         }      
-    });
-    
+    });   
 });
 
 
-
+/**
+ * Verifies a user's log in credentials. If they were on a recipe page, they will be redirected back to that page. Otherwise they are sent to the home page
+ * @param {*} landing string that shows where the user will be directed to
+ * @param {*} req request
+ * @param {*} res response
+ */
 function loggingIn(landing, req, res){
     if(req.body.username == "admin" && req.body.pword == "admin"){
         req.session.user = "admin";
@@ -974,16 +1013,32 @@ function loggingIn(landing, req, res){
         });
     }
 }
+
+/**
+ * logging in when the user was previously at a recipe page
+ * @param req request
+ * @param res response
+ */
 app.post("/login/:id", function(req, res){
     const {id} = req.params;
     loggingIn("/recipe/" + id, req, res);
 
 });
 
+/**
+ * logging in
+ * @param req request
+ * @param res response
+ */
 app.post("/login", function(req, res){
     loggingIn("/home", req, res);
 });
 
+/**
+ * A user creates a recipe
+ * @param req request
+ * @param res response
+ */
 app.post("/createRecipe/:username", function(req, res){
     db.query("SELECT MAX(id) as max FROM recipe", function(err, result){
         var keys = Object.keys(req.body);
@@ -1013,24 +1068,31 @@ app.post("/createRecipe/:username", function(req, res){
     }); 	    
 });
 
+/**
+ * A user updates their profile photo
+ * @param req request
+ * @param res response
+ */
 app.post("/updateProfilePhoto", function(req, res){
     var file = req.files.image;
     file.name = req.session.user + ".jpg";
-   // var imgName = "/recipe_images/"+file.name;
     if(file.mimetype == "image/jpeg"){
         file.mv('public/profile_images/'+file.name, function(err){
             res.redirect("/home");
         });
     }
     else{
-        console.log("error with file type. try again, but better");
-        ///message = "This format is not allowed , please upload file with '.jpg'";
+        console.log("Photo type not jpg");
         res.redirect("/home");
     }
 });
 
+/**
+ * A user can change their bio
+ * @param req request
+ * @param res response
+ */
 app.post("/updateBio", function(req, res){
-    console.log(req.body.bio);
     db.query("update user set bio = ? where username = '"+req.session.user+"'",[req.body.bio], function(err, rows){
         if(err)
             throw err;
@@ -1040,18 +1102,23 @@ app.post("/updateBio", function(req, res){
     });
 });
 
+/**
+ * A user creating their account
+ * @param req request
+ * @param res response
+ */
 app.post("/createAccount", function(req, res){
     var valid = true;
-    if(req.body.uName.length < 6){
-        res.render("login.ejs", {message: "", message2: "Username must be at least 6 characters", id: -1});
+    if(req.body.uName.length < 6 || req.body.uName.length > 20){
+        res.render("login.ejs", {message: "", message2: "Username must be 6-20 characters", id: -1});
         valid = false;
     }
     else if(req.body.email.indexOf('@') == -1 || req.body.email.length == 0){
         res.render("login.ejs", {message: "", message2: "Invalid email address", id:-1});
         valid = false;
     }
-    else if(req.body.pWord.length < 6){
-        res.render("login.ejs", {message: "", message2: "Password must be at least 6 characters", id:-1});
+    else if(req.body.pWord.length < 6 || req.body.pWord.length > 30){
+        res.render("login.ejs", {message: "", message2: "Password must be 6-30 characters", id:-1});
         valid = false;
     }
     else if(req.body.cPword != req.body.pWord){
@@ -1071,38 +1138,36 @@ app.post("/createAccount", function(req, res){
     }
 });
 
+/**
+ * Generates the admin page
+ * @param req request
+ * @param res response
+ */
 app.get("/admin", function(req, res){
-
     if(!req.session.user || req.session.user != "admin")
         res.redirect("/login");
-    else{
-        
+    else{      
     const dishes = new Array ();
-
     db.query("Select * from top10 order by positionId", function(error, rows){
-
         if(error){
             throw error;
         }
-        else{
-        
-             
+        else{          
             for(i=0; i<rows.length; i++){
-
                 dishes[i] = rows[i].dishId;
-
-            }
-            
+            }     
             keyWords = ["Chicken", "Beef", "Pork", "Lamb", "Fish", "Seafood", "Pasta", "Rice", "Stirfry", "Soup", "Stew", "Salad", "Vegeterian"];
-
             res.render("admin.ejs", {message : "", keyWords, dishes});
-        }
-        
+        }      
     }); 
     }
-
 });
 
+/**
+ * A user changing ownership of a recipe to admin
+ * @param req request
+ * @param res response
+ */
 app.post("/deleteRecipe/:id", function(req, res){
     const {id} = req.params;
     db.query("Update recipe set username = 'Community Pantry' where id = '"+id+"'", function(err, result){
@@ -1115,19 +1180,34 @@ app.post("/deleteRecipe/:id", function(req, res){
     })
 });
 
+/**
+ * An admin changing ownership of a recipe to admin
+ * @param req request
+ * @param res response
+ */
 app.post("/deleteRecipe", function(req, res){
-    console.log([req.body.recipe]);
-    db.query("Update recipe set username = 'Community Pantry' where id = '"+[req.body.recipe]+"'", function(err, result){
-        if(err){
-            throw err;
+    db.query("Select * FROM recipe where id = ?", [req.body.recipe], function(err, result){
+        if(!result.length){
+            getTop10(req, res, "Error: recipe " +req.body.recipe+ " does not exist");
         }
         else{
-            res.redirect("/admin"); 
-        }
-    })
+            db.query("Update recipe set username = 'Community Pantry' where id = '"+[req.body.recipe]+"'", function(err, result){
+                if(err){
+                    throw err;
+                }
+                else{
+                   getTop10(req, res, "Success!");
+                }
+            })
+        }    
+    }) 
 });
 
-
+/**
+ * An admin deleting a user account. If the user made recipes, they get switched to admin ownership
+ * @param req request
+ * @param res response
+ */
 app.post("/deleteuser", function(req, res){
     db.query("update recipe set username = 'Community Pantry' where username = ?",[req.body.username], function(err, result){   
         if(err){
@@ -1139,28 +1219,51 @@ app.post("/deleteuser", function(req, res){
                     throw err;
                 }
                 else{
-                   res.redirect("/admin");
-               }
+                    if(!result.affectedRows){
+                        getTop10(req, res, "Error: user " +req.body.username+ " does not exist");
+                    }
+                    else
+                        getTop10(req, res, "Success!");
+                }
             });
         }
     });
 
 });
 
+/**
+ * Ends the users session
+ * @param req request
+ * @param res response
+ */
 app.get('/logout', function(req, res) {
     req.session.reset();
     res.redirect('/search');
 });
 
+/**
+ * Generates the login page when a user was previously at a recipe page
+ * @param req request
+ * @param res response
+ */
 app.get("/login/:id", function(req, res){
     res.render("login.ejs", {message: "", message2: "", id : req.params.id});
 });
 
+/**
+ * Generates the login page
+ * @param req request
+ * @param res response
+ */
 app.get("/login", function(req, res){
     res.render("login.ejs", {message: "", message2: "", id:-1});
 });
 
-
+/**
+ * Generates the search page
+ * @param req request
+ * @param res response
+ */
 app.get("/", function(req, res){
     res.redirect("/search");
 });
