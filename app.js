@@ -1045,13 +1045,15 @@ app.post("/createRecipe/:username", function(req, res){
         keys.splice(0,5);
         var keyString = keys.join(",")
         var file = req.files.image;
+        var user = req.session.user;
+        if(user == "admin") user = "Community Pantry";
         file.name = (result[0].max+1).toString() + ".jpg";
         var imgName = "/recipe_images/"+file.name;
         if(file.mimetype == "image/jpeg" ||file.mimetype == "image/png"||file.mimetype == "image/gif" ){                               
             file.mv('public/recipe_images/'+file.name, function(err) {                      
                 if (err)
                   return res.status(500).send(err);
-                db.query("Insert into recipe (name, picture, cuisine, snipbit, ingredients, instructions, username, keywords) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [req.body.rName, imgName, req.body.cuisine, req.body.snipbit, req.body.ingredients, req.body.instructions, req.session.user, keyString], function(err, result){   
+                db.query("Insert into recipe (name, picture, cuisine, snipbit, ingredients, instructions, username, keywords) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [req.body.rName, imgName, req.body.cuisine, req.body.snipbit, req.body.ingredients, req.body.instructions, user, keyString], function(err, result){   
                       if(err){
                           res.send("Error");
                       }
