@@ -1008,7 +1008,7 @@ app.post("/createRecipe/:username", function(req, res){
             });
         } else {
           message = "This format is not allowed , please upload file with '.jpg'";
-          res.render('index.ejs',{message: message});
+          res.redirect("/home");
         } 
     }); 	    
 });
