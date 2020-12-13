@@ -7,6 +7,7 @@ var upload = require('express-fileupload');
 //var busboy = require('connect-busboy');
 var path = require('path');
 var url = require('url');
+var fs = require('fs');
 var httpMsgs = require('http-msgs')
 const { isNull } = require("util");
 const { get } = require("http");
@@ -1221,6 +1222,14 @@ app.post("/deleteuser", function(req, res){
                     throw err;
                 }
                 else{
+
+                    path = "public/profile_images/" + req.body.username + ".jpg";
+                    try{
+                        fs.unlinkSync(path);
+                    }catch(err){
+                        console.log(err);
+                    }
+
                     if(!result.affectedRows){
                         getTop10(req, res, "Error: user " +req.body.username+ " does not exist");
                     }
@@ -1274,3 +1283,4 @@ app.get("/", function(req, res){
 app.listen(3000, function(){
     console.log("Server running on port 3000")
 });
+
